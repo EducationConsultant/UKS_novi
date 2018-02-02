@@ -1,0 +1,22 @@
+version: '2'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+    ports:
+      - "8000:5432"
+  web:
+    build: .
+    restart: always
+    command: bash -c "python3 manage.py makemigrations && python3 manage.py migrate &&python3 manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/code
+    ports:
+      - "9000:8000"
+    links:
+      - db
+    depends_on:
+      - db
