@@ -23,7 +23,7 @@ install:
   
 # command to run tests
 script:
-  - python tests.py
+  - python ProjekatUKS/github/tests.py
   
 
 
