@@ -21,14 +21,12 @@ services: docker
 install:
   - pip install -r ProjekatUKS/requirements.txt
   
-  
-script:
-  - python ProjekatUKS/github/tests.py
+
   
 
 
 script:
-  - docker build -t $DOCKER_USERNAME/uks_novi .
+  - docker build -t $DOCKER_USERNAME/c:s .
   - docker images
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
-  - docker push $DOCKER_USERNAME/uks_novi
+  - docker push $DOCKER_USERNAME/c:s
