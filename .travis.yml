@@ -1,33 +1,27 @@
 sudo: required
 
-notifications:
-  email:
-    recipients:
-      - cdjuric963@gmail.com
-  on_success: always
-  on_failure: always
-
 language: python
 python:
-  - "3.5"
+  - '3.5'
   
-branches:
-  only:
-    - master  
-    
+ 
 services: 
-	- docker
+  - docker
 
 
 install:
   - pip install -r ProjekatUKS/requirements.txt
   
-
+script:
+  - python ProjekatUKS/github/tests.py
   
 
 
-script:
-  - docker build -t $DOCKER_USERNAME/uks_novi:mmm .
+before_install:
+  - docker --version
+  - docker build -t $DOCKER_USERNAME/uks_novi:proba .
   - docker images
+
+after_success:
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
-  - docker push $DOCKER_USERNAME/uks_novi:mmm
+  - docker push $DOCKER_USERNAME/uks_novi:proba
