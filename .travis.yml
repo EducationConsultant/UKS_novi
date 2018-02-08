@@ -10,7 +10,7 @@ services:
 
 
 install:
-  - pip install -r ProjekatUKS/requirements.txt
+  - pip install -r requirements.txt
   
 script:
   - python ProjekatUKS/github/tests.py
