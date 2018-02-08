@@ -14,21 +14,21 @@ python:
 branches:
   only:
     - master  
-services: docker
+#services: docker
 
 # command to install dependencies
 install:
-  - pip install -r requirements.txt
+  - pip install -r ProjekatUKS/requirements.txt
   
   
 # command to run tests
-#script:
-#  - python tests.py
+script:
+  - python tests.py
   
 
 
-script:
-  - docker build -t $DOCKER_USERNAME/mytravis:latest .
-  - docker images
-  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
-- docker push $DOCKER_USERNAME/mytravis:latest
+#script:
+#  - docker build -t $DOCKER_USERNAME/mytravis:latest .
+#  - docker images
+#  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
+#- docker push $DOCKER_USERNAME/mytravis:latest
