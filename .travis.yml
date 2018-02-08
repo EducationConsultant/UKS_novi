@@ -1,6 +1,6 @@
 sudo: required
 
-notifications: # set notification options
+notifications:
   email:
     recipients:
       - cdjuric963@gmail.com
@@ -14,21 +14,21 @@ python:
 branches:
   only:
     - master  
-#services: docker
+    
+services: docker
 
-# command to install dependencies
+
 install:
   - pip install -r ProjekatUKS/requirements.txt
   
   
-# command to run tests
 script:
   - python ProjekatUKS/github/tests.py
   
 
 
-#script:
-#  - docker build -t $DOCKER_USERNAME/mytravis:latest .
-#  - docker images
-#  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
-#- docker push $DOCKER_USERNAME/mytravis:latest
+script:
+  - docker build -t $DOCKER_USERNAME/mytravis:latest .
+  - docker images
+  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
+  - docker push $DOCKER_USERNAME/mytravis:latest
