@@ -15,7 +15,8 @@ branches:
   only:
     - master  
     
-services: docker
+services: 
+	- docker
 
 
 install:
@@ -26,7 +27,7 @@ install:
 
 
 script:
-  - docker build -t $DOCKER_USERNAME/uks_novi:s .
+  - docker build -t $DOCKER_USERNAME/uks_novi:mmm .
   - docker images
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
-  - docker push $DOCKER_USERNAME/uks_novi:s
+  - docker push $DOCKER_USERNAME/uks_novi:mmm
