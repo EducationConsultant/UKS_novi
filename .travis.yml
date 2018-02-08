@@ -26,7 +26,7 @@ install:
 
 
 script:
-  - docker build -t $DOCKER_USERNAME/c:s .
+  - docker build -t $DOCKER_USERNAME/uks_novi:s .
   - docker images
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
-  - docker push $DOCKER_USERNAME/c:s
+  - docker push $DOCKER_USERNAME/uks_novi:s
