@@ -25,7 +25,7 @@ SECRET_KEY = 'ux2s!1@ly9v!6w^r4$40(tx0+--olh9lo%7xx!jor^!lm-f6(0'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -76,12 +76,12 @@ WSGI_APPLICATION = 'ProjekatUKS.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'example',
         'HOST': 'db',
-        'PORT': '',
+        'PORT': 5432,
     }
 }
 

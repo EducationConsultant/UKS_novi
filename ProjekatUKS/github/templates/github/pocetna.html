@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,8 +6,6 @@
 
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-
-    <link rel="stylesheet" href="{% static 'css/topnav.css' %}">
 
     {% block head_sadrzaj %}{% endblock %}
 </head>
@@ -30,6 +27,6 @@
         </div>
     </nav>
 
-    {% block body_sadrzaj %}{% endblock %}
+    {% block body_sadrzaj %}{{korisnik.ime}}{% endblock %}
 </body>
 </html>
