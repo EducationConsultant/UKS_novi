@@ -19,6 +19,7 @@ script:
 
 before_install:
   - docker --version
+  - cd ProjekatUKS/
   - docker build -t $DOCKER_USERNAME/uks_novi:proba .
   - docker images
 
