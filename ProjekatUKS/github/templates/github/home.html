@@ -1,32 +1,33 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>GitHub</title>
+    <title>BooHub</title>
 
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 
-    {% block head_sadrzaj %}{% endblock %}
+    {% block head_content %}{% endblock %}
 </head>
 <body>
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">Boo</a>
+                <img src="{% static 'github/images/logo.gif' %}" width="50px" height="50px" alt="BooHub"/>
             </div>
 
             <ul class="nav navbar-nav">
-                <li class="active"><a href="{% url 'github:pocetna' %}">Pocetna</a></li>
-                <li><a href="{% url 'github:registracija' %}">Registracija</a></li>
+                <li class="active"><a href="{% url 'github:home' %}">Home</a></li>
+                <li><a href="{% url 'github:registration' %}">Registration</a></li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#"><span class="glyphicon glyphicon-log-in"></span>Prijava</a></li>
+                <li><a href="{% url 'github:login' %}"><span class="glyphicon glyphicon-log-in"></span>Login</a></li>
             </ul>
         </div>
     </nav>
 
-    {% block body_sadrzaj %}{{korisnik.ime}}{% endblock %}
+    {% block body_content %}{% endblock %}
 </body>
 </html>

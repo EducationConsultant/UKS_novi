@@ -1,36 +1,43 @@
 from django.shortcuts import render
 
-from github.models import Korisnik
+from github.models import User
 
 
-def pocetna(requset):
-    return render(requset, 'github/pocetna.html')
+def home(requset):
+    return render(requset, 'github/home.html')
 
-def registracija(request):
-    return render(request, 'github/registracija.html')
+def registration(request):
+    return render(request, 'github/registration.html')
 
-def registrujKorisnika(request):
-    korisnickoIme = request.POST['korisnickoIme']
-    ime = request.POST['ime']
-    prezime = request.POST['prezime']
-    lozinka = request.POST['lozinka']
-    emailAdresa = request.POST['emailAdresa']
+def saveUser(request):
+    username = request.POST['username']
 
-    #korisnik = Korisnik()
-    #korisnik.ime = ime
-    #korisnik.prezime = prezime
-    #korisnik.korisnickoIme = korisnickoIme
-    #korisnik.lozinka = lozinka
-    #korisnik.emailAdresa = emailAdresa
+    firstname = request.POST['firstname']
+    lastname = request.POST['lastname']
+    password = request.POST['password']
+    email = request.POST['email']
 
-    #korisnik.save()
-    korisnik = Korisnik.objects.create(ime=ime,prezime=prezime,korisnickoIme=korisnickoIme,lozinka=lozinka,emailAdresa=emailAdresa)
+    user = User()
+    user.firstname = firstname
+    user.lastname = lastname
+    user.username = username
+    user.password = password
+    user.email = email
 
-    print('JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ')
-    korisnici = Korisnik.objects.all()
-    for k in korisnici:
-        print(k.__str__())
+    #unique username
+    users = User.objects.all()
+    for u in users:
+        if u.username == username:
+            return render(request, 'github/registration.html',{'message':'Username must be unique.','user':user})
 
-    #print(korisnik.__str__())
+    user.save()
 
-    return render(request, 'github/pocetna.html', {'korisnik':korisnik})
+    #print all users
+    #users = User.objects.all()
+    #for u in users:
+        #print(u.__str__())
+
+    return render(request, 'github/login.html', {'user':user})
+
+def login(requset):
+    return render(requset, 'github/login.html')
