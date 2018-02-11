@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from github.models import User
+from github.models import User, Organization
 
 
 def home(requset):
@@ -41,3 +41,50 @@ def saveUser(request):
 
 def login(requset):
     return render(requset, 'github/login.html')
+
+def organization(request):
+    return render(request, 'github/organization.html')
+
+def saveOrganization(request):
+    name = request.POST['name']
+    email = request.POST['email']
+    organization = Organization()
+    organization.name = name
+    organization.email = email
+    organization.save()
+    request.session['name'] = name
+    return render(request, 'github/organizationDetails.html', {'organization':organization})
+
+def saveOrganizationDetails(request):
+    purpose = request.POST['purpose']
+    howLong = request.POST['howLong']
+    howMuchPeople = request.POST['howMuchPeople']
+    name = request.session['name']
+    organization = Organization()
+    organizations = Organization.objects.all()
+    for o in organizations:
+        if o.name == name:
+            o.purpose = purpose
+            o.howLong = howLong
+            o.howMuchPeople = howMuchPeople
+            o.save()
+            organization = o
+    return render(request, 'github/organizationMembers.html', {'organization': organization})
+
+def saveOrganizationMembers(request):
+    memberName=request.POST['member']
+    nameOrganization = request.session['name']
+    organization = Organization()
+    organizations = Organization.objects.all()
+    members = User.objects.all()
+    for o in organizations:
+        if o.name == nameOrganization:
+            organization = o
+    for m in members:
+        if m.username == memberName:
+            organization.members.add(m)
+            organization.save()
+    membersOrganization = organization.members.all
+    return render(request, 'github/organizationInfo.html', {'organization':organization, 'membersOrganization':membersOrganization})
+
+
