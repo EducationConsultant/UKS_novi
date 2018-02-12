@@ -15,5 +15,7 @@ urlpatterns = [
     path('saveOrganizationMembers', views.saveOrganizationMembers, name='saveOrganizationMembers'),
     path('repository', views.repository, name='repository'),
     path('saveRepository', views.saveRepository, name='saveRepository'),
+    path('saveRepositoryMembers', views.saveRepositoryMembers, name='saveRepositoryMembers'),
+    path('repositoriesShow', views.repositoriesShow, name='repositoriesShow'),
 
 ]

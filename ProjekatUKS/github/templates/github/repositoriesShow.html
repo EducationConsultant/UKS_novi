@@ -1,0 +1,42 @@
+{% extends "github/home.html" %}
+
+{% block body_content %}
+    <div class="container">
+        <form class="form-horizontal" action="{% url 'github:saveRepository' %}" method="post">
+            {% csrf_token %}
+
+            <div class="container">
+              <h2>Repository Table</h2>
+               <table class="table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Members</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for r in repositories%}
+                  <tr>
+                    <td>{{r.name}}</td>
+                    <td>{{r.description}}</td>
+                    <td>Username</td>
+                  </tr>
+                {% endfor %}
+
+                </tbody>
+              </table>
+            </div>
+
+
+
+
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-default">Next</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

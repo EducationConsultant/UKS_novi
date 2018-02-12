@@ -89,14 +89,20 @@ def saveOrganization(request):
                           {'organization': organization, 'message': 'That name already exists!'})
     organization.name = name
     organization.save()
+
+    # set name in session
     request.session['name'] = name
+
     return render(request, 'github/organizationDetails.html', {'organization':organization})
 
 def saveOrganizationDetails(request):
     purpose = request.POST['purpose']
     howLong = request.POST['howLong']
     howMuchPeople = request.POST['howMuchPeople']
+
+    # get name from session
     name = request.session['name']
+
     organization = Organization()
     organizations = Organization.objects.all()
     for o in organizations:
@@ -150,4 +156,41 @@ def saveRepository(request):
     repository.description = description
     repository.type = type
     repository.save()
+    # put name in session
+    request.session['nameRepository'] = repository.name
     return render(request, 'github/repositoryMembers.html', {'repository': repository})
+
+def saveRepositoryMembers(request):
+    memberName = request.POST['memberRepository']
+    # get name from session
+    nameRepository= request.session['nameRepository']
+    repository = Repository()
+    repositories = Repository.objects.all()
+    users = User.objects.all()
+    usernameList = []
+
+    # find organization
+    for r in repositories:
+        if r.name == nameRepository:
+            repository = r
+    # list with all usernames
+    for u in users:
+        usernameList.append(u.username)
+    # check username
+    if memberName not in usernameList:
+        return render(request, 'github/repositoryMembers.html',
+                      {'message': 'Username does not exist.', 'repository': repository})
+    else:
+        for m in users:
+            if m.username == memberName:
+                repository.members.add(m)
+                repository.save()
+                membersRepository = repository.members.all
+                return render(request, 'github/repositoryDetails.html',
+                              {'repository': repository, 'membersRepository': membersRepository})
+
+    return render(request, 'github/repositoryDetails.html', {'repository':repository})
+
+def repositoriesShow(request):
+    repositories = Repository.objects.all()
+    return render(request, 'github/repositoriesShow.html', {'repositories':repositories})
