@@ -1,0 +1,66 @@
+{% extends "github/home.html" %}
+
+{% block body_content %}
+    <div class="container">
+        <form class="form-horizontal" action="{% url 'github:saveOrganizationDetails' %}" method="post">
+            {% csrf_token %}
+            <h2>Purpose</h2>
+            <div class="radio">
+                <label><input type="radio" name="purpose" value = "Professional work, for-profit ">Professional work, for-profit </label>
+            </div>
+            <div class="radio">
+                <label><input type="radio" name="purpose" value="Professional work, non-profit">Professional work, non-profit </label>
+            </div>
+            <div class="radio ">
+                <label> <input type="radio" name="purpose" value="Educational purposes">Educational purposes</label>
+            </div>
+            <div class="radio ">
+                <label><input type="radio" name="purpose" value="An open source project" >An open source project </label>
+            </div>
+            <div class="radio">
+                <label><input type="radio" name="purpose" value="Other" checked="checked" >Other</label>
+            </div>
+
+
+            <h2>How long do you plan to use this organization?</h2>
+            <div class="radio">
+                <label><input type="radio" name="howLong" value="Just a few days">Just a few days</label>
+            </div>
+            <div class="radio">
+                <label><input type="radio" name="howLong" value="A few weeks to months">A few weeks to months </label>
+            </div>
+            <div class="radio ">
+                <label><input type="radio" name="howLong" value="A year or more" >A year or more </label>
+            </div>
+            <div class="radio ">
+                <label> <input type="radio" name="howLong" value="Indefinitely">Indefinitely  </label>
+            </div>
+            <div class="radio">
+                <label><input type="radio" name="howLong" value="Other" checked="checked" >Other</label>
+            </div>
+
+            <h2>How much people do you plan to work in this organization?</h2>
+            <div class="radio">
+                <label><input type="radio" name="howMuchPeople" value="I plan to work alone ">I plan to work alone  </label>
+            </div>
+            <div class="radio">
+                <label><input type="radio" name="howMuchPeople" value="5 or fewer ">5 or fewer  </label>
+            </div>
+            <div class="radio ">
+                <label><input type="radio" name="howMuchPeople" value="6 to 20">6 to 20 </label>
+            </div>
+            <div class="radio">
+                <label><input type="radio" name="howMuchPeople" value="Other" checked="checked">Other</label>
+            </div>
+
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-default">Next</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+{% endblock %}
