@@ -28,8 +28,14 @@
 
             <ul class="nav navbar-nav">
                 <li class="active"><a href="{% url 'github:home' %}">Home</a></li>
+
+                {% if not request.session.uname_user %}
                 <li><a href="{% url 'github:registration' %}">Registration</a></li>
+                {% endif %}
+
+                {% if request.session.uname_user %}
                 <li><a href="{% url 'github:organization' %}">Organization</a></li>
+                {% endif %}
             </ul>
 
 

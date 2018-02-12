@@ -81,7 +81,6 @@ def login_user(request):
             request.session['id_user'] = id(user)
             request.session['uname_user'] = user.username
 
-
             return render(request, "github/afterUserLogin.html")
         else:
             return render(request, "github/login.html",{'message':'Incorrect password.','uname':username})
@@ -89,6 +88,11 @@ def login_user(request):
         return render(request, "github/login.html", {'message': 'User does not exist.'})
 
 def logout(request):
+    username = request.session['uname_user']
+    user = User.objects.get(username=username)
+    user.loggedin = False
+    user.save()
+
     request.session['uname_user'] = None
     return render(request, "github/login.html")
 
@@ -98,15 +102,64 @@ def about_user(request):
 
     return render(request, "github/about_user.html",{'user':user})
 
-def change_username(request):
+def switch_change_username(request):
     return render(request, "github/change_username.html")
 
-def change_password(request):
+def change_username(request):
+    newusername = request.POST.get('newusername')
+    print("AAAAAAAAAAAAAAAAAAA")
+    print(newusername)
+
+    username = request.session['uname_user']
+    user = User.objects.get(username=username)
+    user.username = newusername
+    user.save()
+    request.session['uname_user'] = user.username
+
+    return render(request, "github/change_username.html", {'message': 'Username successfully changed.'})
+
+def switch_change_password(request):
     return render(request, "github/change_password.html")
 
-def delete_account(request):
+def change_password(request):
+    oldpassword = request.POST.get('oldpassword')
+    newpassword = request.POST.get('newpassword')
+    confirmnewpassword = request.POST.get('confirmnewpassword')
+
+    username = request.session['uname_user']
+    user = User.objects.get(username=username)
+
+    if user.password == oldpassword:
+        if newpassword == confirmnewpassword:
+            user.password = newpassword
+            user.save()
+
+            return render(request, "github/change_password.html", {'messageNew': 'Password successfully changed.'})
+        else:
+            return render(request, "github/change_password.html", {'messageConfirmationPass': 'Password does not match the confirmation.'})
+    else:
+        return render(request, "github/change_password.html", {'messageOldPass': 'Old password is not valid.'})
+
+def switch_delete_account(request):
     return render(request, "github/delete_account.html")
 
+def delete_account(request):
+    usernameI = request.POST.get('username')
+    passwordI = request.POST.get('password')
+
+    username = request.session['uname_user']
+    user = User.objects.get(username=username)
+
+    if user.username == usernameI:
+        if user.password == passwordI:
+            request.session['uname_user'] = None
+            user.delete()
+
+            return render(request, "github/home.html")
+        else:
+            return render(request, "github/delete_account.html", {'message': 'Password is not valid.'})
+    else:
+        return render(request, "github/delete_account.html", {'message': 'Username is not valid.'})
 
 def organization(request):
     return render(request, 'github/organization.html')
