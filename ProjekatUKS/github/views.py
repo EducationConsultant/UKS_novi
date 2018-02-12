@@ -48,9 +48,16 @@ def organization(request):
 def saveOrganization(request):
     name = request.POST['name']
     email = request.POST['email']
+    organizations = Organization.objects.all()
     organization = Organization()
-    organization.name = name
     organization.email = email
+
+    # check if name exists
+    for o in organizations:
+        if o.name == name:
+            return render(request, 'github/organization.html',
+                          {'organization': organization, 'message': 'That name already exists!'})
+    organization.name = name
     organization.save()
     request.session['name'] = name
     return render(request, 'github/organizationDetails.html', {'organization':organization})
@@ -76,15 +83,32 @@ def saveOrganizationMembers(request):
     nameOrganization = request.session['name']
     organization = Organization()
     organizations = Organization.objects.all()
-    members = User.objects.all()
+    users = User.objects.all()
+    usernameList = []
+    # find organization
     for o in organizations:
         if o.name == nameOrganization:
             organization = o
-    for m in members:
-        if m.username == memberName:
-            organization.members.add(m)
-            organization.save()
-    membersOrganization = organization.members.all
-    return render(request, 'github/organizationInfo.html', {'organization':organization, 'membersOrganization':membersOrganization})
+    # list with all usernames
+    for u in users:
+        usernameList.append(u.username)
+    # check username
+    if memberName not in usernameList:
+        return render(request, 'github/organizationMembers.html',
+                      {'message': 'Username does not exist.', 'organization': organization})
+    else:
+        for m in users:
+            if m.username == memberName:
+                organization.members.add(m)
+                organization.save()
+                membersOrganization = organization.members.all
+                return render(request, 'github/organizationInfo.html',
+                              {'organization': organization, 'membersOrganization': membersOrganization})
+
+
+
+
+
+
 
 

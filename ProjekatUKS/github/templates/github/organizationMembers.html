@@ -11,7 +11,11 @@
                 </div>
             </div>
 
-
+            {% if message %}
+                <div class="alert alert-warning">
+                    <strong>Warning!</strong> {{message}}
+                </div>
+            {% endif %}
             
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">

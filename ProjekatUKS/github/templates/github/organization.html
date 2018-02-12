@@ -8,6 +8,11 @@
                 <label class="control-label col-sm-2" for="name">Name:</label>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" id="name" placeholder="Enter name" name="name" value="{{ organization.name }}" />
+                    {% if message %}
+                     <div class="alert alert-warning">
+                    <strong>Warning!</strong> {{message}}
+                    </div>
+                    {% endif %}
                 </div>
             </div>
 
