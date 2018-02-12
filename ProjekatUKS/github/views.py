@@ -88,6 +88,25 @@ def login_user(request):
     except User.DoesNotExist:
         return render(request, "github/login.html", {'message': 'User does not exist.'})
 
+def logout(request):
+    request.session['uname_user'] = None
+    return render(request, "github/login.html")
+
+def about_user(request):
+    username = request.session['uname_user']
+    user = User.objects.get(username=username)
+
+    return render(request, "github/about_user.html",{'user':user})
+
+def change_username(request):
+    return render(request, "github/change_username.html")
+
+def change_password(request):
+    return render(request, "github/change_password.html")
+
+def delete_account(request):
+    return render(request, "github/delete_account.html")
+
 
 def organization(request):
     return render(request, 'github/organization.html')

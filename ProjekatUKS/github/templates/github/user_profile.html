@@ -1,0 +1,31 @@
+{% extends "github/home.html" %}
+
+{% block body_content %}
+<div class="wrapper">
+     <nav class="col-sm-3 sidenav hidden-xs">
+        <!-- Sidebar Header -->
+        <div class="sidebar-header">
+            <h3>Personal settings</h3>
+        </div>
+
+        <!-- Sidebar Links -->
+        <ul class="nav nav-stacked">
+            <li><a href="{% url 'github:about_user' %}">About</a></li>
+            <li><a href="{% url 'github:change_username' %}">Change username</a></li>
+            <li><a href="{% url 'github:change_password' %}">Change password</a></li>
+            <li><a href="{% url 'github:delete_account' %}">Delete account</a></li>
+        </ul>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="content container">
+        <div class="row">
+            <div class="col-md-8">
+            {% block content %}
+            {% endblock %}
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
