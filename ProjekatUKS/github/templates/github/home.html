@@ -24,9 +24,15 @@
             </ul>
 
 
+            {% if not request.session.uname_user %}
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="{% url 'github:login' %}"><span class="glyphicon glyphicon-log-in"></span>Login</a></li>
             </ul>
+            {% endif %}
+
+            {% if request.session.uname_user %}
+
+            {% endif %}
         </div>
     </nav>
 

@@ -4,10 +4,8 @@ from django.shortcuts import render
 from django.core.mail import EmailMessage
 
 from django.contrib.sites.shortcuts import get_current_site
-from django.template.loader import render_to_string
 
 from github.models import User, Organization
-
 
 
 def home(requset):
@@ -65,10 +63,30 @@ def activate_user(request,username):
     user = User.objects.get(username=username)
     user.isActive = True
     user.save()
-    return render(request, "github/login.html",{'user':user})
+    return render(request, "github/login.html")
 
 def login(requset):
     return render(requset, "github/login.html")
+
+def login_user(request):
+    username = request.POST['username']
+    password = request.POST['password']
+
+    try:
+        user = User.objects.get(username=username)
+        if user.password == password:
+            user.loggedin = True
+            user.save()
+
+            request.session['id_user'] = id(user)
+            request.session['uname_user'] = user.username
+
+
+            return render(request, "github/afterUserLogin.html")
+        else:
+            return render(request, "github/login.html",{'message':'Incorrect password.','uname':username})
+    except User.DoesNotExist:
+        return render(request, "github/login.html", {'message': 'User does not exist.'})
 
 
 def organization(request):
