@@ -6,7 +6,7 @@ from django.core.mail import EmailMessage
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 
-from github.models import User, Organization
+from github.models import User, Organization, Repository
 
 
 
@@ -72,7 +72,8 @@ def login(requset):
 
 
 def organization(request):
-    return render(request, 'github/organization.html')
+    organization = Organization()
+    return render(request, 'github/organization.html', {'organization' : organization})
 
 def saveOrganization(request):
     name = request.POST['name']
@@ -136,6 +137,17 @@ def saveOrganizationMembers(request):
 
 
 
+def repository(request):
+    repository = Repository()
+    return render(request, 'github/repository.html', {'repository':repository})
 
-
-
+def saveRepository(request):
+    name = request.POST['name']
+    description = request.POST['description']
+    type = request.POST['type']
+    repository = Repository()
+    repository.name = name
+    repository.description = description
+    repository.type = type
+    repository.save()
+    return render(request, 'github/repositoryMembers.html', {'repository': repository})

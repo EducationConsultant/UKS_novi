@@ -13,4 +13,7 @@ urlpatterns = [
     path('saveOrganization', views.saveOrganization, name='saveOrganization'),
     path('saveOrganizationDetails', views.saveOrganizationDetails, name='saveOrganizationDetails'),
     path('saveOrganizationMembers', views.saveOrganizationMembers, name='saveOrganizationMembers'),
+    path('repository', views.repository, name='repository'),
+    path('saveRepository', views.saveRepository, name='saveRepository'),
+
 ]
