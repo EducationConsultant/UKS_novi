@@ -44,7 +44,7 @@ def saveUser(request):
     message = ("Hello " + user.firstname + ","
          "\n\n"
          "Thanks for signing up with BooHub!" 
-         "You must follow this link to activate your account:"
+         " You must follow this link to activate your account:"
          "\n\n" + domain + "/github/activate_user/" + user.username +
          "\n\n"
          "Have fun! :)"
