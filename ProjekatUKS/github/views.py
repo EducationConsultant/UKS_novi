@@ -105,27 +105,31 @@ def switch_forgot_password(request):
 
 def send_email_reset_password(request):
     email = request.POST.get('email')
-    user = User.objects.get(email=email)
 
-    # send email
-    current_site = get_current_site(request)
+    try:
+        user = User.objects.get(email=email)
 
-    mail_subject = 'Please reset your password'
-    domain = current_site.domain
-    message = ("Hello " + user.firstname + ","
-                "\n\n"
-                "We heard that you lost your BooHub password. Sorry about that!"
-                " But don’t worry! You can use the following link to reset your password:"
-                "\n\n" + domain + "/github/password_reset/" + user.username +
-               "\n\n"
-               "The BooHub Team"
-               )
-    to_email = user.email
+        # send email
+        current_site = get_current_site(request)
 
-    email = EmailMessage(mail_subject, message, to=[to_email])
-    email.send()
+        mail_subject = 'Please reset your password'
+        domain = current_site.domain
+        message = ("Hello " + user.firstname + ","
+                    "\n\n"
+                    "We heard that you lost your BooHub password. Sorry about that!"
+                    " But don’t worry! You can use the following link to reset your password:"
+                    "\n\n" + domain + "/github/password_reset/" + user.username +
+                   "\n\n"
+                   "The BooHub Team"
+                   )
+        to_email = user.email
 
-    return render(request, "github/password_reset.html", {'user':user})
+        email = EmailMessage(mail_subject, message, to=[to_email])
+        email.send()
+
+        return render(request, "github/password_reset.html", {'user':user})
+    except User.DoesNotExist:
+        return render(request, "github/forgot_password.html", {'message': 'User does not exist.'})
 
 def switch_forgot_password_reset(request,username):
     request.session['uname_user'] = username
@@ -136,17 +140,19 @@ def reset_password(request):
     confirmnewpassword = request.POST.get('confirmnewpassword')
 
     username=request.session['uname_user']
-    user = User.objects.get(username=username)
+    try:
+        user = User.objects.get(username=username)
 
-    if newpassword == confirmnewpassword:
-        user.password = newpassword
-        user.save()
+        if newpassword == confirmnewpassword:
+            user.password = newpassword
+            user.save()
 
-        return render(request, "github/login.html")
-    else:
-        return render(request, "github/forgot_password_reset.html",
-                      {'message': 'Password does not match the confirmation.'})
-
+            return render(request, "github/login.html")
+        else:
+            return render(request, "github/forgot_password_reset.html",
+                          {'message': 'Password does not match the confirmation.'})
+    except User.DoesNotExist:
+        return render(request, "github/forgot_password_reset.html", {'message': 'User does not exist.'})
 
 def logout(request):
     username = request.session['uname_user']
