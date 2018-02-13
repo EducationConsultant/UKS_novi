@@ -29,22 +29,26 @@
             <ul class="nav navbar-nav">
                 <li class="active"><a href="{% url 'github:home' %}">Home</a></li>
 
+                <!--user not loggedin-->
                 {% if not request.session.uname_user and not request.session.loggedin %}
                 <li><a href="{% url 'github:registration' %}">Registration</a></li>
                 {% endif %}
 
+                <!--user loggedin-->
                 {% if request.session.uname_user and request.session.loggedin %}
                 <li><a href="{% url 'github:organization' %}">Organization</a></li>
+                <li><a href="{% url 'github:switch_all_issues' %}">Issues</a></li>
                 {% endif %}
             </ul>
 
-
+            <!--user not loggedin-->
             {% if not request.session.uname_user and not request.session.loggedin %}
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="{% url 'github:login' %}"><span class="glyphicon glyphicon-log-in"></span>Login</a></li>
             </ul>
             {% endif %}
 
+            <!--user loggedin-->
             {% if request.session.uname_user and request.session.loggedin  %}
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">

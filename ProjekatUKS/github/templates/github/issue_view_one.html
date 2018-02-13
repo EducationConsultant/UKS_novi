@@ -1,0 +1,13 @@
+{% extends "github/issue.html" %}
+
+{% block content %}
+<h1 class="text-primary">{{issue.title}}</h1>
+
+<div class="row">
+    <div class="col-xs-4">
+        <h4><b>Description:</b> {{issue.description}}</h4>
+        <h4><b>Author:</b> {{issue.creator.username}}</h4>
+        <h4><b>Asssignees:</b> </h4>
+    </div>
+</div>
+{% endblock %}

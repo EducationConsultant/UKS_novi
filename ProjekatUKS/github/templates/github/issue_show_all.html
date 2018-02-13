@@ -1,0 +1,27 @@
+{% extends "github/issue.html" %}
+
+{% block content %}
+<h1 class="text-primary">Show all</h1>
+
+<div class="container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Author</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for issue in issues %}
+                <tr {% if not issue.closed %} class="success" {% endif %} {% if issue.closed %} class="danger" {% endif %}>
+                    <td><a href="{% url 'github:switch_issue_view_one' issue.pk %}">{{issue.title}}</a></td>
+                    <td>{{issue.description}}</td>
+                    <td>{{issue.creator.username}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

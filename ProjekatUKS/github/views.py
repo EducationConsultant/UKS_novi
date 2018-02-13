@@ -5,7 +5,8 @@ from django.core.mail import EmailMessage
 
 from django.contrib.sites.shortcuts import get_current_site
 
-from github.models import User, Organization
+from github.models import User, Organization, Issue
+
 
 # switch from some page to home.html
 def switch_home(requset):
@@ -291,8 +292,44 @@ def saveOrganizationMembers(request):
                 return render(request, 'github/organizationInfo.html',
                               {'organization': organization, 'membersOrganization': membersOrganization})
 
+def switch_issue_show_all(request):
+    issues = Issue.objects.all()
+    return render(request, "github/issue_show_all.html",{'issues':issues})
 
+def switch_issue_new(request):
+    #TODO: dodaj listu svih korisnika koji su na tom repozitorijumu na kom se kreira problem
+    #ovo je potrebno zbog asssignees
+    users = User.objects.all()
+    return render(request, "github/issue_new.html", {'users':users})
 
+def issue_new(request):
+    title = request.POST.get('title')
+    description = request.POST.get('description')
+    asssignees = request.POST.getlist('asssignees')
 
+    username = request.session['uname_user']
+    user = User.objects.get(username=username)
+
+    issue = Issue()
+    issue.title = title
+    issue.description = description
+    issue.creator = user
+
+    issue.save()
+
+    for ass in asssignees:
+        user = User.objects.get(username=ass)
+        issue.asssignees.add(user)
+    issue.save()
+
+    users = User.objects.all()
+    return render(request, "github/issue_new.html",{'message':'Issue successfully created.','users':users})
+
+def switch_issue_view_one(request,id):
+    issue = Issue.objects.get(pk=id)
+    return render(request,"github/issue_view_one.html",{'issue':issue})
+
+def switch_issue_closed(request):
+    return render(request, "github/issue_closed.html")
 
 

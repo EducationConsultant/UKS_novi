@@ -34,4 +34,12 @@ urlpatterns = [
     path('saveOrganization', views.saveOrganization, name='saveOrganization'),
     path('saveOrganizationDetails', views.saveOrganizationDetails, name='saveOrganizationDetails'),
     path('saveOrganizationMembers', views.saveOrganizationMembers, name='saveOrganizationMembers'),
+
+    path('switch_all_issues', views.switch_issue_show_all, name='switch_all_issues'),
+
+    path('switch_issue_new', views.switch_issue_new, name='switch_issue_new'),
+    path('issue_new', views.issue_new, name='issue_new'),
+    path('switch_issue_view_one/<id>', views.switch_issue_view_one, name='switch_issue_view_one'),
+
+    path('swicth_issue_closed', views.switch_issue_closed, name='switch_issue_closed'),
 ]
