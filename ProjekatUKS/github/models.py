@@ -50,5 +50,6 @@ class Repository(models.Model):
     type = models.CharField( max_length=50)
     typeList = {'private', 'public'}
     members = models.ManyToManyField(User)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     def __str__(self):
         return self.name

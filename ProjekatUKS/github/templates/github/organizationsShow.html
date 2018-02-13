@@ -2,34 +2,24 @@
 
 {% block body_content %}
     <div class="container">
-        <form class="form-horizontal" action="{% url 'github:saveRepository' %}" method="post">
-            {% csrf_token %}
-            <div class="container">
-              <h2>Organization Table</h2>
-               <table class="table">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                  </tr>
-                </thead>
-                <tbody>
-                {% for o in organizations%}
-                  <tr>
-                    <td>{{o.name}}</td>
-                    <td> <a href="{% url 'github:organizationInfo' o.name %}">Info</a></td>
-                  </tr>
-                {% endfor %}
+        <div class="container">
+          <h2>Organization Table</h2>
+           <table class="table">
+            <thead>
+              <tr>
+                <th>Name</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for o in organizations%}
+              <tr>
+                <td>{{o.name}}</td>
+                <td> <a href="{% url 'github:organizationInfo' o.name %}">Info</a></td>
+              </tr>
+            {% endfor %}
 
-                </tbody>
-              </table>
-            </div>
-
-
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <button type="submit" class="btn btn-default">Next</button>
-                </div>
-            </div>
-        </form>
+            </tbody>
+          </table>
+        </div>
     </div>
 {% endblock %}

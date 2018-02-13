@@ -140,13 +140,11 @@ def saveOrganizationMembers(request, name):
                 return render(request, 'github/organizationInformations.html',
                               {'organization': organization, 'organizationMembers': organizationMembers})
 
-
-
-def repository(request):
+def repository(request, name):
     repository = Repository()
-    return render(request, 'github/repository.html', {'repository':repository})
+    return render(request, 'github/repository.html', {'repository':repository, 'organization' : name})
 
-def saveRepository(request):
+def saveRepository(request, organization):
     name = request.POST['name']
     description = request.POST['description']
     type = request.POST['type']
@@ -154,6 +152,7 @@ def saveRepository(request):
     repository.name = name
     repository.description = description
     repository.type = type
+    repository.organization = getOrganizationByName(organization)
     repository.save()
     # put name in session
     request.session['nameRepository'] = repository.name
