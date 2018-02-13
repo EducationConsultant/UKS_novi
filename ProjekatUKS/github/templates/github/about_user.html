@@ -14,8 +14,16 @@
             <h4><b>Email:</b> {{user.email}}</h4>
         </div>
         <div class="col-xs-4">
-            <img src="{% static 'github/images/user.png' %}" width="200px" height="200px" class="pull-right img-responsive">
+            <img src="{% static 'github/profile_pic/user.png' %}" width="200px" height="200px" class="pull-right img-responsive">
         </div>
+
+        <form action="#" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p>
+                <input id="id_image" type="file" class="" name="image">
+            </p>
+            <input type="submit" value="Submit" />
+        </form>
     </div>
 </div>
 {% endblock %}

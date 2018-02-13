@@ -7,16 +7,20 @@ from django.contrib.sites.shortcuts import get_current_site
 
 from github.models import User, Organization
 
-
-def home(requset):
+# switch from some page to home.html
+def switch_home(requset):
     return render(requset, "github/home.html")
 
-def registration(request):
+
+# switch from some page to registration.html
+def switch_registration(request):
     return render(request, "github/registration.html")
 
-def saveUser(request):
+# registrate new user
+# unique username and email
+# switch to activate.html
+def save_user(request):
     username = request.POST['username']
-
     firstname = request.POST['firstname']
     lastname = request.POST['lastname']
     password = request.POST['password']
@@ -30,12 +34,18 @@ def saveUser(request):
     user.email = email
 
     #unique username
-    users = User.objects.all()
-    for u in users:
-        if u.username == username:
-            return render(request, 'github/registration.html',{'message':'Username must be unique.','user':user})
+    try:
+        user = User.objects.get(username=username)
+        return render(request, 'github/registration.html', {'message': 'Username must be unique.', 'user': user})
+    except User.DoesNotExist:
+        user.username=username
 
-    user.save()
+    #unique email
+    try:
+        user = User.objects.get(email=email)
+        return render(request, 'github/registration.html', {'messageEmail': 'Email must be unique.', 'user': user})
+    except User.DoesNotExist:
+        user.save()
 
     #send email
     current_site = get_current_site(request)
@@ -59,13 +69,15 @@ def saveUser(request):
 
     return render(request, "github/activate.html", {'user':user})
 
+# from email link to login.html
 def activate_user(request,username):
     user = User.objects.get(username=username)
     user.isActive = True
     user.save()
     return render(request, "github/login.html")
 
-def login(requset):
+# from some page to login.html
+def switch_login(requset):
     return render(requset, "github/login.html")
 
 def login_user(request):
@@ -78,14 +90,63 @@ def login_user(request):
             user.loggedin = True
             user.save()
 
-            request.session['id_user'] = id(user)
             request.session['uname_user'] = user.username
+            request.session['loggedin'] = 'True'
 
             return render(request, "github/afterUserLogin.html")
         else:
             return render(request, "github/login.html",{'message':'Incorrect password.','uname':username})
     except User.DoesNotExist:
         return render(request, "github/login.html", {'message': 'User does not exist.'})
+
+# from some page to forgot_password.html
+def switch_forgot_password(request):
+    return render(request, "github/forgot_password.html")
+
+def send_email_reset_password(request):
+    email = request.POST.get('email')
+    user = User.objects.get(email=email)
+
+    # send email
+    current_site = get_current_site(request)
+
+    mail_subject = 'Please reset your password'
+    domain = current_site.domain
+    message = ("Hello " + user.firstname + ","
+                "\n\n"
+                "We heard that you lost your BooHub password. Sorry about that!"
+                " But don’t worry! You can use the following link to reset your password:"
+                "\n\n" + domain + "/github/password_reset/" + user.username +
+               "\n\n"
+               "The BooHub Team"
+               )
+    to_email = user.email
+
+    email = EmailMessage(mail_subject, message, to=[to_email])
+    email.send()
+
+    return render(request, "github/password_reset.html", {'user':user})
+
+def switch_forgot_password_reset(request,username):
+    request.session['uname_user'] = username
+    return render(request, "github/forgot_password_reset.html",{'username':username})
+
+def reset_password(request):
+    newpassword = request.POST.get('newpassword')
+    confirmnewpassword = request.POST.get('confirmnewpassword')
+
+    username=request.session['uname_user']
+    user = User.objects.get(username=username)
+
+    if newpassword == confirmnewpassword:
+        user.password = newpassword
+        user.save()
+
+        return render(request, "github/login.html")
+    else:
+        return render(request, "github/forgot_password_reset.html",
+                      {'message': 'Password does not match the confirmation.'})
+
 
 def logout(request):
     username = request.session['uname_user']
@@ -94,6 +155,7 @@ def logout(request):
     user.save()
 
     request.session['uname_user'] = None
+    request.session['loggedin'] = None
     return render(request, "github/login.html")
 
 def about_user(request):
@@ -107,8 +169,6 @@ def switch_change_username(request):
 
 def change_username(request):
     newusername = request.POST.get('newusername')
-    print("AAAAAAAAAAAAAAAAAAA")
-    print(newusername)
 
     username = request.session['uname_user']
     user = User.objects.get(username=username)
@@ -153,6 +213,7 @@ def delete_account(request):
     if user.username == usernameI:
         if user.password == passwordI:
             request.session['uname_user'] = None
+            request.session['loggedin'] = None
             user.delete()
 
             return render(request, "github/home.html")
