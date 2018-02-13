@@ -2,38 +2,28 @@
 {% load static %}
 
 {% block body_content %}
+    <!--user loggedin-->
     {% if request.session.uname_user and request.session.loggedin %}
     <div class="container-fluid text-center">
         <div class="row content">
             <div class="col-sm-2 sidenav">
-                <p><a href="#">Link</a></p>
-                <p><a href="#">Link</a></p>
-                <p><a href="#">Link</a></p>
             </div>
 
             <div class="col-sm-8 text-left">
-                <h1>Welcome</h1>
+                <h1>Welcome {{ request.session.uname_user }}</h1>
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                <hr>
+                <h4>Thank you for joining BooHub!</h4>
 
-                <h3>Test</h3>
-                <p>Lorem ipsum...</p>
+                <img src="{% static 'github/images/get_started.jpg'%}" style="width:100%;"/>
             </div>
 
             <div class="col-sm-2 sidenav">
-                <div class="well">
-                    <p>ADS</p>
-                </div>
-
-                <div class="well">
-                    <p>ADS</p>
-                </div>
             </div>
         </div>
     </div>
     {% endif %}
 
+    <!--user not loggedin-->
     {% if not request.session.uname_user and not request.session.loggedin %}
     <div id="myCarousel" class="carousel slide" data-ride="carousel" >
         <div class="carousel-inner" role="listbox">
@@ -71,6 +61,5 @@
             </div>
         </div>
     </div>
-
     {% endif %}
 {% endblock %}

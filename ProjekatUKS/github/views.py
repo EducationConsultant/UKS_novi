@@ -93,7 +93,7 @@ def login_user(request):
             request.session['uname_user'] = user.username
             request.session['loggedin'] = 'True'
 
-            return render(request, "github/afterUserLogin.html")
+            return render(request, "github/home.html")
         else:
             return render(request, "github/login.html",{'message':'Incorrect password.','uname':username})
     except User.DoesNotExist:
