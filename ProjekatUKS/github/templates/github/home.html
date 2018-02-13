@@ -1,80 +1,76 @@
-<!DOCTYPE html>
+{% extends "github/base.html" %}
 {% load static %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>BooHub</title>
 
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-    <style type='text/css'>
-        ul.nav li.dropdown:hover ul.dropdown-menu {
-            display: block;
-        }
-    </style>
-
-    {% block head_content %}{% endblock %}
-</head>
-<body>
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <img src="{% static 'github/images/logo.png'%}" width="70px" height="50px" alt="BooHub"/>
+{% block body_content %}
+    {% if request.session.uname_user and request.session.loggedin %}
+    <div class="container-fluid text-center">
+        <div class="row content">
+            <div class="col-sm-2 sidenav">
+                <p><a href="#">Link</a></p>
+                <p><a href="#">Link</a></p>
+                <p><a href="#">Link</a></p>
             </div>
 
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="{% url 'github:home' %}">Home</a></li>
+            <div class="col-sm-8 text-left">
+                <h1>Welcome</h1>
 
-                {% if not request.session.uname_user and not request.session.loggedin %}
-                <li><a href="{% url 'github:registration' %}">Registration</a></li>
-                {% endif %}
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                <hr>
 
-                {% if request.session.uname_user and request.session.loggedin %}
-                <li><a href="{% url 'github:organization' %}">Organization</a></li>
-                {% endif %}
-            </ul>
+                <h3>Test</h3>
+                <p>Lorem ipsum...</p>
+            </div>
 
+            <div class="col-sm-2 sidenav">
+                <div class="well">
+                    <p>ADS</p>
+                </div>
 
-            {% if not request.session.uname_user and not request.session.loggedin %}
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="{% url 'github:login' %}"><span class="glyphicon glyphicon-log-in"></span>Login</a></li>
-            </ul>
-            {% endif %}
-
-            {% if request.session.uname_user and request.session.loggedin  %}
-            <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                    <a href="#">My Account <b class="caret"></b></a>
-
-                    <ul class="dropdown-menu">
-                        <li>
-                            <p><b>{{ request.session.uname_user }}</b></p>
-                        </li>
-
-                        <li class="divider"></li>
-
-                        <li>
-                            <a href="{% url 'github:about_user' %}">
-                                <span class="glyphicon glyphicon-user"></span>Edit profile
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="{% url 'github:logout' %}">
-                                <span class="glyphicon glyphicon-log-out"></span>Logout
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-            {% endif %}
+                <div class="well">
+                    <p>ADS</p>
+                </div>
+            </div>
         </div>
-    </nav>
+    </div>
+    {% endif %}
 
-    {% block body_content %}{% endblock %}
-</body>
-</html>
+    {% if not request.session.uname_user and not request.session.loggedin %}
+    <div id="myCarousel" class="carousel slide" data-ride="carousel" >
+        <div class="carousel-inner" role="listbox">
+            <div class="item active">
+                <img src="{% static 'github/images/carousel.jpg'%}" style="width:100%;">
+                <div class="carousel-caption">
+                    <h1>Built for developers</h1>
+                    <h2>BooHub is a development platform inspired by the way you work.</h2>
+                    <a href="{% url 'github:registration' %}"><button class="btn btn-default">Signup</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container text-center">
+        <h1>A better way to work together</h1><br>
+
+        <div class="row">
+            <div class="col-sm-4">
+                <h3>Write better code</h3>
+                <p>Collaboration makes perfect. The conversations and code reviews that happen in Pull Requests help your team share the weight of your work and improve the software you build. </p>
+            </div>
+
+            <div class="col-sm-4">
+                <h3>Manage your chaos</h3>
+                <p>Take a deep breath. On BooHub, project management happens in Issues and Projects, right alongside your code. All you have to do is mention a teammate to get them involved.</p>
+            </div>
+
+            <div class="col-sm-4">
+                <h3>Say 'Hello World' in different languages!</h3>
+                <img src="{% static 'github/images/c#_logo.png' %}" class="img-circle" alt="C#" width="50px" height="50px">
+                <img src="{% static 'github/images/c++_logo.png' %}" class="img-circle" alt="C#" width="50px" height="50px">
+                <img src="{% static 'github/images/java_logo.png' %}" class="img-circle" alt="C#" width="50px" height="50px">
+                <img src="{% static 'github/images/go_logo.png' %}" class="img-circle" alt="C#" width="50px" height="50px">
+            </div>
+        </div>
+    </div>
+
+    {% endif %}
+{% endblock %}

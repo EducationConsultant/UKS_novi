@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BooHub</title>
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <style type='text/css'>
+        ul.nav li.dropdown:hover ul.dropdown-menu {
+            display: block;
+        }
+    </style>
+
+    {% block head_content %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <img src="{% static 'github/images/logo.png'%}" width="70px" height="50px" alt="BooHub"/>
+            </div>
+
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="{% url 'github:home' %}">Home</a></li>
+
+                {% if not request.session.uname_user and not request.session.loggedin %}
+                <li><a href="{% url 'github:registration' %}">Registration</a></li>
+                {% endif %}
+
+                {% if request.session.uname_user and request.session.loggedin %}
+                <li><a href="{% url 'github:organization' %}">Organization</a></li>
+                {% endif %}
+            </ul>
+
+
+            {% if not request.session.uname_user and not request.session.loggedin %}
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="{% url 'github:login' %}"><span class="glyphicon glyphicon-log-in"></span>Login</a></li>
+            </ul>
+            {% endif %}
+
+            {% if request.session.uname_user and request.session.loggedin  %}
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#">My Account <b class="caret"></b></a>
+
+                    <ul class="dropdown-menu">
+                        <li>
+                            <p><b>{{ request.session.uname_user }}</b></p>
+                        </li>
+
+                        <li class="divider"></li>
+
+                        <li>
+                            <a href="{% url 'github:about_user' %}">
+                                <span class="glyphicon glyphicon-user"></span>Edit profile
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{% url 'github:logout' %}">
+                                <span class="glyphicon glyphicon-log-out"></span>Logout
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            {% endif %}
+        </div>
+    </nav>
+
+{% block body_content %}{% endblock %}
+
+    <footer class="container-fluid text-center">
+        <p>BooHub</p>
+    </footer>
+</body>
+</html>
