@@ -90,8 +90,8 @@ def saveOrganization(request):
     organization.name = name
     organization.save()
 
-    # set name in session
-    request.session['name'] = name
+    # set nameOrganization in session
+    request.session['nameOrganization'] = name
 
     return render(request, 'github/organizationDetails.html', {'organization':organization})
 
@@ -100,46 +100,45 @@ def saveOrganizationDetails(request):
     howLong = request.POST['howLong']
     howMuchPeople = request.POST['howMuchPeople']
 
-    # get name from session
-    name = request.session['name']
+    # get nameOrganization from session
+    nameOrganization = request.session['nameOrganization']
 
     organization = Organization()
     organizations = Organization.objects.all()
     for o in organizations:
-        if o.name == name:
+        if o.name == nameOrganization:
             o.purpose = purpose
             o.howLong = howLong
             o.howMuchPeople = howMuchPeople
             o.save()
             organization = o
-    return render(request, 'github/organizationMembers.html', {'organization': organization})
+    return render(request, 'github/addNewMemberOrganization.html', {'organization': organization})
 
-def saveOrganizationMembers(request):
+def saveOrganizationMembers(request, name):
     memberName=request.POST['member']
-    nameOrganization = request.session['name']
     organization = Organization()
     organizations = Organization.objects.all()
     users = User.objects.all()
     usernameList = []
     # find organization
     for o in organizations:
-        if o.name == nameOrganization:
+        if o.name == name:
             organization = o
     # list with all usernames
     for u in users:
         usernameList.append(u.username)
     # check username
     if memberName not in usernameList:
-        return render(request, 'github/organizationMembers.html',
+        return render(request, 'github/addNewMemberOrganization.html',
                       {'message': 'Username does not exist.', 'organization': organization})
     else:
         for m in users:
             if m.username == memberName:
                 organization.members.add(m)
                 organization.save()
-                membersOrganization = organization.members.all
-                return render(request, 'github/organizationInfo.html',
-                              {'organization': organization, 'membersOrganization': membersOrganization})
+                organizationMembers = organization.members.all
+                return render(request, 'github/organizationInformations.html',
+                              {'organization': organization, 'organizationMembers': organizationMembers})
 
 
 
@@ -194,3 +193,40 @@ def saveRepositoryMembers(request):
 def repositoriesShow(request):
     repositories = Repository.objects.all()
     return render(request, 'github/repositoriesShow.html', {'repositories':repositories})
+
+# shows all organisations
+def organizationsShow(request):
+    organizations = Organization.objects.all()
+    return render(request, 'github/organizationsShow.html', {'organizations':organizations})
+
+# informations about one organization
+def organizationInfo(request, name):
+    organizations = Organization.objects.all()
+
+    organization = Organization()
+    for o in organizations:
+        if o.name == name:
+            organization = o
+
+    organizationMembers = organizationMembersShow(organization)
+    return render(request, 'github/organizationInformations.html', {'organization': organization,
+                                                            'organizationMembers': organizationMembers})
+# returns all members of one organziation
+def organizationMembersShow(organization):
+    organizationMembers = organization.members.all()
+    return organizationMembers
+
+
+# new member in organization
+def addNewMemberOrganization(request, name):
+    organization = getOrganizationByName(name)
+    return render(request, 'github/addNewMemberOrganization.html', {'organization': organization})
+
+# return organization by name
+def getOrganizationByName(nameOrganization):
+    organization = Organization()
+    organizations = Organization.objects.all()
+    for o in organizations:
+        if o.name == nameOrganization:
+            organization = o
+    return organization
