@@ -11,12 +11,9 @@
         <!-- Sidebar Links -->
         <ul class="nav nav-stacked">
             <ul class="nav nav-stacked">
-            <li><a href="{% url 'github:organizationInfo' organization.name %}">About organization</a></li>
-            <li><a href="{% url 'github:addNewMemberOrganization' organization.name%}">Add member</a></li>
-            <li><a href="{% url 'github:repository' organization.name %}">Add new repository</a></li>
-            <!--<li><a href="{% url 'github:login' %}">Change organization informations</a></li>-->
-            <!--<li><a href="{% url 'github:login' %}">Delete organization</a></li>-->
-        </ul>
+            <li><a href="{% url 'github:login' %}">About repository</a></li>
+            <li><a href="{% url 'github:addNewMemberRepository' repository.name %}">Add member</a></li>
+            </ul>
         </ul>
     </nav>
 
@@ -25,8 +22,8 @@
         <div class="row">
             <div class="col-md-8">
             {% block content %}
-                <div><h4>New member</h4></div>
-                 <form class="form-horizontal" action="{% url 'github:saveOrganizationMembers' organization.name %}" method="post">
+             <div><h4>New member</h4></div>
+                 <form class="form-horizontal" action="{% url 'github:saveRepositoryMembers' repository.name %}" method="post">
                     {% csrf_token %}
                     <div class="form-group">
                         <label class="control-label col-sm-2" for="member">Type username:</label>

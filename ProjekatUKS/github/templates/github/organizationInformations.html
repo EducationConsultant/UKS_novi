@@ -11,7 +11,7 @@
         <!-- Sidebar Links -->
         <ul class="nav nav-stacked">
             <li><a href="{% url 'github:organizationInfo' organization.name %}">About organization</a></li>
-            <li><a href="{% url 'github:addNewMemberOrganization' organization.name%}">Add member</a></li>
+            <li><a href="{% url 'github:addNewMemberOrganization' organization.name %}">Add member</a></li>
             <li><a href="{% url 'github:repository' organization.name %}">Add new repository</a></li>
             <!--<li><a href="{% url 'github:login' %}">Change organization informations</a></li>-->
             <!--<li><a href="{% url 'github:login' %}">Delete organization</a></li>-->
@@ -73,6 +73,25 @@
                     {% for m in organizationMembers%}
                       <tr>
                         <td>{{m.username}}</td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="col-xs-12" style="height:50px;"></div>
+                <div><h4>Repositories in organization</h4></div>
+                <div class="container">
+                   <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Repository name</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for r in organizationRepositories%}
+                      <tr>
+                        <td>{{r.name}}</td>
                       </tr>
                     {% endfor %}
                     </tbody>

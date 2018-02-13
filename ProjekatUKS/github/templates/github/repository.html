@@ -2,7 +2,7 @@
 
 {% block body_content %}
     <div class="container">
-        <form class="form-horizontal" action="{% url 'github:saveRepository' organization %}" method="post">
+        <form class="form-horizontal" action="{% url 'github:saveRepository' p %}" method="post">
             {% csrf_token %}
             <div class="form-group">
                 <label class="control-label col-sm-2" for="name">Name:</label>

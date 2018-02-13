@@ -139,12 +139,13 @@ def saveOrganizationMembers(request, name):
                 organizationMembers = organization.members.all
                 return render(request, 'github/organizationInformations.html',
                               {'organization': organization, 'organizationMembers': organizationMembers})
-
-def repository(request, name):
+# new repository
+def repository(request, p):
     repository = Repository()
-    return render(request, 'github/repository.html', {'repository':repository, 'organization' : name})
+    return render(request, 'github/repository.html', {'repository':repository, 'p' : p})
 
-def saveRepository(request, organization):
+# save new repository
+def saveRepository(request, p):
     name = request.POST['name']
     description = request.POST['description']
     type = request.POST['type']
@@ -152,42 +153,37 @@ def saveRepository(request, organization):
     repository.name = name
     repository.description = description
     repository.type = type
-    repository.organization = getOrganizationByName(organization)
+    repository.organization = getOrganizationByName(p)
     repository.save()
-    # put name in session
-    request.session['nameRepository'] = repository.name
-    return render(request, 'github/repositoryMembers.html', {'repository': repository})
+    return render(request, 'github/addNewMemberRepository.html', {'repository': repository})
 
-def saveRepositoryMembers(request):
-    memberName = request.POST['memberRepository']
-    # get name from session
-    nameRepository= request.session['nameRepository']
+# parametar 'name' is nameRepostiory
+def saveRepositoryMembers(request, name):
+    memberName = request.POST['member']
     repository = Repository()
     repositories = Repository.objects.all()
     users = User.objects.all()
     usernameList = []
-
-    # find organization
+    # find rpeository
     for r in repositories:
-        if r.name == nameRepository:
+        if r.name == name:
             repository = r
     # list with all usernames
     for u in users:
         usernameList.append(u.username)
     # check username
     if memberName not in usernameList:
-        return render(request, 'github/repositoryMembers.html',
+        return render(request, 'github/addNewMemberRepository.html',
                       {'message': 'Username does not exist.', 'repository': repository})
     else:
         for m in users:
             if m.username == memberName:
                 repository.members.add(m)
                 repository.save()
-                membersRepository = repository.members.all
-                return render(request, 'github/repositoryDetails.html',
-                              {'repository': repository, 'membersRepository': membersRepository})
+                repositoryMembers = repository.members.all
+                return render(request, 'github/repositoryInformations.html',
+                              {'repository': repository, 'repositoryMembers': repositoryMembers})
 
-    return render(request, 'github/repositoryDetails.html', {'repository':repository})
 
 def repositoriesShow(request):
     repositories = Repository.objects.all()
@@ -201,27 +197,38 @@ def organizationsShow(request):
 # informations about one organization
 def organizationInfo(request, name):
     organizations = Organization.objects.all()
-
     organization = Organization()
     for o in organizations:
         if o.name == name:
             organization = o
-
     organizationMembers = organizationMembersShow(organization)
+    organizationRepositories = getRepositoriesByOrganization(name)
     return render(request, 'github/organizationInformations.html', {'organization': organization,
-                                                            'organizationMembers': organizationMembers})
+                                                            'organizationMembers': organizationMembers,
+                                                            'organizationRepositories':organizationRepositories})
+
 # returns all members of one organziation
 def organizationMembersShow(organization):
     organizationMembers = organization.members.all()
     return organizationMembers
 
+# returns all members of one repository
+def repositoryMembersShow(repository):
+    repositoryMembers = repository.members.all()
+    return repositoryMembers
 
 # new member in organization
 def addNewMemberOrganization(request, name):
     organization = getOrganizationByName(name)
     return render(request, 'github/addNewMemberOrganization.html', {'organization': organization})
 
-# return organization by name
+# new member in repository, name is repositoryName
+def addNewMemberRepository(request, name):
+    repository = getRepositoryByName(name)
+    return render(request, 'github/addNewMemberRepository.html', {'repository': repository})
+
+
+# returns organization by name
 def getOrganizationByName(nameOrganization):
     organization = Organization()
     organizations = Organization.objects.all()
@@ -229,3 +236,43 @@ def getOrganizationByName(nameOrganization):
         if o.name == nameOrganization:
             organization = o
     return organization
+
+# returns repository by name
+def getRepositoryByName(nameRepository):
+    repository = Repository()
+    repositories = Repository.objects.all()
+    for r in repositories:
+        if r.name == nameRepository:
+            repository = r
+    return repository
+
+# returns all repositories of organization
+def getRepositoriesByOrganization(nameOrganization):
+    repositories = Repository.objects.all()
+    organizationRepositories = []
+    for r in repositories:
+        if r.organization.name == nameOrganization:
+            organizationRepositories.append(r)
+    return organizationRepositories
+
+# informations about one repository
+def repositoryInfo(request, name):
+    repositories = Repository.objects.all()
+    repository = Repository()
+    for r in repositories:
+        if r.name == name:
+            repository = r
+    repositoryMembers = repositoryMembersShow(repository)
+    return render(request, 'github/repositoryInformations.html', {'repository': repository,
+                                                                    'repositoryMembers': repositoryMembers,
+                                                                    })
+
+
+
+
+
+
+
+
+
+
