@@ -1,0 +1,81 @@
+{% extends "github/issue.html" %}
+
+{% block content %}
+<h1 class="text-primary">{{issue.title}}</h1>
+<span {% if not issue.closed %}class="label label-success"{% endif %} {% if issue.closed %}class="label label-danger"{% endif %}>
+    {% if not issue.closed %}
+    Open
+    {% endif %}
+
+    {% if issue.closed %}
+    Closed
+    {% endif %}
+</span>
+
+<div class="row">
+    <div class="col-xs-4">
+        <h4>
+
+        </h4>
+        <h4><b>Description:</b> {{issue.description}}</h4>
+        <h4><b>Author:</b> {{issue.creator.username}}</h4>
+        <h4><b>Asssignees:</b>
+             <ul class="list-group">
+                 {% for assignee in issue.asssignees.all %}
+                 <li class="list-group-item">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<span class="glyphicon glyphicon-user">&nbsp{{assignee.username}}</span></li>
+                 {% endfor %}
+            </ul>
+        </h4>
+    </div>
+</div>
+{% endblock %}
+
+{% block content_right %}
+<ul class="nav nav-stacked">
+    <li>
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editModal">Edit</button>
+        {% if not issue.closed %}
+        <button type="button" class="btn btn-danger" onclick="location.href='{% url 'github:issue_close' issue.pk %}'">Close</button>
+        {% endif %}
+
+        {% if issue.closed %}
+        <button type="button" class="btn btn-info" onclick="location.href='{% url 'github:issue_reopen' issue.pk %}'">Reopen</button>
+        {% endif %}
+    </li>
+</ul>
+
+<!-- Modal -->
+<div id="editModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><b>Edit</b> {{issue.title}} <b>title</b></h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="container">
+                    <form class="form-horizontal" action="{% url 'github:issue_edit_title' issue.pk %}" method="post">
+                    {% csrf_token %}
+                        <div class="form-group">
+                            <label for="newtitle" class="control-label col-sm-0"></label>
+                            <div class="col-sm-6">
+                                <input type="text" align="left" class="form-control" id="newtitle" placeholder="Enter new title" name="newtitle" required/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-2">
+                                <button type="submit" class="btn btn-success">Confirm</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

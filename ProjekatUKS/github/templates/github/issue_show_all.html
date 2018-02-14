@@ -1,0 +1,45 @@
+{% extends "github/issue.html" %}
+
+{% block content %}
+<h1 class="text-primary">Show all</h1>
+
+<div class="container">
+    <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" id="filters" data-toggle="dropdown">Filters
+            <span class="caret"></span>
+        </button>
+
+        <ul class="dropdown-menu" role="menu" aria-labelledby="filters">
+            <li role="presentation">
+                <a role="menuitem" tabindex="-1" href="{% url 'github:issue_show_all_open' %}">Open</a>
+            </li>
+
+            <li role="presentation">
+                <a role="menuitem" tabindex="-1" href="{% url 'github:issue_show_all_closed' %}">Closed</a>
+            </li>
+        </ul>
+
+        <a href="{% url 'github:switch_all_issues' %}"><button class="btn btn-default">Close filter</button></a>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Author</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for issue in issues %}
+                <tr {% if not issue.closed %} class="success" {% endif %} {% if issue.closed %} class="danger" {% endif %}>
+                    <td><a href="{% url 'github:switch_issue_view_one' issue.pk %}">{{issue.title}}</a></td>
+                    <td>{{issue.description}}</td>
+                    <td>{{issue.creator.username}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

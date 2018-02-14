@@ -9,6 +9,7 @@ class User(models.Model):
     password = models.CharField(max_length=50)
     email = models.CharField(max_length=50)
     isActive = models.BooleanField(default=False)
+    loggedin = models.BooleanField(default=False)
 
     def __str__(self):
         return self.firstname + " " + self.lastname + " " + self.username + " " + self.email
@@ -39,6 +40,7 @@ class Organization(models.Model):
                           'Other'
 
     }
+<<<<<<< HEAD
     def __str__(self):
         return self.name
 
@@ -53,3 +55,31 @@ class Repository(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     def __str__(self):
         return self.name
+=======
+    def __str__(self):
+        return self.name
+
+
+
+class Repository(models.Model):
+    name = models.CharField(max_length=50)
+    description = models.CharField(max_length=50)
+    type = models.CharField( max_length=50)
+    typeList = {'private', 'public'}
+    members = models.ManyToManyField(User)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.name
+
+
+class Issue(models.Model):
+    title = models.CharField(max_length=50)
+    description = models.CharField(max_length=500)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='creator_issue')
+    asssignees = models.ManyToManyField(User, related_name='assignees_issue')
+    closed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.title + " " + self.description
+
+>>>>>>> 66a116625e84dde8632082e02a2cf3539d75c2b1

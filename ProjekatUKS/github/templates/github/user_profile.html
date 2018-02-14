@@ -1,0 +1,29 @@
+{% extends "github/base.html" %}
+
+{% block body_content %}
+<div class="container-fluid text-center">
+    <div class="row content">
+        <div class="col-sm-2 sidenav">
+            <!-- Sidebar Header -->
+            <div class="sidebar-header">
+                <h3>Personal settings</h3>
+            </div>
+
+            <!-- Sidebar Links -->
+            <ul class="nav nav-stacked">
+                <li><a href="{% url 'github:about_user' %}">About</a></li>
+                <li><a href="{% url 'github:switch_change_username' %}">Change username</a></li>
+                <li><a href="{% url 'github:switch_change_password' %}">Change password</a></li>
+                <li><a href="{% url 'github:switch_delete_account' %}">Delete account</a></li>
+            </ul>
+        </div>
+        <div class="col-sm-8 text-left">
+            {% block content %}
+            {% endblock %}
+        </div>
+
+        <div class="col-sm-2 sidenav">
+        </div>
+    </div>
+</div>
+{% endblock %}

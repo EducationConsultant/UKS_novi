@@ -1,5 +1,37 @@
-{% extends "github/home.html" %}
+{% extends "github/base.html" %}
+
+{% load static %}
 
 {% block body_content %}
-    <p>{{user.firstname}}</p>
+<div class="container">
+    <div class="row" id="pwd-container">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <form class="login-form" method="post" action="{% url 'github:login_user' %}">
+                {% csrf_token %}
+
+                <div class="imgcontainer" align="center">
+                    <img src="{% static 'github/images/logo.png' %}" width="100px" height="80px" alt="BooHub"/>
+                </div>
+
+                <h4 align="center">Login in to BooHub</h4>
+
+                <input type="text" class="form-control" id="username" placeholder="Enter username" name="username" value="{{ uname }}" required />
+                <input type="password" class="form-control" id="password" placeholder="Enter password" name="password" required />
+
+                {% if message %}
+                <div class="alert alert-warning">
+                    <strong>Warning!</strong> {{message}}
+                </div>
+                {% endif %}
+
+                <button type="submit" class="btn btn-default btn-block">Login</button>
+
+                <div>
+                    <a href="{% url 'github:forgot_password' %}">Forgot password?</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}
