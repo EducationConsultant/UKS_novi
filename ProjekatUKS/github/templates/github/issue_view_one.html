@@ -11,23 +11,58 @@
     Closed
     {% endif %}
 </span>
+<p>{{issue.creator.username}}</p>
 
 <div class="row">
-    <div class="col-xs-4">
-        <h4>
+    <div class="col-xs-10">
+        <h5><b>Description</b></h5>
+        <ul class="list-group">
+            <li class="list-group-item">{{issue.description}}</li>
+        </ul>
 
-        </h4>
-        <h4><b>Description:</b> {{issue.description}}</h4>
-        <h4><b>Author:</b> {{issue.creator.username}}</h4>
-        <h4><b>Asssignees:</b>
-             <ul class="list-group">
-                 {% for assignee in issue.asssignees.all %}
-                 <li class="list-group-item">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<span class="glyphicon glyphicon-user">&nbsp{{assignee.username}}</span></li>
-                 {% endfor %}
-            </ul>
-        </h4>
+        <h5><b>Comments</b></h5>
+        <ul class="list-group">
+            {% for comment in comments %}
+             <li class="list-group-item">
+                 <span>{{comment.author.username}}: </span>
+                 <span>{{comment.description}}</span>
+             </li>
+             {% endfor %}
+        </ul>
+        <h4><button type="submit" class="btn btn-default" data-toggle="collapse" href="#addComment">Add comment</button></h4>
     </div>
 </div>
+
+<div id="addComment" class="collapse">
+    <div class="row" >
+        <div class="col-xs-4">
+            <div class="container">
+                <form class="form-horizontal" action="{% url 'github:comment_new' issue.pk %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="comment">Comment:</label>
+                        <div class="col-sm-5">
+                            <textarea class="form-control" placeholder="Leave a comment" rows="5" id="comment" name="comment"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-4 col-sm-10">
+                            <button type="submit" class="btn btn-default">Comment</button>
+                            {% if not issue.closed %}
+                            <button type="button" class="btn btn-danger" onclick="location.href='{% url 'github:issue_close' issue.pk %}'">Close</button>
+                            {% endif %}
+
+                            {% if issue.closed %}
+                            <button type="button" class="btn btn-info" onclick="location.href='{% url 'github:issue_reopen' issue.pk %}'">Reopen</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>>
 {% endblock %}
 
 {% block content_right %}
@@ -41,6 +76,17 @@
         {% if issue.closed %}
         <button type="button" class="btn btn-info" onclick="location.href='{% url 'github:issue_reopen' issue.pk %}'">Reopen</button>
         {% endif %}
+    </li>
+
+    <br/>
+
+    <li>
+        <h5><b>Asssignees:</b></h5>
+        <ul class="list-group">
+            {% for assignee in issue.asssignees.all %}
+            <li class="list-group-item">{{assignee.username}}</li>
+            {% endfor %}
+        </ul>
     </li>
 </ul>
 

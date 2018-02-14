@@ -7,8 +7,7 @@ from django.contrib.sites.shortcuts import get_current_site
 
 
 
-from github.models import User, Organization, Repository, Issue
-
+from github.models import User, Organization, Repository, Issue, Comment
 
 
 # switch from some page to home.html
@@ -475,13 +474,17 @@ def issue_new(request):
         issue.asssignees.add(user)
     issue.save()
 
-    users = User.objects.all()
-    return render(request, "github/issue_new.html",{'message':'Issue successfully created.','users':users})
+    comments = Comment.objects.filter(issue=issue.pk)
+
+    return render(request, "github/issue_view_one.html",{'issue':issue,'comments':comments})
 
 
 def switch_issue_view_one(request,id):
     issue = Issue.objects.get(pk=id)
-    return render(request,"github/issue_view_one.html",{'issue':issue})
+
+    comments = Comment.objects.filter(issue=issue.pk)
+
+    return render(request,"github/issue_view_one.html",{'issue':issue,'comments':comments})
 
 
 def issue_edit_title(request,id):
@@ -490,23 +493,71 @@ def issue_edit_title(request,id):
 
     issue.title = newtitle
     issue.save()
-    return render(request, "github/issue_view_one.html", {'issue': issue})
+
+    comments = Comment.objects.filter(issue=issue.pk)
+
+    return render(request, "github/issue_view_one.html", {'issue': issue,'comments':comments})
 
 
 def issue_close(request,id):
+    username = request.session['uname_user']
+    user = User.objects.get(username=username)
+
     issue = Issue.objects.get(pk=id)
     issue.closed = True
     issue.save()
 
-    return render(request, "github/issue_view_one.html", {'issue': issue})
+    comment = Comment()
+    comment.description = ' closed this'
+    comment.author = user
+    comment.issue = issue
+
+    comment.save()
+
+    comments = Comment.objects.filter(issue=issue.pk)
+
+    return render(request, "github/issue_view_one.html", {'issue': issue,'comments':comments})
 
 
 def issue_reopen(request,id):
+    username = request.session['uname_user']
+    user = User.objects.get(username=username)
+
     issue = Issue.objects.get(pk=id)
     issue.closed = False
     issue.save()
 
-    return render(request, "github/issue_view_one.html", {'issue': issue})
+    comment = Comment()
+    comment.description = ' reopend this'
+    comment.author = user
+    comment.issue = issue
+
+    comment.save()
+
+    comments = Comment.objects.filter(issue=issue.pk)
+
+    return render(request, "github/issue_view_one.html", {'issue': issue,'comments':comments})
+
+
+def comment_new(request,id):
+    username = request.session['uname_user']
+    user = User.objects.get(username=username)
+
+    issue = Issue.objects.get(pk=id)
+
+
+    description = request.POST.get('comment')
+
+    comment = Comment()
+    comment.description = description
+    comment.author = user
+    comment.issue = issue
+
+    comment.save()
+
+    comments = Comment.objects.filter(issue=issue.pk)
+
+    return render(request, "github/issue_view_one.html", {'issue': issue,'comments':comments})
 
 
 

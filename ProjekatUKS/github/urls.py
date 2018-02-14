@@ -46,6 +46,8 @@ urlpatterns = [
     path('issue_close/<id>', views.issue_close, name='issue_close'),
     path('issue_reopen/<id>', views.issue_reopen, name='issue_reopen'),
 
+    path('comment_new/<id>', views.comment_new, name='comment_new'),
+
 
     path('saveOrganizationMembers/<str:name>', views.saveOrganizationMembers, name='saveOrganizationMembers'),
     path('repository/<str:p>', views.repository, name='repository'),
