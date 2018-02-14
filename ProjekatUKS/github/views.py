@@ -507,11 +507,17 @@ def issue_close(request,id):
     issue.closed = True
     issue.save()
 
+    description = request.POST.get('comment')
+
     comment = Comment()
-    comment.description = ' closed this'
+
+    if description is None:
+        comment.description = 'closed this'
+    else:
+        comment.description = description
+
     comment.author = user
     comment.issue = issue
-
     comment.save()
 
     comments = Comment.objects.filter(issue=issue.pk)
@@ -527,8 +533,15 @@ def issue_reopen(request,id):
     issue.closed = False
     issue.save()
 
+    description = request.POST.get('comment')
+
     comment = Comment()
-    comment.description = ' reopend this'
+
+    if description is None:
+        comment.description = 'reopend this'
+    else:
+        comment.description = description
+
     comment.author = user
     comment.issue = issue
 
