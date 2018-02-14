@@ -26,9 +26,9 @@
                             <label class="control-label col-sm-2" for="name">Name:</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="name" placeholder="Enter name" name="name" value="{{ organization.name }}" />
-                                {% if message %}
+                                {% if messageName %}
                                  <div class="alert alert-warning">
-                                <strong>Warning!</strong> {{message}}
+                                     <strong>Warning!</strong> {{messageName}}
                                 </div>
                                 {% endif %}
                             </div>
@@ -38,6 +38,11 @@
                             <label class="control-label col-sm-2" for="email">Email:</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="email" placeholder="Enter email" name="email" value="{{ organization.email }}" />
+                                 {% if messageEmail %}
+                                 <div class="alert alert-warning">
+                                     <strong>Warning!</strong> {{messageEmail}}
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
 

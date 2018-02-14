@@ -242,6 +242,15 @@ def saveOrganization(request):
     organizations = Organization.objects.all()
     users = User.objects.all()
     organization = Organization()
+
+    # check fileds empty
+    if name == "":
+        return render(request, 'github/organization.html',
+                      {'organization': organization, 'messageName': ' Field name must be filled!'})
+    if email == "":
+        return render(request, 'github/organization.html',
+                      {'organization': organization, 'messageEmail': ' Field email must be filled!'})
+
     organization.email = email
 
     # put owner into members of organization
@@ -313,15 +322,11 @@ def saveOrganizationMembers(request, name):
                 return render(request, 'github/organizationInformations.html',
                               {'organization': organization, 'organizationMembers': organizationMembers})
 
-# by owner
+# get all organizations by user ( owner and member)
 def organizationsByUser(request):
     username = request.session['uname_user']
     organizations = Organization.objects.all()
     organizationsOfUser = []
-    # for o in organizations:
-    #     if o.owner == username:
-    #         organizationsOfUser.append(o)
-
     for o in organizations:
         for m in o.members.all():
             if m.username == username:
