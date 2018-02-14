@@ -5,54 +5,26 @@
         <form class="form-horizontal" action="{% url 'github:saveOrganizationDetails' %}" method="post">
             {% csrf_token %}
             <h2>Purpose</h2>
+            {% for p in organization.purposeList%}
             <div class="radio">
-                <label><input type="radio" name="purpose" value = "Professional work, for-profit ">Professional work, for-profit </label>
+                <label><input type="radio" name="purpose" value = "{{p}} ">{{p}}</label>
             </div>
-            <div class="radio">
-                <label><input type="radio" name="purpose" value="Professional work, non-profit">Professional work, non-profit </label>
-            </div>
-            <div class="radio ">
-                <label> <input type="radio" name="purpose" value="Educational purposes">Educational purposes</label>
-            </div>
-            <div class="radio ">
-                <label><input type="radio" name="purpose" value="An open source project" >An open source project </label>
-            </div>
-            <div class="radio">
-                <label><input type="radio" name="purpose" value="Other" checked="checked" >Other</label>
-            </div>
+            {% endfor %}
 
 
             <h2>How long do you plan to use this organization?</h2>
+            {% for l in organization.howLongList%}
             <div class="radio">
-                <label><input type="radio" name="howLong" value="Just a few days">Just a few days</label>
+                <label><input type="radio" name="howLong" value = "{{l}} ">{{l}}</label>
             </div>
-            <div class="radio">
-                <label><input type="radio" name="howLong" value="A few weeks to months">A few weeks to months </label>
-            </div>
-            <div class="radio ">
-                <label><input type="radio" name="howLong" value="A year or more" >A year or more </label>
-            </div>
-            <div class="radio ">
-                <label> <input type="radio" name="howLong" value="Indefinitely">Indefinitely  </label>
-            </div>
-            <div class="radio">
-                <label><input type="radio" name="howLong" value="Other" checked="checked" >Other</label>
-            </div>
+            {% endfor %}
 
-            <h2>How much people do you plan to work in this organization?</h2>
+            <h2>How much people do you plan to use this organization?</h2>
+            {% for pl in organization.howMuchPeopleList%}
             <div class="radio">
-                <label><input type="radio" name="howMuchPeople" value="I plan to work alone ">I plan to work alone  </label>
+                <label><input type="radio" name="howMuchPeople" value = "{{pl}} ">{{pl}}</label>
             </div>
-            <div class="radio">
-                <label><input type="radio" name="howMuchPeople" value="5 or fewer ">5 or fewer  </label>
-            </div>
-            <div class="radio ">
-                <label><input type="radio" name="howMuchPeople" value="6 to 20">6 to 20 </label>
-            </div>
-            <div class="radio">
-                <label><input type="radio" name="howMuchPeople" value="Other" checked="checked">Other</label>
-            </div>
-
+            {% endfor %}
 
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">

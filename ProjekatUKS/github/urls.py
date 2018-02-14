@@ -33,7 +33,7 @@ urlpatterns = [
     path('organization', views.organization, name='organization'),
     path('saveOrganization', views.saveOrganization, name='saveOrganization'),
     path('saveOrganizationDetails', views.saveOrganizationDetails, name='saveOrganizationDetails'),
-    path('saveOrganizationMembers', views.saveOrganizationMembers, name='saveOrganizationMembers'),
+
 
     path('switch_all_issues', views.switch_issue_show_all, name='switch_all_issues'),
     path('issue_show_all_open', views.issue_show_all_open, name='issue_show_all_open'),
@@ -45,4 +45,17 @@ urlpatterns = [
     path('issue_edit_title/<id>', views.issue_edit_title, name='issue_edit_title'),
     path('issue_close/<id>', views.issue_close, name='issue_close'),
     path('issue_reopen/<id>', views.issue_reopen, name='issue_reopen'),
+
+    path('saveOrganizationMembers/<str:name>', views.saveOrganizationMembers, name='saveOrganizationMembers'),
+    path('repository/<str:p>', views.repository, name='repository'),
+    path('saveRepository/<str:p>', views.saveRepository, name='saveRepository'),
+    path('saveRepositoryMembers/<str:name>', views.saveRepositoryMembers, name='saveRepositoryMembers'),
+    path('repositoriesShow', views.repositoriesShow, name='repositoriesShow'),
+    path('organizationsShow', views.organizationsShow, name='organizationsShow'),
+    path('organizationInfo/<str:name>', views.organizationInfo, name='organizationInfo'),
+    path('addNewMemberOrganization/<str:name>', views.addNewMemberOrganization, name='addNewMemberOrganization'),
+    path('repositoryInfo/<str:name>', views.repositoryInfo, name='repositoryInfo'),
+    path('addNewMemberRepository/<str:name>', views.addNewMemberRepository, name='addNewMemberRepository'),
+
+
 ]

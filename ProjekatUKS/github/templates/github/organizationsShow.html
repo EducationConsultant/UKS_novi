@@ -1,0 +1,25 @@
+{% extends "github/home.html" %}
+
+{% block body_content %}
+    <div class="container">
+        <div class="container">
+          <h2>Organization Table</h2>
+           <table class="table">
+            <thead>
+              <tr>
+                <th>Name</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for o in organizations%}
+              <tr>
+                <td>{{o.name}}</td>
+                <td> <a href="{% url 'github:organizationInfo' o.name %}">Info</a></td>
+              </tr>
+            {% endfor %}
+
+            </tbody>
+          </table>
+        </div>
+    </div>
+{% endblock %}
