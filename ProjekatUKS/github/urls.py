@@ -36,10 +36,13 @@ urlpatterns = [
     path('saveOrganizationMembers', views.saveOrganizationMembers, name='saveOrganizationMembers'),
 
     path('switch_all_issues', views.switch_issue_show_all, name='switch_all_issues'),
+    path('issue_show_all_open', views.issue_show_all_open, name='issue_show_all_open'),
+    path('issue_show_all_closed', views.issue_show_all_closed, name='issue_show_all_closed'),
 
     path('switch_issue_new', views.switch_issue_new, name='switch_issue_new'),
     path('issue_new', views.issue_new, name='issue_new'),
     path('switch_issue_view_one/<id>', views.switch_issue_view_one, name='switch_issue_view_one'),
-
-    path('swicth_issue_closed', views.switch_issue_closed, name='switch_issue_closed'),
+    path('issue_edit_title/<id>', views.issue_edit_title, name='issue_edit_title'),
+    path('issue_close/<id>', views.issue_close, name='issue_close'),
+    path('issue_reopen/<id>', views.issue_reopen, name='issue_reopen'),
 ]

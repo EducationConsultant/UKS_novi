@@ -296,16 +296,28 @@ def switch_issue_show_all(request):
     issues = Issue.objects.all()
     return render(request, "github/issue_show_all.html",{'issues':issues})
 
+
+def issue_show_all_open(request):
+    issues = Issue.objects.filter(closed=False)
+    return render(request, "github/issue_show_all.html",{'issues': issues})
+
+
+def issue_show_all_closed(request):
+    issues = Issue.objects.filter(closed=True)
+    return render(request, "github/issue_show_all.html",{'issues': issues})
+
+
 def switch_issue_new(request):
     #TODO: dodaj listu svih korisnika koji su na tom repozitorijumu na kom se kreira problem
     #ovo je potrebno zbog asssignees
     users = User.objects.all()
     return render(request, "github/issue_new.html", {'users':users})
 
+
 def issue_new(request):
     title = request.POST.get('title')
     description = request.POST.get('description')
-    asssignees = request.POST.getlist('asssignees')
+    listAsssignees = request.POST.getlist('asssignees')
 
     username = request.session['uname_user']
     user = User.objects.get(username=username)
@@ -317,7 +329,7 @@ def issue_new(request):
 
     issue.save()
 
-    for ass in asssignees:
+    for ass in listAsssignees:
         user = User.objects.get(username=ass)
         issue.asssignees.add(user)
     issue.save()
@@ -325,11 +337,36 @@ def issue_new(request):
     users = User.objects.all()
     return render(request, "github/issue_new.html",{'message':'Issue successfully created.','users':users})
 
+
 def switch_issue_view_one(request,id):
     issue = Issue.objects.get(pk=id)
     return render(request,"github/issue_view_one.html",{'issue':issue})
 
-def switch_issue_closed(request):
-    return render(request, "github/issue_closed.html")
+
+def issue_edit_title(request,id):
+    newtitle = request.POST.get('newtitle')
+    issue = Issue.objects.get(pk=id)
+
+    issue.title = newtitle
+    issue.save()
+    return render(request, "github/issue_view_one.html", {'issue': issue})
+
+
+def issue_close(request,id):
+    issue = Issue.objects.get(pk=id)
+    issue.closed = True
+    issue.save()
+
+    return render(request, "github/issue_view_one.html", {'issue': issue})
+
+
+def issue_reopen(request,id):
+    issue = Issue.objects.get(pk=id)
+    issue.closed = False
+    issue.save()
+
+    return render(request, "github/issue_view_one.html", {'issue': issue})
+
+
 
 

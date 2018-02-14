@@ -4,6 +4,24 @@
 <h1 class="text-primary">Show all</h1>
 
 <div class="container">
+    <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" id="filters" data-toggle="dropdown">Filters
+            <span class="caret"></span>
+        </button>
+
+        <ul class="dropdown-menu" role="menu" aria-labelledby="filters">
+            <li role="presentation">
+                <a role="menuitem" tabindex="-1" href="{% url 'github:issue_show_all_open' %}">Open</a>
+            </li>
+
+            <li role="presentation">
+                <a role="menuitem" tabindex="-1" href="{% url 'github:issue_show_all_closed' %}">Closed</a>
+            </li>
+        </ul>
+
+        <a href="{% url 'github:switch_all_issues' %}"><button class="btn btn-default">Close filter</button></a>
+    </div>
+
     <table class="table">
         <thead>
             <tr>

@@ -12,7 +12,6 @@
             <ul class="nav nav-stacked">
                 <li><a href="{% url 'github:switch_all_issues' %}">Show all</a></li>
                 <li><a href="{% url 'github:switch_issue_new' %}">New issue</a></li>
-                <li><a href="{% url 'github:switch_issue_closed' %}">Closed issues</a></li>
             </ul>
         </div>
         <div class="col-sm-8 text-left">
@@ -21,6 +20,8 @@
         </div>
 
         <div class="col-sm-2 sidenav">
+            {% block content_right %}
+            {% endblock %}
         </div>
     </div>
 </div>
