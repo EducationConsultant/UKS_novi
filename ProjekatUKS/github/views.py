@@ -89,16 +89,19 @@ def login_user(request):
 
     try:
         user = User.objects.get(username=username)
-        if user.password == password:
-            user.loggedin = True
-            user.save()
+        if user.isActive:
+            if user.password == password:
+                user.loggedin = True
+                user.save()
 
-            request.session['uname_user'] = user.username
-            request.session['loggedin'] = 'True'
+                request.session['uname_user'] = user.username
+                request.session['loggedin'] = 'True'
 
-            return render(request, "github/home.html")
+                return render(request, "github/home.html")
+            else:
+                return render(request, "github/login.html",{'message':'Incorrect password.','uname':username})
         else:
-            return render(request, "github/login.html",{'message':'Incorrect password.','uname':username})
+            return render(request, "github/login.html", {'message': 'Account is not activated.'})
     except User.DoesNotExist:
         return render(request, "github/login.html", {'message': 'User does not exist.'})
 
@@ -227,9 +230,9 @@ def delete_account(request):
 
             return render(request, "github/home.html")
         else:
-            return render(request, "github/delete_account.html", {'message': 'Password is not valid.'})
+            return render(request, "github/delete_account.html", {'messagePassword': 'Password is not valid.'})
     else:
-        return render(request, "github/delete_account.html", {'message': 'Username is not valid.'})
+        return render(request, "github/delete_account.html", {'messageUsername': 'Username is not valid.'})
 
 def organization(request):
     organization = Organization()
