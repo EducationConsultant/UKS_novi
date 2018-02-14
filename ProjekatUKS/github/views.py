@@ -240,21 +240,33 @@ def saveOrganization(request):
     name = request.POST['name']
     email = request.POST['email']
     organizations = Organization.objects.all()
+    users = User.objects.all()
     organization = Organization()
     organization.email = email
+
+    # put owner into members of organization
+    # logged user: uname_user
+    owner = request.session['uname_user']
+    organization.owner = owner
+    organization.save()
+    for m in users:
+        if m.username == owner:
+            organization.members.add(m)
+            organization.save()
+            organizationMembers = organization.members.all
 
     # check if name exists
     for o in organizations:
         if o.name == name:
             return render(request, 'github/organization.html',
-                          {'organization': organization, 'message': 'That name already exists!'})
+                          {'organization': organization,'organizationMembers': organizationMembers,'message': 'That name already exists!'})
     organization.name = name
     organization.save()
 
     # set nameOrganization in session
     request.session['nameOrganization'] = name
 
-    return render(request, 'github/organizationDetails.html', {'organization':organization})
+    return render(request, 'github/organizationDetails.html', {'organization':organization, 'organizationMembers': organizationMembers})
 
 def saveOrganizationDetails(request):
     purpose = request.POST['purpose']
@@ -300,6 +312,8 @@ def saveOrganizationMembers(request, name):
                 organizationMembers = organization.members.all
                 return render(request, 'github/organizationInformations.html',
                               {'organization': organization, 'organizationMembers': organizationMembers})
+
+
 # new repository
 def repository(request, p):
     repository = Repository()
@@ -315,8 +329,21 @@ def saveRepository(request, p):
     repository.description = description
     repository.type = type
     repository.organization = getOrganizationByName(p)
+    users = User.objects.all()
+
+    # put owner into members of repository
+    # logged user: uname_user
+    owner = request.session['uname_user']
+    repository.owner = owner
     repository.save()
-    return render(request, 'github/addNewMemberRepository.html', {'repository': repository})
+    for m in users:
+        if m.username == owner:
+            repository.members.add(m)
+            repository.save()
+            repositoryMembers = repository.members.all
+
+    repository.save()
+    return render(request, 'github/addNewMemberRepository.html', {'repository': repository, 'repositoryMembers':repositoryMembers})
 
 # parametar 'name' is nameRepostiory
 def saveRepositoryMembers(request, name):

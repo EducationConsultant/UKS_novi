@@ -22,6 +22,7 @@ class Organization(models.Model):
     howLong =  models.CharField(max_length=50)
     howMuchPeople =  models.CharField(max_length=50)
     members = models.ManyToManyField(User)
+    owner = models.CharField(max_length=50)
     purposeList = {'Professional work, for-profit',
                    'Professional work, for-non-profit',
                    'Educational purposes',
@@ -53,6 +54,7 @@ class Repository(models.Model):
     typeList = {'private', 'public'}
     members = models.ManyToManyField(User)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    owner = models.CharField(max_length=50)
     def __str__(self):
         return self.name
 

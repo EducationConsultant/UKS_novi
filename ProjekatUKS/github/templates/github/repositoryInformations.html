@@ -5,7 +5,7 @@
      <nav class="col-sm-3 shomeidenav hidden-xs">
         <!-- Sidebar Header -->
         <div class="sidebar-header">
-            <h3>Organization settings</h3>
+            <h3>Repository settings</h3>
         </div>
 
         <!-- Sidebar Links -->
@@ -13,6 +13,7 @@
             <ul class="nav nav-stacked">
             <li><a href="{% url 'github:repositoryInfo' repository.name %}">About repository</a></li>
             <li><a href="{% url 'github:addNewMemberRepository' repository.name %}">Add member</a></li>
+            <li><a href="{% url 'github:organizationInfo' repository.organization.name %}">Back to organization</a></li>
             </ul>
         </ul>
     </nav>
@@ -35,22 +36,24 @@
                     </div>
                 </div>
 
-
-
-
                 <div class="col-xs-12" style="height:50px;"></div>
                 <div><h4>Members in repository</h4></div>
                 <div class="container">
                    <table class="table">
                     <thead>
                       <tr>
-                        <th>Username</th>
+                          <th>Username</th>
+                          <th>Type of user</th>
                       </tr>
                     </thead>
                     <tbody>
                     {% for m in repositoryMembers%}
                       <tr>
-                        <td>{{m.username}}</td>
+                          <td>{{m.username}}</td>
+                          <td>
+                              {% if m.username == repository.owner %} owner {% endif %}
+                              {% if m.username != repository.owner %} member {% endif %}
+                          </td>
                       </tr>
                     {% endfor %}
                     </tbody>
