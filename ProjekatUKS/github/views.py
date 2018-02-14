@@ -313,6 +313,22 @@ def saveOrganizationMembers(request, name):
                 return render(request, 'github/organizationInformations.html',
                               {'organization': organization, 'organizationMembers': organizationMembers})
 
+# by owner
+def organizationsByUser(request):
+    username = request.session['uname_user']
+    organizations = Organization.objects.all()
+    organizationsOfUser = []
+    # for o in organizations:
+    #     if o.owner == username:
+    #         organizationsOfUser.append(o)
+
+    for o in organizations:
+        for m in o.members.all():
+            if m.username == username:
+                organizationsOfUser.append(o)
+
+    return render(request, 'github/organizationsShow.html', {'username': username, 'organizationsOfUser':organizationsOfUser })
+
 
 # new repository
 def repository(request, p):

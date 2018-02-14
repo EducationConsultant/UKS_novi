@@ -104,7 +104,8 @@
                     <tbody>
                     {% for r in organizationRepositories%}
                       <tr>
-                        <td>{{r.name}}</td>
+                          <td>{{r.name}}</td>
+                          <td><a href="{% url 'github:repositoryInfo' r.name %}">Info</a></td>
                       </tr>
                     {% endfor %}
                     </tbody>

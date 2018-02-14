@@ -57,6 +57,7 @@ urlpatterns = [
     path('addNewMemberOrganization/<str:name>', views.addNewMemberOrganization, name='addNewMemberOrganization'),
     path('repositoryInfo/<str:name>', views.repositoryInfo, name='repositoryInfo'),
     path('addNewMemberRepository/<str:name>', views.addNewMemberRepository, name='addNewMemberRepository'),
+    path('organizationsByUser', views.organizationsByUser, name='organizationsByUser'),
 
 
 ]
