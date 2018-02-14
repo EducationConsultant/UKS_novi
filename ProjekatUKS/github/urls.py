@@ -33,8 +33,6 @@ urlpatterns = [
     path('organization', views.organization, name='organization'),
     path('saveOrganization', views.saveOrganization, name='saveOrganization'),
     path('saveOrganizationDetails', views.saveOrganizationDetails, name='saveOrganizationDetails'),
-<<<<<<< HEAD
-=======
 
 
     path('switch_all_issues', views.switch_issue_show_all, name='switch_all_issues'),
@@ -48,7 +46,7 @@ urlpatterns = [
     path('issue_close/<id>', views.issue_close, name='issue_close'),
     path('issue_reopen/<id>', views.issue_reopen, name='issue_reopen'),
 
->>>>>>> 66a116625e84dde8632082e02a2cf3539d75c2b1
+
     path('saveOrganizationMembers/<str:name>', views.saveOrganizationMembers, name='saveOrganizationMembers'),
     path('repository/<str:p>', views.repository, name='repository'),
     path('saveRepository/<str:p>', views.saveRepository, name='saveRepository'),
@@ -60,8 +58,5 @@ urlpatterns = [
     path('repositoryInfo/<str:name>', views.repositoryInfo, name='repositoryInfo'),
     path('addNewMemberRepository/<str:name>', views.addNewMemberRepository, name='addNewMemberRepository'),
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 66a116625e84dde8632082e02a2cf3539d75c2b1
 ]

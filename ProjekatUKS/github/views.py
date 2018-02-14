@@ -5,10 +5,7 @@ from django.core.mail import EmailMessage
 
 from django.contrib.sites.shortcuts import get_current_site
 
-<<<<<<< HEAD
-from github.models import User, Organization, Repository
-=======
->>>>>>> 66a116625e84dde8632082e02a2cf3539d75c2b1
+
 
 from github.models import User, Organization, Repository, Issue
 
@@ -433,10 +430,6 @@ def repositoryInfo(request, name):
 
 
 
-
-<<<<<<< HEAD
-=======
-
 def switch_issue_show_all(request):
     issues = Issue.objects.all()
     return render(request, "github/issue_show_all.html",{'issues':issues})
@@ -504,7 +497,6 @@ def issue_close(request,id):
 
     return render(request, "github/issue_view_one.html", {'issue': issue})
 
->>>>>>> 66a116625e84dde8632082e02a2cf3539d75c2b1
 
 def issue_reopen(request,id):
     issue = Issue.objects.get(pk=id)

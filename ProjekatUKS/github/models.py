@@ -40,7 +40,7 @@ class Organization(models.Model):
                           'Other'
 
     }
-<<<<<<< HEAD
+
     def __str__(self):
         return self.name
 
@@ -55,21 +55,8 @@ class Repository(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     def __str__(self):
         return self.name
-=======
-    def __str__(self):
-        return self.name
 
 
-
-class Repository(models.Model):
-    name = models.CharField(max_length=50)
-    description = models.CharField(max_length=50)
-    type = models.CharField( max_length=50)
-    typeList = {'private', 'public'}
-    members = models.ManyToManyField(User)
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
-    def __str__(self):
-        return self.name
 
 
 class Issue(models.Model):
@@ -82,4 +69,4 @@ class Issue(models.Model):
     def __str__(self):
         return self.title + " " + self.description
 
->>>>>>> 66a116625e84dde8632082e02a2cf3539d75c2b1
+
