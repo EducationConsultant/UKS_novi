@@ -11,6 +11,13 @@
         var form = document.getElementById("form_part"+n);
         form.style.display = "none";
     }
+
+    function click_button(n){
+        var button = document.getElementById("button"+n);
+        $(".modal-body #commentid").val( n );
+        $('#deleteModal').modal('show');
+    }
+
 </script>
 {% endblock %}
 
@@ -35,44 +42,51 @@
         </ul>
 
         <h5><b>Comments</b></h5>
+        {% if messageDelete %}
+         <div class="alert alert-success">
+             <strong>Success!</strong> {{messageDelete}}
+         </div>
+        {% endif %}
         <ul class="list-group">
             {% for comment in comments %}
              <li class="list-group-item">
+                 <!-- Edit button-->
+                 <button type="button" onclick="show_form({{comment.pk}})"><span class="glyphicon glyphicon-pencil"></span></button>
 
-                 <button type="button" onclick="show_form({{comment.pk}})"><span class="glyphicon glyphicon-pencil"></span> Edit</button>
+                 <!-- Delete button-->
+                 <button type="button" id="button{{comment.pk}}" onclick="click_button({{comment.pk}})"><span class="glyphicon glyphicon-trash"></span></button>
 
                  <div class="row" >
-                    <div class="col-xs-4">
-                        <div class="container">
-                            <form id="form_part{{comment.pk}}" style="display: none;" class="form-horizontal" action="{% url 'github:comment_edit' issue.pk comment.pk %}" method="post">
+                     <div class="col-xs-4">
+                         <div class="container">
+                             <form id="form_part{{comment.pk}}" style="display: none;" class="form-horizontal" action="{% url 'github:comment_edit' issue.pk comment.pk %}" method="post">
                                 {% csrf_token %}
-                                <div class="form-group">
-                                    <label class="control-label col-sm-2" for="comment">Comment:</label>
-                                    <div class="col-sm-5">
-                                        <textarea class="form-control" placeholder="Leave a comment" rows="5" id="commentEdit" name="comment">{{comment.description}}</textarea>
+                                 <div class="form-group">
+                                     <label class="control-label col-sm-2" for="comment">Comment:</label>
+                                     <div class="col-sm-5">
+                                         <textarea class="form-control" placeholder="Leave a comment" rows="5" id="commentEdit" name="comment">{{comment.description}}</textarea>
 
                                         {% if messageNewComm %}
-                                        <div class="alert alert-danger">
-                                          <strong>Danger!</strong> {{messageNewComm}}
-                                        </div>
+                                         <div class="alert alert-danger">
+                                             <strong>Danger!</strong> {{messageNewComm}}
+                                         </div>
                                         {% endif %}
-                                    </div>
-                                </div>
+                                     </div>
+                                 </div>
 
-                                <div class="form-group">
-                                    <div class="col-sm-offset-4 col-sm-10">
-                                        <button type="submit" class="btn btn-success">Confirm</button>
-                                        <button type="button" class="btn btn-danger" onclick="hide_form({{comment.pk}})">Cancel</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+                                 <div class="form-group">
+                                     <div class="col-sm-offset-4 col-sm-10">
+                                         <button type="submit" class="btn btn-success">Confirm</button>
+                                         <button type="button" class="btn btn-danger" onclick="hide_form({{comment.pk}})">Cancel</button>
+                                     </div>
+                                 </div>
+                             </form>
+                         </div>
+                     </div>
+                 </div>
 
                  <span>{{comment.author.username}}</span>
-                 <span> commented {{comment.createdDate}}</span>
-
+                 <span>{{comment.createdDate}}</span>
                  <p>
                      <span>{{comment.description}}</span>
                  </p>
@@ -162,6 +176,40 @@
                             <div class="col-sm-offset-2 col-sm-2">
                                 <button type="submit" class="btn btn-success">Confirm</button>
                                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Delete comment -->
+<div id="deleteModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><b>Delete comment</b></h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="container">
+                    <form class="form-horizontal" action="{% url 'github:comment_delete' issue.id %}" method="post">
+                    {% csrf_token %}
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Are you sure you want to do this?</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="commentid" name="commentid" hidden/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-2">
+                                <button type="submit" class="btn btn-success">Yes</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
                             </div>
                         </div>
                     </form>

@@ -571,9 +571,19 @@ def comment_edit(request, idIssue, idComment):
     comment = Comment.objects.get(pk=idComment)
 
     newDescription = request.POST.get('comment')
-    comment.description = newDescription
+    comment.description = '[edited] ' + newDescription
     comment.save()
 
     comments = Comment.objects.filter(issue=issue.pk)
-    return render(request, "github/issue_view_one.html", {'issue': issue,'commentToEdit': comment,'comments': comments})
+    return render(request, "github/issue_view_one.html", {'issue': issue,'comments': comments})
 
+def comment_delete(request,id):
+    issue = Issue.objects.get(pk=id)
+
+    comment_pk = request.POST.get('commentid')
+    comment = Comment.objects.get(pk=comment_pk)
+
+    comment.delete()
+
+    comments = Comment.objects.filter(issue=issue.pk)
+    return render(request, "github/issue_view_one.html",{'issue': issue,'comments': comments,'messageDelete':'Comment deleted!'})
