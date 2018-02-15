@@ -18,9 +18,10 @@
                    <table class="table">
                     <thead>
                       <tr>
-                          <th>Repository name</th>
-                          <th>Organization name</th>
-                          <th>More informations</th>
+                          <th  style="width:10%">Repository name</th>
+                          <th  style="width:10%">Organization name</th>
+                          <th  style="width:10%">More informations</th>
+                          <th  style="width:10%"></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -29,6 +30,8 @@
                           <td>{{o.name}}</td>
                           <td>{{o.organization.name}}</td>
                           <td><a href="{% url 'github:repositoryInfo' o.name %}">More informations</a></td>
+                          <td><a href="{% url 'github:switch_delete_repository' o.name %}">Delete</a></td>
+
                       </tr>
                     {% endfor %}
                     </tbody>

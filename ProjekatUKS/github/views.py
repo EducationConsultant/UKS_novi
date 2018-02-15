@@ -235,6 +235,10 @@ def delete_account(request):
 def switch_delete_organization(request, name):
     return render(request, 'github/delete_organization.html', {'name':name})
 
+def switch_delete_repository(request, name):
+    return render(request, 'github/delete_repository.html', {'name':name})
+
+
 def delete_organization(request, name):
     organization = Organization.objects.get(name=name)
     nameDelete = request.POST.get('nameDelete')
@@ -243,6 +247,15 @@ def delete_organization(request, name):
         return render(request, 'github/home.html')
     else:
         return render(request, 'github/delete_organization.html', {'name': name, 'message': 'Name is not valid'})
+
+def delete_repository(request, name):
+    repository = Repository.objects.get(name=name)
+    nameDelete = request.POST.get('nameDelete')
+    if name == nameDelete:
+        repository.delete()
+        return render(request, 'github/home.html')
+    else:
+        return render(request, 'github/delete_repository.html', {'name': name, 'message': 'Name is not valid'})
 
 
 

@@ -4,6 +4,7 @@
     <div class="container">
         <form class="form-horizontal" action="{% url 'github:saveRepository' p %}" method="post">
             {% csrf_token %}
+            <h3>New repository</h3>
             <div class="form-group">
                 <label class="control-label col-sm-2" for="name">Name:</label>
                 <div class="col-sm-10">

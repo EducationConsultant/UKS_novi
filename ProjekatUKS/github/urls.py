@@ -60,6 +60,8 @@ urlpatterns = [
     path('organizationsByUser', views.organizationsByUser, name='organizationsByUser'),
     path('switch_delete_organization/<str:name>', views.switch_delete_organization, name='switch_delete_organization'),
     path('delete_organization/<str:name>', views.delete_organization, name='delete_organization'),
+    path('switch_delete_repository/<str:name>', views.switch_delete_repository, name='switch_delete_repository'),
+    path('delete_repository/<str:name>', views.delete_repository, name='delete_repository'),
 
 
 ]
