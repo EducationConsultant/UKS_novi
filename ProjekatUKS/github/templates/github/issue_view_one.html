@@ -5,6 +5,9 @@
     function show_form(n){
         var form = document.getElementById("form_part"+n);
         form.style.display = "";
+
+        var form_reply = document.getElementById("form_part_reply"+n);
+        form_reply.style.display = "none";
     }
 
     function hide_form(n){
@@ -18,6 +21,18 @@
         $('#deleteModal').modal('show');
     }
 
+    function show_form_reply(n){
+        var form_reply = document.getElementById("form_part_reply"+n);
+        form_reply.style.display = "";
+
+        var form = document.getElementById("form_part"+n);
+        form.style.display = "none";
+    }
+
+    function hide_form_reply(n){
+        var form_reply = document.getElementById("form_part_reply"+n);
+        form_reply.style.display = "none";
+    }
 </script>
 {% endblock %}
 
@@ -53,14 +68,31 @@
                  <!-- Edit button-->
                  <button type="button" onclick="show_form({{comment.pk}})"><span class="glyphicon glyphicon-pencil"></span></button>
 
+                 <!-- Reply button-->
+                 <button type="button" onclick="show_form_reply({{comment.pk}})"><span class="glyphicon glyphicon-share-alt"></span></button>
+
+
                  <!-- Delete button-->
                  <button type="button" id="button{{comment.pk}}" onclick="click_button({{comment.pk}})"><span class="glyphicon glyphicon-trash"></span></button>
 
+                 <span>{{comment.author.username}}</span>
+                 <span>{{comment.createdDate}}</span>
+                 <p>
+                     <span>{{comment.description}}</span>
+                     {% if comment.replies %}
+                        {% for reply in comment.replies %}
+                            <p>{{ reply.description }}</p>
+                        {% endfor %}
+                     {% endif %}
+                 </p>
+
+                 <!-- Edit form-->
                  <div class="row" >
                      <div class="col-xs-4">
                          <div class="container">
                              <form id="form_part{{comment.pk}}" style="display: none;" class="form-horizontal" action="{% url 'github:comment_edit' issue.pk comment.pk %}" method="post">
                                 {% csrf_token %}
+                                 <h4><b>Edit comment</b></h4>
                                  <div class="form-group">
                                      <label class="control-label col-sm-2" for="comment">Comment:</label>
                                      <div class="col-sm-5">
@@ -85,11 +117,36 @@
                      </div>
                  </div>
 
-                 <span>{{comment.author.username}}</span>
-                 <span>{{comment.createdDate}}</span>
-                 <p>
-                     <span>{{comment.description}}</span>
-                 </p>
+                 <!-- Reply form-->
+                 <div class="row" >
+                     <div class="col-xs-4">
+                         <div class="container">
+                             <form id="form_part_reply{{comment.pk}}" style="display: none;" class="form-horizontal" action="{% url 'github:comment_reply' issue.pk comment.pk %}" method="post">
+                                {% csrf_token %}
+                                 <h4><b>Reply comment</b></h4>
+                                 <div class="form-group">
+                                     <label class="control-label col-sm-2" for="commentReply">Comment:</label>
+                                     <div class="col-sm-5">
+                                         <textarea class="form-control" placeholder="Leave a comment" rows="5" id="commentReply" name="commentReply"></textarea>
+
+                                         {% if messageReply %}
+                                         <div class="alert alert-danger">
+                                             <strong>Danger!</strong> {{messageReply}}
+                                         </div>
+                                        {% endif %}
+                                     </div>
+                                 </div>
+
+                                 <div class="form-group">
+                                     <div class="col-sm-offset-4 col-sm-10">
+                                         <button type="submit" class="btn btn-success">Confirm</button>
+                                         <button type="button" class="btn btn-danger" onclick="hide_form_reply({{comment.pk}})">Cancel</button>
+                                     </div>
+                                 </div>
+                             </form>
+                         </div>
+                     </div>
+                 </div>
              </li>
              {% endfor %}
         </ul>

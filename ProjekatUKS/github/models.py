@@ -73,8 +73,10 @@ class Comment(models.Model):
     description = models.CharField(max_length=500)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
-    reply = models.ForeignKey('self', null=True, on_delete=models.CASCADE, related_name='comment_reply')
     createdDate = models.DateField(("Date"), default=datetime.date.today)
+    reply = models.ForeignKey('self', null=True, on_delete=models.CASCADE, related_name='comment')
+    replies = []
+    isReply = models.BooleanField(default=False)
 
     def __str__(self):
         return self.description

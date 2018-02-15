@@ -49,6 +49,7 @@ urlpatterns = [
     path('comment_new/<id>', views.comment_new, name='comment_new'),
     path('comment_edit/<idIssue>/<idComment>', views.comment_edit, name='comment_edit'),
     path('comment_delete/<id>', views.comment_delete, name='comment_delete'),
+    path('comment_reply/<idIssue>/<idComment>', views.comment_reply, name='comment_reply'),
 
 
     path('saveOrganizationMembers/<str:name>', views.saveOrganizationMembers, name='saveOrganizationMembers'),
