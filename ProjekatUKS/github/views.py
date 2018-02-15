@@ -269,6 +269,15 @@ def edit_repository(request, name):
     return render(request, 'github/home.html')
 
 
+def switch_edit_organization(request, name):
+    return render(request, 'github/edit_organization.html', {'name':name})
+
+def edit_organization(request, name):
+    nameEdit = request.POST.get('nameEdit')
+    organization = Organization.objects.get(name=name)
+    organization.name = nameEdit
+    organization.save()
+    return render(request, 'github/home.html')
 
 def organization(request):
     organization = Organization()

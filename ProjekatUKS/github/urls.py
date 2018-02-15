@@ -64,6 +64,7 @@ urlpatterns = [
     path('delete_repository/<str:name>', views.delete_repository, name='delete_repository'),
     path('switch_edit_repository/<str:name>', views.switch_edit_repository, name='switch_edit_repository'),
     path('edit_repository/<str:name>', views.edit_repository, name='edit_repository'),
-
+    path('switch_edit_organization/<str:name>', views.switch_edit_organization, name='switch_edit_organization'),
+    path('edit_organization/<str:name>', views.edit_organization, name='edit_organization'),
 
 ]
