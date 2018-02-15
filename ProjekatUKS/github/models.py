@@ -64,9 +64,10 @@ class Repository(models.Model):
 class Issue(models.Model):
     title = models.CharField(max_length=50)
     description = models.CharField(max_length=500)
-    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='creator_issue')
-    asssignees = models.ManyToManyField(User, related_name='assignees_issue')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author')
+    assignees = models.ManyToManyField(User, related_name='assignees')
     closed = models.BooleanField(default=False)
+    repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title + " " + self.description

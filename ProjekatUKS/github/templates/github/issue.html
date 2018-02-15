@@ -6,12 +6,13 @@
         <div class="col-sm-2 sidenav">
             <!-- Sidebar Header -->
             <div class="sidebar-header">
-                <h3>Issues</h3>
+                <h3>Issues for <a href="{% url 'github:repositoryInfo' request.session.repository_name %}">{{request.session.repository_name}}</a></h3>
             </div>
 
             <ul class="nav nav-stacked">
                 <li><a href="{% url 'github:switch_all_issues' %}">Show all</a></li>
                 <li><a href="{% url 'github:switch_issue_new' %}">New issue</a></li>
+                <li><a href="{% url 'github:repositoryInfo' request.session.repository_name %}">Back to repository</a></li>
             </ul>
         </div>
         <div class="col-sm-8 text-left">

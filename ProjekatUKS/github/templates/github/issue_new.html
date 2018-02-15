@@ -25,23 +25,17 @@
             <div class="col-sm-5">
                 {% for user in users %}
                 <div class="checkbox">
-                    <label for="{{user.username}}"><input type="checkbox" value="{{user.username}}" id="{{user.username}}" name="asssignees">{{user.username}}</label>
+                    <label for="{{user}}"><input type="checkbox" value="{{user}}" id="{{user}}" name="asssignees">{{user}}</label>
                 </div>
                 {% endfor %}
             </div>
         </div>
 
-        <div class="form-group">
+         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 <button type="submit" class="btn btn-default">Submit new issue</button>
             </div>
         </div>
     </form>
-
-    {% if message %}
-    <div class="alert alert-success col-sm-offset-2 col-sm-4">
-      <strong>Success!</strong> {{message}}
-    </div>
-    {% endif %}
 </div>
 {% endblock %}

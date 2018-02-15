@@ -47,7 +47,7 @@
     Closed
     {% endif %}
 </span>
-<p>{{issue.creator.username}}</p>
+<p>{{issue.author.username}}</p>
 
 <div class="row">
     <div class="col-xs-10">
@@ -199,9 +199,9 @@
     <br/>
 
     <li>
-        <h5><b>Asssignees:</b></h5>
+        <h5><b>Assignees:</b></h5>
         <ul class="list-group">
-            {% for assignee in issue.asssignees.all %}
+            {% for assignee in issue.assignees.all %}
             <li class="list-group-item">{{assignee.username}}</li>
             {% endfor %}
         </ul>

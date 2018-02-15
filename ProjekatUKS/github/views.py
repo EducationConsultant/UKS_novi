@@ -767,6 +767,11 @@ def repositoryInfo(request, name):
         if r.name == name:
             repository = r
     repositoryMembers = repositoryMembersShow(repository)
+
+    repository = Repository.objects.get(name=name)
+    request.session['repository_id'] = repository.pk
+    request.session['repository_name'] = repository.name
+
     return render(request, 'github/repositoryInformations.html', {'repository': repository,
                                                                     'repositoryMembers': repositoryMembers,
                                                                     })
@@ -774,7 +779,10 @@ def repositoryInfo(request, name):
 
 
 def switch_issue_show_all(request):
-    issues = Issue.objects.all()
+    repository_pk = request.session['repository_id']
+    repository = Repository.objects.get(pk=repository_pk)
+
+    issues = Issue.objects.filter(repository=repository.pk)
     return render(request, "github/issue_show_all.html",{'issues':issues})
 
 
@@ -789,16 +797,24 @@ def issue_show_all_closed(request):
 
 
 def switch_issue_new(request):
-    #TODO: dodaj listu svih korisnika koji su na tom repozitorijumu na kom se kreira problem
-    #ovo je potrebno zbog asssignees
-    users = User.objects.all()
+    repository_pk = request.session['repository_id']
+    repository = Repository.objects.get(pk=repository_pk)
+
+    users=[]
+    if repository.members.all() is not None:
+        for member in repository.members.all():
+            users.append(member.username)
+
     return render(request, "github/issue_new.html", {'users':users})
 
 
 def issue_new(request):
+    repository_pk = request.session['repository_id']
+    repository = Repository.objects.get(pk=repository_pk)
+
     title = request.POST.get('title')
     description = request.POST.get('description')
-    listAsssignees = request.POST.getlist('asssignees')
+    listAssignees = request.POST.getlist('assignees')
 
     username = request.session['uname_user']
     user = User.objects.get(username=username)
@@ -806,13 +822,14 @@ def issue_new(request):
     issue = Issue()
     issue.title = title
     issue.description = description
-    issue.creator = user
+    issue.author = user
+    issue.repository = repository
 
     issue.save()
 
-    for ass in listAsssignees:
+    for ass in listAssignees:
         user = User.objects.get(username=ass)
-        issue.asssignees.add(user)
+        issue.assignees.add(user)
     issue.save()
 
     comments = Comment.objects.filter(issue=issue.pk)
