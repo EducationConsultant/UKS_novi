@@ -232,6 +232,20 @@ def delete_account(request):
     else:
         return render(request, "github/delete_account.html", {'message': 'Username is not valid.'})
 
+def switch_delete_organization(request, name):
+    return render(request, 'github/delete_organization.html', {'name':name})
+
+def delete_organization(request, name):
+    organization = Organization.objects.get(name=name)
+    nameDelete = request.POST.get('nameDelete')
+    if name == nameDelete:
+        organization.delete()
+        return render(request, 'github/home.html')
+    else:
+        return render(request, 'github/delete_organization.html', {'message': 'Name is not valid'})
+
+
+
 def organization(request):
     organization = Organization()
     return render(request, 'github/organization.html', {'organization' : organization})
