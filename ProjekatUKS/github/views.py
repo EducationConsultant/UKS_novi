@@ -258,6 +258,17 @@ def delete_repository(request, name):
         return render(request, 'github/delete_repository.html', {'name': name, 'message': 'Name is not valid'})
 
 
+def switch_edit_repository(request, name):
+    return render(request, 'github/edit_repository.html', {'name':name})
+
+def edit_repository(request, name):
+    nameEdit = request.POST.get('nameEdit')
+    repository = Repository.objects.get(name=name)
+    repository.name = nameEdit
+    repository.save()
+    return render(request, 'github/home.html')
+
+
 
 def organization(request):
     organization = Organization()

@@ -22,6 +22,7 @@
                           <th  style="width:10%">Organization name</th>
                           <th  style="width:10%">More informations</th>
                           <th  style="width:10%"></th>
+                          <th style="width:10%"></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -33,6 +34,7 @@
                           {% if o.owner == username %}
                           <td><a href="{% url 'github:switch_delete_repository' o.name %}">Delete</a></td>
                           {% endif %}
+                          <td><a href="{% url 'github:switch_edit_repository' o.name %}">Edit</a></td>
                       </tr>
                     {% endfor %}
                     </tbody>
