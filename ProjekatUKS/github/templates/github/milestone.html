@@ -1,15 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+{% extends "github/user_profile.html" %}
+
+{% block head_content %}
+<meta charset="UTF-8">
     <title>Title</title>
-    <!--  jQuery -->
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-
-    <!-- Isolated Version of Bootstrap, not needed if your site already uses Bootstrap -->
     <link rel="stylesheet" href="https://formden.com/static/cdn/bootstrap-iso.css" />
-
-    <!-- Bootstrap Date-Picker Plugin -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
     <script>
@@ -24,48 +19,40 @@
           };
           date_input.datepicker(options);
         })
-    </script>
-</head>
-<body>
-    <div class="bootstrap-iso">
-     <div class="container-fluid">
-      <div class="row">
-       <div class="col-md-6 col-sm-6 col-xs-12">
+</script>
+{% endblock %}
 
-        <!-- Form code begins -->
-        <form method="post" action="{% url 'github:milestone'  %}" method="post">
+{% block content %}
+<h1 class="text-primary">New milestone</h1>
+
+<div class="container">
+     <form method="post" action="{% url 'github:milestone'  %}" method="post">
             {% csrf_token %}
             <div class="form-group">
                 <label class="control-label col-sm-2" for="title">Title:</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="title" placeholder="Enter title" name="title"  required  />
+                    <input type="text" class="form-control" id="title" placeholder="Enter title" name="title" rows="5" required  />
                 </div>
             </div>
-          <div class="form-group"> <!-- Date input -->
-            <label class="control-label" for="date">Date</label>
-            <input class="form-control" id="date" name="date" placeholder="YYYY-MM-DD" type="text"/>
-          </div>
-
             <div class="form-group">
-            <label class="control-label col-sm-2" for="description">Description:</label>
-            <div class="col-sm-5">
-                <textarea class="form-control" rows="5" id="description" name="description"></textarea>
+                <label class="control-label col-sm-2" for="date">Date</label>
+                 <div class="col-sm-10">
+                     <input class="form-control" id="date" name="date" placeholder="YYYY-MM-DD" type="text" rows="5" required/>
+                 </div>
             </div>
-        </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="description">Description:</label>
+                <div class="col-sm-5">
+                    <textarea class="form-control" rows="5" id="description" name="description" required></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </div>
+            </div>
+     </form>
+</div>
 
 
-          <div class="form-group"> <!-- Submit button -->
-            <button class="btn btn-primary " name="submit" type="submit">Submit</button>
-          </div>
-
-
-         </form>
-         <!-- Form code ends -->
-
-        </div>
-      </div>
-     </div>
-    </div>
-
-</body>
-</html>
+{% endblock %}
