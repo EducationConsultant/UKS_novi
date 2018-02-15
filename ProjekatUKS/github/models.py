@@ -1,5 +1,5 @@
 from django.db import models
-from enum import Enum
+import datetime
 
 # Create your models here.
 class User(models.Model):
@@ -74,6 +74,7 @@ class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
     reply = models.ForeignKey('self', null=True, on_delete=models.CASCADE, related_name='comment_reply')
+    createdDate = models.DateField(("Date"), default=datetime.date.today)
 
     def __str__(self):
         return self.description

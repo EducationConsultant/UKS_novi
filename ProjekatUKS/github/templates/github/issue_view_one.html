@@ -24,47 +24,44 @@
         <ul class="list-group">
             {% for comment in comments %}
              <li class="list-group-item">
-                 <span>{{comment.author.username}}: </span>
-                 <span>{{comment.description}}</span>
+                 <span>{{comment.author.username}}</span>
+                 <span> commented {{comment.createdDate}}</span>
+                 <p><span>{{comment.description}}</span></p>
              </li>
              {% endfor %}
         </ul>
-        <h4><button type="submit" class="btn btn-default" data-toggle="collapse" href="#addComment">Add comment</button></h4>
     </div>
 </div>
 
-<div id="addComment" class="collapse">
-    <div class="row" >
-        <div class="col-xs-4">
-            <div class="container">
-                <form class="form-horizontal" action="{% url 'github:comment_new' issue.pk %}" method="post">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label class="control-label col-sm-2" for="comment">Comment:</label>
-                        <div class="col-sm-5">
-                            <textarea class="form-control" placeholder="Leave a comment" rows="5" id="comment" name="comment"></textarea>
-                        </div>
-                    </div>
 
-                    <div class="form-group">
-                        <div class="col-sm-offset-4 col-sm-10">
-                            <button type="submit" class="btn btn-default">Comment</button>
-                        </div>
-                    </div>
-                </form>
-                <div class="col-sm-offset-4 col-sm-10">
-                    {% if not issue.closed %}
-                    <button type="submit" class="btn btn-danger" onclick="location.href='{% url 'github:issue_close' issue.pk %}'">Close</button>
-                    {% endif %}
+<div class="row" >
+    <div class="col-xs-4">
+        <div class="container">
+            <form class="form-horizontal" action="{% url 'github:comment_new' issue.pk %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="comment">Comment:</label>
+                    <div class="col-sm-5">
+                        <textarea class="form-control" placeholder="Leave a comment" rows="5" id="comment" name="comment"></textarea>
 
-                    {% if issue.closed %}
-                    <button type="submit" class="btn btn-info" onclick="location.href='{% url 'github:issue_reopen' issue.pk %}'">Reopen</button>
-                    {% endif %}
+                        {% if messageNewComm %}
+                        <div class="alert alert-danger">
+                          <strong>Danger!</strong> {{messageNewComm}}
+                        </div>
+                        {% endif %}
+                    </div>
                 </div>
-            </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-4 col-sm-10">
+                        <button type="submit" class="btn btn-default">Comment</button>
+                    </div>
+                </div>
+            </form>
+
         </div>
     </div>
-</div>>
+</div>
 {% endblock %}
 
 {% block content_right %}

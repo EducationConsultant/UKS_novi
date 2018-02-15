@@ -481,7 +481,6 @@ def issue_new(request):
 
 def switch_issue_view_one(request,id):
     issue = Issue.objects.get(pk=id)
-
     comments = Comment.objects.filter(issue=issue.pk)
 
     return render(request,"github/issue_view_one.html",{'issue':issue,'comments':comments})
@@ -500,6 +499,7 @@ def issue_edit_title(request,id):
 
 
 def issue_close(request,id):
+
     username = request.session['uname_user']
     user = User.objects.get(username=username)
 
@@ -510,12 +510,7 @@ def issue_close(request,id):
     description = request.POST.get('comment')
 
     comment = Comment()
-
-    if description is None:
-        comment.description = 'closed this'
-    else:
-        comment.description = description
-
+    comment.description = 'closed this'
     comment.author = user
     comment.issue = issue
     comment.save()
@@ -536,12 +531,7 @@ def issue_reopen(request,id):
     description = request.POST.get('comment')
 
     comment = Comment()
-
-    if (description is None) or (description == ""):
-        comment.description = 'reopend this'
-    else:
-        comment.description = description
-
+    comment.description = 'reopend this'
     comment.author = user
     comment.issue = issue
 
@@ -549,24 +539,24 @@ def issue_reopen(request,id):
 
     comments = Comment.objects.filter(issue=issue.pk)
 
-    print("JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ")
-    for com in comments:
-        print(com.description)
-
     return render(request, "github/issue_view_one.html", {'issue': issue,'comments':comments})
 
 
-def comment_new(request,id):
+def comment_new(request, id):
     username = request.session['uname_user']
     user = User.objects.get(username=username)
 
     issue = Issue.objects.get(pk=id)
 
-
     description = request.POST.get('comment')
 
     comment = Comment()
-    comment.description = description
+    if description != "":
+        comment.description = description
+    else:
+        comments = Comment.objects.filter(issue=issue.pk)
+        return render(request, "github/issue_view_one.html", {'issue': issue, 'comments': comments,'messageNewComm':'Enter comment.'})
+
     comment.author = user
     comment.issue = issue
 
