@@ -15,6 +15,8 @@
             <li><a href="{% url 'github:addNewMemberRepository' repository.name %}">Add member</a></li>
             <li><a href="{% url 'github:organizationInfo' repository.organization.name %}">Back to organization</a></li>
             <li><a href="{% url 'github:repository' repository.organization.name %}">New repository</a></li>
+            <li><a href="{% url 'github:switch_milestone' repository.name %}">Milestones</a></li>
+
             </ul>
         </ul>
     </nav>

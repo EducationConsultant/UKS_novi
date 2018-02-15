@@ -850,5 +850,10 @@ def issue_reopen(request,id):
     return render(request, "github/issue_view_one.html", {'issue': issue})
 
 
+def switch_milestone(request, name):
+    return render(request, 'github/milestone.html', {'nameRepository': name})
 
+def milestone(request):
+    date = request.POST.get('date')
+    return render(request, 'github/milestoneInformation.html', {'date':date})
 
