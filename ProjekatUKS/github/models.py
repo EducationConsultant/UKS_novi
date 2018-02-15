@@ -75,6 +75,7 @@ class Milestone(models.Model):
     date = models.DateField()
     title = models.CharField(max_length=50)
     description = models.CharField(max_length=50)
+    repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
 
     def __str__(self):
-        return "Cao"
+        return self.title

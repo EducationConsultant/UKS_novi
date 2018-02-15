@@ -67,7 +67,7 @@ urlpatterns = [
     path('switch_edit_organization/<str:name>', views.switch_edit_organization, name='switch_edit_organization'),
     path('edit_organization/<str:name>', views.edit_organization, name='edit_organization'),
     path('switch_milestone/<str:name>', views.switch_milestone, name='switch_milestone'),
-    path('milestone', views.milestone, name='milestone'),
-
+    path('milestone/<str:name>', views.milestone, name='milestone'),
+    path('getAllMilestones/<str:name>', views.getAllMilestones, name='getAllMilestones'),
 
 ]

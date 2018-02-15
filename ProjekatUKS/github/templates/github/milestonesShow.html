@@ -1,0 +1,50 @@
+{% extends "github/base.html" %}
+
+{% block body_content %}
+<div class="wrapper">
+     <nav class="col-sm-3 shomeidenav hidden-xs">
+        <!-- Sidebar Header -->
+        <div class="sidebar-header">
+            <h3>Milestone settings</h3>
+        </div>
+         <!-- Sidebar Links -->
+        <ul class="nav nav-stacked">
+              <!--<li><a href="{% url 'github:repositoryInfo' nameRepository %}">Back to repository</a></li>-->
+              <!--<li><a href="{% url 'github:switch_milestone' nameRepository %}">New milestone</a></li>-->
+        </ul>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="content container">
+        <div class="row">
+            <div class="col-md-8">
+            {% block content %}
+                <div><h3>Milestones of {{nameRepository}}</h3></div>
+                <div class="col-xs-12" style="height:50px;"></div>
+                <div class="container">
+                   <table class="table">
+                    <thead>
+                      <tr>
+                        <th style="width:10%">Title</th>
+                        <th style="width:10%">Due date</th>
+                        <th style="width:10%">Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for m in milestonesOfRepository%}
+                      <tr>
+                          <td>{{m.title}}</td>
+                          <td>{{m.date}}</td>
+                          <td>{{m.description}}</td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+            {% endblock %}
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -850,10 +850,14 @@ def issue_reopen(request,id):
     return render(request, "github/issue_view_one.html", {'issue': issue})
 
 
+# new milestone
+# name is nameRepository
 def switch_milestone(request, name):
     return render(request, 'github/milestone.html', {'nameRepository': name})
 
-def milestone(request):
+# informations od repository
+# name is nameRepository
+def milestone(request, name):
     date = request.POST.get('date')
     title = request.POST.get('title')
     description = request.POST.get('description')
@@ -861,6 +865,19 @@ def milestone(request):
     milestone.date = date
     milestone.title = title
     milestone.description = description
+    milestone.repository = Repository.objects.get(name=name)
     milestone.save()
     return render(request, 'github/milestoneInformation.html', {'milestone':milestone})
 
+def getAllMilestones(request, name):
+    milestonesOfRepository = getMilestonesOfRepository(name)
+    return render(request, 'github/milestonesShow.html', {'nameRepository':name,  'milestonesOfRepository': milestonesOfRepository})
+
+# name is repositoryName
+def getMilestonesOfRepository(name):
+    milestones = Milestone.objects.all()
+    milestonesOfRepository = []
+    for m in milestones:
+        if m.repository.name == name:
+            milestonesOfRepository.append(m)
+    return milestonesOfRepository
