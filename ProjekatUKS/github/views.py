@@ -7,7 +7,7 @@ from django.contrib.sites.shortcuts import get_current_site
 
 
 
-from github.models import User, Organization, Repository, Issue
+from github.models import User, Organization, Repository, Issue, Milestone
 
 
 
@@ -855,5 +855,12 @@ def switch_milestone(request, name):
 
 def milestone(request):
     date = request.POST.get('date')
-    return render(request, 'github/milestoneInformation.html', {'date':date})
+    title = request.POST.get('title')
+    description = request.POST.get('description')
+    milestone = Milestone()
+    milestone.date = date
+    milestone.title = title
+    milestone.description = description
+    milestone.save()
+    return render(request, 'github/milestoneInformation.html', {'milestone':milestone})
 

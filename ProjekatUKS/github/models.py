@@ -71,4 +71,10 @@ class Issue(models.Model):
     def __str__(self):
         return self.title + " " + self.description
 
+class Milestone(models.Model):
+    date = models.DateField()
+    title = models.CharField(max_length=50)
+    description = models.CharField(max_length=50)
 
+    def __str__(self):
+        return "Cao"
