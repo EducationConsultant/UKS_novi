@@ -7,8 +7,7 @@ from django.contrib.sites.shortcuts import get_current_site
 
 
 
-from github.models import User, Organization, Repository, Issue
-
+from github.models import User, Organization, Repository, Issue, Comment
 
 
 # switch from some page to home.html
@@ -816,13 +815,20 @@ def issue_new(request):
         issue.asssignees.add(user)
     issue.save()
 
-    users = User.objects.all()
-    return render(request, "github/issue_new.html",{'message':'Issue successfully created.','users':users})
+    comments = Comment.objects.filter(issue=issue.pk)
+
+    return render(request, "github/issue_view_one.html",{'issue':issue,'comments':comments})
 
 
 def switch_issue_view_one(request,id):
     issue = Issue.objects.get(pk=id)
-    return render(request,"github/issue_view_one.html",{'issue':issue})
+
+    comments_with_reply = Comment.objects.filter(issue=issue.pk)
+    comments = []
+    for comm in comments_with_reply:
+        if not comm.isReply:
+            comments.append(comm)
+    return render(request,"github/issue_view_one.html",{'issue':issue,'comments':comments})
 
 
 def issue_edit_title(request,id):
@@ -831,24 +837,158 @@ def issue_edit_title(request,id):
 
     issue.title = newtitle
     issue.save()
-    return render(request, "github/issue_view_one.html", {'issue': issue})
+
+    comments_with_reply = Comment.objects.filter(issue=issue.pk)
+    comments = []
+    for comm in comments_with_reply:
+        if not comm.isReply:
+            comments.append(comm)
+    return render(request, "github/issue_view_one.html", {'issue': issue,'comments':comments})
 
 
 def issue_close(request,id):
+
+    username = request.session['uname_user']
+    user = User.objects.get(username=username)
+
     issue = Issue.objects.get(pk=id)
     issue.closed = True
     issue.save()
 
-    return render(request, "github/issue_view_one.html", {'issue': issue})
+    description = request.POST.get('comment')
+
+    comment = Comment()
+    comment.description = 'closed this'
+    comment.author = user
+    comment.issue = issue
+    comment.save()
+
+    comments_with_reply = Comment.objects.filter(issue=issue.pk)
+    comments = []
+    for comm in comments_with_reply:
+        if not comm.isReply:
+            comments.append(comm)
+    return render(request, "github/issue_view_one.html", {'issue': issue,'comments':comments})
 
 
 def issue_reopen(request,id):
+    username = request.session['uname_user']
+    user = User.objects.get(username=username)
+
     issue = Issue.objects.get(pk=id)
     issue.closed = False
     issue.save()
 
-    return render(request, "github/issue_view_one.html", {'issue': issue})
+    description = request.POST.get('comment')
+
+    comment = Comment()
+    comment.description = 'reopend this'
+    comment.author = user
+    comment.issue = issue
+
+    comment.save()
+
+    comments_with_reply = Comment.objects.filter(issue=issue.pk)
+    comments = []
+    for comm in comments_with_reply:
+        if not comm.isReply:
+            comments.append(comm)
+    return render(request, "github/issue_view_one.html", {'issue': issue,'comments':comments})
 
 
+def comment_new(request, id):
+    username = request.session['uname_user']
+    user = User.objects.get(username=username)
+
+    issue = Issue.objects.get(pk=id)
+
+    description = request.POST.get('comment')
+
+    comment = Comment()
+    if description != "":
+        comment.description = description
+    else:
+        comments_with_reply = Comment.objects.filter(issue=issue.pk)
+        comments = []
+        for comm in comments_with_reply:
+            if not comm.isReply:
+                comments.append(comm)
+        return render(request, "github/issue_view_one.html", {'issue': issue, 'comments': comments,'messageNewComm':'Enter comment.'})
+
+    comment.author = user
+    comment.issue = issue
+
+    comment.save()
+
+    comments_with_reply = Comment.objects.filter(issue=issue.pk)
+    comments = []
+    for comm in comments_with_reply:
+        if not comm.isReply:
+            comments.append(comm)
+    return render(request, "github/issue_view_one.html", {'issue': issue,'comments':comments})
 
 
+def comment_edit(request, idIssue, idComment):
+    issue = Issue.objects.get(pk=idIssue)
+    comment = Comment.objects.get(pk=idComment)
+
+    newDescription = request.POST.get('comment')
+    comment.description = '[edited] ' + newDescription
+    comment.save()
+
+    comments_with_reply = Comment.objects.filter(issue=issue.pk)
+    comments = []
+    for comm in comments_with_reply:
+        if not comm.isReply:
+            comments.append(comm)
+    return render(request, "github/issue_view_one.html", {'issue': issue,'comments': comments})
+
+def comment_delete(request,id):
+    issue = Issue.objects.get(pk=id)
+
+    comment_pk = request.POST.get('commentid')
+    comment = Comment.objects.get(pk=comment_pk)
+
+    comment.delete()
+
+    comments_with_reply = Comment.objects.filter(issue=issue.pk)
+    comments = []
+    for comm in comments_with_reply:
+        if not comm.isReply:
+            comments.append(comm)
+    return render(request, "github/issue_view_one.html",{'issue': issue,'comments': comments,'messageDelete':'Comment deleted!'})
+
+
+def comment_reply(request, idIssue, idComment):
+    username = request.session['uname_user']
+    user = User.objects.get(username=username)
+
+    issue = Issue.objects.get(pk=idIssue)
+    comment = Comment.objects.get(pk=idComment)
+
+    replyDescription = request.POST.get('commentReply')
+
+    reply = Comment()
+    if replyDescription != "":
+        reply.description = "[reply] " + replyDescription
+    else:
+        comments = Comment.objects.filter(issue=issue.pk)
+        return render(request, "github/issue_view_one.html", {'issue': issue, 'comments': comments,'messageReply':'Enter comment.'})
+
+    reply.author = user
+    reply.issue = issue
+    reply.isReply = True
+
+    reply.save()
+
+    comment.replies.append(reply)
+    comment.save()
+
+    comments_with_reply = Comment.objects.filter(issue=issue.pk)
+
+    comments = []
+    for comm in comments_with_reply:
+        if not comm.isReply:
+            comments.append(comm)
+
+    return render(request, "github/issue_view_one.html", {'issue': issue, 'comments': comments})
