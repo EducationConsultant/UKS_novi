@@ -57,6 +57,14 @@ urlpatterns = [
     path('addNewMemberOrganization/<str:name>', views.addNewMemberOrganization, name='addNewMemberOrganization'),
     path('repositoryInfo/<str:name>', views.repositoryInfo, name='repositoryInfo'),
     path('addNewMemberRepository/<str:name>', views.addNewMemberRepository, name='addNewMemberRepository'),
-
+    path('organizationsByUser', views.organizationsByUser, name='organizationsByUser'),
+    path('switch_delete_organization/<str:name>', views.switch_delete_organization, name='switch_delete_organization'),
+    path('delete_organization/<str:name>', views.delete_organization, name='delete_organization'),
+    path('switch_delete_repository/<str:name>', views.switch_delete_repository, name='switch_delete_repository'),
+    path('delete_repository/<str:name>', views.delete_repository, name='delete_repository'),
+    path('switch_edit_repository/<str:name>', views.switch_edit_repository, name='switch_edit_repository'),
+    path('edit_repository/<str:name>', views.edit_repository, name='edit_repository'),
+    path('switch_edit_organization/<str:name>', views.switch_edit_organization, name='switch_edit_organization'),
+    path('edit_organization/<str:name>', views.edit_organization, name='edit_organization'),
 
 ]

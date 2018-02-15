@@ -13,8 +13,7 @@
             <li><a href="{% url 'github:organizationInfo' organization.name %}">About organization</a></li>
             <li><a href="{% url 'github:addNewMemberOrganization' organization.name %}">Add member</a></li>
             <li><a href="{% url 'github:repository' organization.name %}">Add new repository</a></li>
-            <!--<li><a href="{% url 'github:login' %}">Change organization informations</a></li>-->
-            <!--<li><a href="{% url 'github:login' %}">Delete organization</a></li>-->
+            <li><a href="{% url 'github:organization' %}">New organization</a></li>
         </ul>
     </nav>
 
@@ -54,12 +53,20 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="control-label col-sm-2" for="owner">Owner:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="owner" placeholder="Enter owner" name="owner" value="{{ organization.owner }}"  disabled />
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="control-label col-sm-2" for="howMuchPeople">How much people:</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" id="howMuchPeople" placeholder="Enter howMuchPeople" name="howMuchPeople" value="{{ organization.howMuchPeople }}"  disabled />
                     </div>
                 </div>
 
+
+                <div class="col-xs-12" style="height:50px;"></div>
                 <div class="col-xs-12" style="height:50px;"></div>
                 <div><h4>Members in organization</h4></div>
                 <div class="container">
@@ -67,12 +74,17 @@
                     <thead>
                       <tr>
                         <th>Username</th>
+                        <th>Type of user:</th>
                       </tr>
                     </thead>
                     <tbody>
                     {% for m in organizationMembers%}
                       <tr>
                         <td>{{m.username}}</td>
+                        <td>
+                            {% if  m.username == organization.owner %} owner  {% endif %}
+                            {% if m.username != organization.owner %} member {% endif %}
+                        </td>
                       </tr>
                     {% endfor %}
                     </tbody>
@@ -85,14 +97,18 @@
                    <table class="table">
                     <thead>
                       <tr>
-                        <th>Repository name</th>
+                          <th>Repository name</th>
+                          <th>Organization name</th>
+                          <th>More informations</th>
                       </tr>
                     </thead>
                     <tbody>
                     {% for r in organizationRepositories%}
-                      <tr>
-                        <td>{{r.name}}</td>
-                      </tr>
+                        <tr>
+                            <td>{{r.name}}</td>
+                            <td>{{r.organization.name}}</td>
+                            <td><a href="{% url 'github:repositoryInfo' r.name %}">Info</a></td>
+                        </tr>
                     {% endfor %}
                     </tbody>
                   </table>

@@ -1,0 +1,48 @@
+{% extends "github/home.html" %}
+
+{% block body_content %}
+<div class="wrapper">
+     <nav class="col-sm-3 shomeidenav hidden-xs">
+        <!-- Sidebar Header -->
+        <div class="sidebar-header">
+            <h3>Organization settings</h3>
+        </div>
+
+        <!-- Sidebar Links -->
+        <ul class="nav nav-stacked">
+             <li><a href="{% url 'github:organizationsByUser' %}">My organizations</a></li>
+        </ul>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="content container">
+        <div class="row">
+            <div class="col-md-8">
+                {% block content %}
+                    <form class="form-horizontal" action="{% url 'github:delete_organization' name %}" method="post">
+                        {% csrf_token %}
+                        <h3>Delete organization</h3>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="nameDelete">Name:</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="nameDelete" placeholder="Enter name" name="nameDelete" required />
+                                {% if message %}
+                                <div class="alert alert-warning">
+                                <strong>Warning!</strong> {{message}}
+                                </div>
+                        {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-default">Delete</button>
+                            </div>
+                        </div>
+                    </form>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

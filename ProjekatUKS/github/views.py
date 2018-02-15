@@ -235,6 +235,53 @@ def delete_account(request):
     else:
         return render(request, "github/delete_account.html", {'messageUsername': 'Username is not valid.'})
 
+def switch_delete_organization(request, name):
+    return render(request, 'github/delete_organization.html', {'name':name})
+
+def switch_delete_repository(request, name):
+    return render(request, 'github/delete_repository.html', {'name':name})
+
+
+def delete_organization(request, name):
+    organization = Organization.objects.get(name=name)
+    nameDelete = request.POST.get('nameDelete')
+    if name == nameDelete:
+        organization.delete()
+        return render(request, 'github/home.html')
+    else:
+        return render(request, 'github/delete_organization.html', {'name': name, 'message': 'Name is not valid'})
+
+def delete_repository(request, name):
+    repository = Repository.objects.get(name=name)
+    nameDelete = request.POST.get('nameDelete')
+    if name == nameDelete:
+        repository.delete()
+        return render(request, 'github/home.html')
+    else:
+        return render(request, 'github/delete_repository.html', {'name': name, 'message': 'Name is not valid'})
+
+
+def switch_edit_repository(request, name):
+    return render(request, 'github/edit_repository.html', {'name':name})
+
+def edit_repository(request, name):
+    nameEdit = request.POST.get('nameEdit')
+    repository = Repository.objects.get(name=name)
+    repository.name = nameEdit
+    repository.save()
+    return render(request, 'github/home.html')
+
+
+def switch_edit_organization(request, name):
+    return render(request, 'github/edit_organization.html', {'name':name})
+
+def edit_organization(request, name):
+    nameEdit = request.POST.get('nameEdit')
+    organization = Organization.objects.get(name=name)
+    organization.name = nameEdit
+    organization.save()
+    return render(request, 'github/home.html')
+
 def organization(request):
     organization = Organization()
     return render(request, 'github/organization.html', {'organization' : organization})
@@ -243,21 +290,42 @@ def saveOrganization(request):
     name = request.POST['name']
     email = request.POST['email']
     organizations = Organization.objects.all()
+    users = User.objects.all()
     organization = Organization()
+
+    # check fileds empty
+    if name == "":
+        return render(request, 'github/organization.html',
+                      {'organization': organization, 'messageName': ' Field name must be filled!'})
+    if email == "":
+        return render(request, 'github/organization.html',
+                      {'organization': organization, 'messageEmail': ' Field email must be filled!'})
+
     organization.email = email
+
+    # put owner into members of organization
+    # logged user: uname_user
+    owner = request.session['uname_user']
+    organization.owner = owner
+    organization.save()
+    for m in users:
+        if m.username == owner:
+            organization.members.add(m)
+            organization.save()
+            organizationMembers = organization.members.all
 
     # check if name exists
     for o in organizations:
         if o.name == name:
             return render(request, 'github/organization.html',
-                          {'organization': organization, 'message': 'That name already exists!'})
+                          {'organization': organization,'organizationMembers': organizationMembers,'message': 'That name already exists!'})
     organization.name = name
     organization.save()
 
     # set nameOrganization in session
     request.session['nameOrganization'] = name
 
-    return render(request, 'github/organizationDetails.html', {'organization':organization})
+    return render(request, 'github/organizationDetails.html', {'organization':organization, 'organizationMembers': organizationMembers})
 
 def saveOrganizationDetails(request):
     purpose = request.POST['purpose']
@@ -303,6 +371,20 @@ def saveOrganizationMembers(request, name):
                 organizationMembers = organization.members.all
                 return render(request, 'github/organizationInformations.html',
                               {'organization': organization, 'organizationMembers': organizationMembers})
+
+# get all organizations by user ( owner and member)
+def organizationsByUser(request):
+    username = request.session['uname_user']
+    organizations = Organization.objects.all()
+    organizationsOfUser = []
+    for o in organizations:
+        for m in o.members.all():
+            if m.username == username:
+                organizationsOfUser.append(o)
+
+    return render(request, 'github/organizationsShow.html', {'username': username, 'organizationsOfUser':organizationsOfUser })
+
+
 # new repository
 def repository(request, p):
     repository = Repository()
@@ -318,8 +400,21 @@ def saveRepository(request, p):
     repository.description = description
     repository.type = type
     repository.organization = getOrganizationByName(p)
+    users = User.objects.all()
+
+    # put owner into members of repository
+    # logged user: uname_user
+    owner = request.session['uname_user']
+    repository.owner = owner
     repository.save()
-    return render(request, 'github/addNewMemberRepository.html', {'repository': repository})
+    for m in users:
+        if m.username == owner:
+            repository.members.add(m)
+            repository.save()
+            repositoryMembers = repository.members.all
+
+    repository.save()
+    return render(request, 'github/addNewMemberRepository.html', {'repository': repository, 'repositoryMembers':repositoryMembers})
 
 # parametar 'name' is nameRepostiory
 def saveRepositoryMembers(request, name):
@@ -349,9 +444,7 @@ def saveRepositoryMembers(request, name):
                               {'repository': repository, 'repositoryMembers': repositoryMembers})
 
 
-def repositoriesShow(request):
-    repositories = Repository.objects.all()
-    return render(request, 'github/repositoriesShow.html', {'repositories':repositories})
+
 
 # shows all organisations
 def organizationsShow(request):
@@ -409,6 +502,19 @@ def getRepositoryByName(nameRepository):
         if r.name == nameRepository:
             repository = r
     return repository
+
+# get repositories of user
+def repositoriesShow(request):
+    username = request.session['uname_user']
+    repositories = Repository.objects.all()
+    repositoriesOfUser = []
+    for o in repositories:
+        for m in o.members.all():
+            if m.username == username:
+                repositoriesOfUser.append(o)
+
+    return render(request, 'github/repositoriesShow.html', {'username': username, 'repositoriesOfUser':repositoriesOfUser })
+
 
 # returns all repositories of organization
 def getRepositoriesByOrganization(nameOrganization):

@@ -1,25 +1,56 @@
-{% extends "github/home.html" %}
+{% extends "github/base.html" %}
 
 {% block body_content %}
-    <div class="container">
-        <div class="container">
-          <h2>Organization Table</h2>
-           <table class="table">
-            <thead>
-              <tr>
-                <th>Name</th>
-              </tr>
-            </thead>
-            <tbody>
-            {% for o in organizations%}
-              <tr>
-                <td>{{o.name}}</td>
-                <td> <a href="{% url 'github:organizationInfo' o.name %}">Info</a></td>
-              </tr>
-            {% endfor %}
+<div class="wrapper">
+     <nav class="col-sm-3 shomeidenav hidden-xs">
+        <!-- Sidebar Header -->
+        <div class="sidebar-header">
+            <h3>Organization settings</h3>
+        </div>
 
-            </tbody>
-          </table>
+        <!-- Sidebar Links -->
+        <ul class="nav nav-stacked">
+             <li><a href="{% url 'github:organization' %}">New organization</a></li>
+        </ul>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="content container">
+        <div class="row">
+            <div class="col-md-8">
+            {% block content %}
+                <div><h3>Organizations of {{username}}</h3></div>
+                <div class="col-xs-12" style="height:50px;"></div>
+                <div class="container">
+                   <table class="table">
+                    <thead>
+                      <tr>
+                        <th style="width:10%">Organization name</th>
+                        <th style="width:10%"></th>
+                        <th style="width:10%"></th>
+                        <th style="width:10%"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for o in organizationsOfUser%}
+                      <tr>
+                          <td>{{o.name}}</td>
+                          <td><a href="{% url 'github:organizationInfo' o.name %}">More informations</a></td>
+                          {% if o.owner == username %}
+                          <td><a href="{% url 'github:switch_delete_organization' o.name %}">Delete</a></td>
+                          {% endif %}
+                          {% if o.owner == username %}
+                          <td><a href="{% url 'github:switch_edit_organization' o.name %}">Edit</a></td>
+                          {% endif %}
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+            {% endblock %}
+            </div>
         </div>
     </div>
+
+</div>
 {% endblock %}

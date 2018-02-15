@@ -14,8 +14,8 @@
             <li><a href="{% url 'github:organizationInfo' organization.name %}">About organization</a></li>
             <li><a href="{% url 'github:addNewMemberOrganization' organization.name%}">Add member</a></li>
             <li><a href="{% url 'github:repository' organization.name %}">Add new repository</a></li>
-            <!--<li><a href="{% url 'github:login' %}">Change organization informations</a></li>-->
-            <!--<li><a href="{% url 'github:login' %}">Delete organization</a></li>-->
+            <li><a href="{% url 'github:organization' %}">Add new organization</a></li>
+
         </ul>
         </ul>
     </nav>
@@ -44,6 +44,8 @@
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
                             <button type="submit" class="btn btn-default">Add member</button>
+                            <a href="{% url 'github:organizationInfo' organization.name %}" class="btn btn-info" role="button">Skip</a>
+
                         </div>
                     </div>
                  </form>

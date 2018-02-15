@@ -7,7 +7,7 @@
             <h2>Purpose</h2>
             {% for p in organization.purposeList%}
             <div class="radio">
-                <label><input type="radio" name="purpose" value = "{{p}} ">{{p}}</label>
+                <label><input type="radio" name="purpose" value = "{{p}} " required>{{p}}</label>
             </div>
             {% endfor %}
 
@@ -15,14 +15,14 @@
             <h2>How long do you plan to use this organization?</h2>
             {% for l in organization.howLongList%}
             <div class="radio">
-                <label><input type="radio" name="howLong" value = "{{l}} ">{{l}}</label>
+                <label><input type="radio" name="howLong" value = "{{l}} " required>{{l}}</label>
             </div>
             {% endfor %}
 
             <h2>How much people do you plan to use this organization?</h2>
             {% for pl in organization.howMuchPeopleList%}
             <div class="radio">
-                <label><input type="radio" name="howMuchPeople" value = "{{pl}} ">{{pl}}</label>
+                <label><input type="radio" name="howMuchPeople" value = "{{pl}} " required>{{pl}}</label>
             </div>
             {% endfor %}
 

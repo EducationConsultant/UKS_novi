@@ -4,10 +4,11 @@
     <div class="container">
         <form class="form-horizontal" action="{% url 'github:saveRepository' p %}" method="post">
             {% csrf_token %}
+            <h3>New repository</h3>
             <div class="form-group">
                 <label class="control-label col-sm-2" for="name">Name:</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="name" placeholder="Enter name" name="name" value="{{ repository.name }}" />
+                    <input type="text" class="form-control" id="name" placeholder="Enter name" name="name" value="{{ repository.name }}" required />
                     {% if message %}
                      <div class="alert alert-warning">
                     <strong>Warning!</strong> {{message}}
@@ -18,13 +19,13 @@
             <div class="form-group">
                 <label class="control-label col-sm-2" for="description">Description:</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="description" placeholder="Enter description" name="description" value="{{ repository.description }}" />
+                    <input type="text" class="form-control" id="description" placeholder="Enter description" name="description"  required value="{{ repository.description }}" />
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label col-sm-2" >Type:</label>
                  {% for l in repository.typeList%}
-                <label class="radio-inline"><input type="radio" name="type" value="{{l}}">{{l}}</label>
+                <label class="radio-inline"><input type="radio" name="type" value="{{l}}" required>{{l}}</label>
                  {% endfor %}
             </div>
 
@@ -34,6 +35,8 @@
                     <button type="submit" class="btn btn-default">Next</button>
                 </div>
             </div>
+
+
         </form>
     </div>
 {% endblock %}
