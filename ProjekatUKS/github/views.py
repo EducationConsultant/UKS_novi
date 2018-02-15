@@ -242,7 +242,7 @@ def delete_organization(request, name):
         organization.delete()
         return render(request, 'github/home.html')
     else:
-        return render(request, 'github/delete_organization.html', {'message': 'Name is not valid'})
+        return render(request, 'github/delete_organization.html', {'name': name, 'message': 'Name is not valid'})
 
 
 
