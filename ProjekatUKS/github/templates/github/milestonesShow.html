@@ -8,9 +8,9 @@
             <h3>Milestone settings</h3>
         </div>
          <!-- Sidebar Links -->
-        <ul class="nav nav-stacked">
-              <!--<li><a href="{% url 'github:repositoryInfo' nameRepository %}">Back to repository</a></li>-->
-              <!--<li><a href="{% url 'github:switch_milestone' nameRepository %}">New milestone</a></li>-->
+         <ul class="nav nav-stacked">
+            <li><a href="{% url 'github:switch_milestone' nameRepository %}">New milestone</a></li>
+            <li><a href="{% url 'github:getAllMilestones' nameRepository %}">Milestones</a></li>
         </ul>
     </nav>
 
@@ -28,6 +28,7 @@
                         <th style="width:10%">Title</th>
                         <th style="width:10%">Due date</th>
                         <th style="width:10%">Description</th>
+                        <th></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -36,6 +37,7 @@
                           <td>{{m.title}}</td>
                           <td>{{m.date}}</td>
                           <td>{{m.description}}</td>
+                          <td><a href="{% url 'github:milestoneInfo' m.title %}">More</a></td>
                       </tr>
                     {% endfor %}
                     </tbody>

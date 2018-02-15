@@ -869,6 +869,12 @@ def milestone(request, name):
     milestone.save()
     return render(request, 'github/milestoneInformation.html', {'milestone':milestone})
 
+# name is milestoneName
+def milestoneInfo(request, name ) :
+    milestone = Milestone.objects.get(title=name)
+    return render(request, 'github/milestoneInformation.html', {'milestone': milestone})
+
+
 def getAllMilestones(request, name):
     milestonesOfRepository = getMilestonesOfRepository(name)
     return render(request, 'github/milestonesShow.html', {'nameRepository':name,  'milestonesOfRepository': milestonesOfRepository})

@@ -7,7 +7,10 @@
         <div class="sidebar-header">
             <h3>Milestone settings</h3>
         </div>
-
+        <ul class="nav nav-stacked">
+            <li><a href="{% url 'github:switch_milestone' milestone.repository.name %}">New milestone</a></li>
+            <li><a href="{% url 'github:getAllMilestones' milestone.repository.name %}">Milestones</a></li>
+        </ul>
 
     </nav>
 
@@ -36,15 +39,6 @@
                         <textarea class="form-control" rows="5" id="description" name="description"  disabled>{{milestone.description}}</textarea>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-primary">Add</button>
-                    </div>
-                </div>
-
-
-
-
             {% endblock %}
             </div>
         </div>
