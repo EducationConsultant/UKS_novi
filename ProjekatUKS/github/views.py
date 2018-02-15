@@ -563,9 +563,17 @@ def comment_new(request, id):
     comment.save()
 
     comments = Comment.objects.filter(issue=issue.pk)
-
     return render(request, "github/issue_view_one.html", {'issue': issue,'comments':comments})
 
 
+def comment_edit(request, idIssue, idComment):
+    issue = Issue.objects.get(pk=idIssue)
+    comment = Comment.objects.get(pk=idComment)
 
+    newDescription = request.POST.get('comment')
+    comment.description = newDescription
+    comment.save()
+
+    comments = Comment.objects.filter(issue=issue.pk)
+    return render(request, "github/issue_view_one.html", {'issue': issue,'commentToEdit': comment,'comments': comments})
 

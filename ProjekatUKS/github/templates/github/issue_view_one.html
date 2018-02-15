@@ -1,5 +1,19 @@
 {% extends "github/issue.html" %}
 
+{% block head_content %}
+<script>
+    function show_form(n){
+        var form = document.getElementById("form_part"+n);
+        form.style.display = "";
+    }
+
+    function hide_form(n){
+        var form = document.getElementById("form_part"+n);
+        form.style.display = "none";
+    }
+</script>
+{% endblock %}
+
 {% block content %}
 <h1 class="text-primary">{{issue.title}}</h1>
 <span {% if not issue.closed %}class="label label-success"{% endif %} {% if issue.closed %}class="label label-danger"{% endif %}>
@@ -24,15 +38,49 @@
         <ul class="list-group">
             {% for comment in comments %}
              <li class="list-group-item">
+
+                 <button type="button" onclick="show_form({{comment.pk}})"><span class="glyphicon glyphicon-pencil"></span> Edit</button>
+
+                 <div class="row" >
+                    <div class="col-xs-4">
+                        <div class="container">
+                            <form id="form_part{{comment.pk}}" style="display: none;" class="form-horizontal" action="{% url 'github:comment_edit' issue.pk comment.pk %}" method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2" for="comment">Comment:</label>
+                                    <div class="col-sm-5">
+                                        <textarea class="form-control" placeholder="Leave a comment" rows="5" id="commentEdit" name="comment">{{comment.description}}</textarea>
+
+                                        {% if messageNewComm %}
+                                        <div class="alert alert-danger">
+                                          <strong>Danger!</strong> {{messageNewComm}}
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-sm-offset-4 col-sm-10">
+                                        <button type="submit" class="btn btn-success">Confirm</button>
+                                        <button type="button" class="btn btn-danger" onclick="hide_form({{comment.pk}})">Cancel</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
                  <span>{{comment.author.username}}</span>
                  <span> commented {{comment.createdDate}}</span>
-                 <p><span>{{comment.description}}</span></p>
+
+                 <p>
+                     <span>{{comment.description}}</span>
+                 </p>
              </li>
              {% endfor %}
         </ul>
     </div>
 </div>
-
 
 <div class="row" >
     <div class="col-xs-4">
@@ -89,7 +137,7 @@
     </li>
 </ul>
 
-<!-- Modal -->
+<!-- Modal: EDIT ISSUE-->
 <div id="editModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <!-- Modal content-->

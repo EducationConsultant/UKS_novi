@@ -47,6 +47,7 @@ urlpatterns = [
     path('issue_reopen/<id>', views.issue_reopen, name='issue_reopen'),
 
     path('comment_new/<id>', views.comment_new, name='comment_new'),
+    path('comment_edit/<idIssue>/<idComment>', views.comment_edit, name='comment_edit'),
 
 
     path('saveOrganizationMembers/<str:name>', views.saveOrganizationMembers, name='saveOrganizationMembers'),
