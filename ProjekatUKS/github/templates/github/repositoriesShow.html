@@ -1,27 +1,43 @@
-{% extends "github/home.html" %}
+{% extends "github/base.html" %}
 
 {% block body_content %}
-    <div class="container">
-        <div class="container">
-          <h2>Repository Table</h2>
-           <table class="table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Members</th>
-              </tr>
-            </thead>
-            <tbody>
-            {% for r in repositories%}
-              <tr>
-                <td>{{r.name}}</td>
-                <td>{{r.description}}</td>
-                <td>Username</td>
-              </tr>
-            {% endfor %}
-            </tbody>
-          </table>
+<div class="wrapper">
+     <nav class="col-sm-3 shomeidenav hidden-xs">
+        <!-- Sidebar Header -->
+
+    </nav>
+
+    <!-- Page Content -->
+    <div class="content container">
+        <div class="row">
+            <div class="col-md-8">
+            {% block content %}
+                <div><h3>Repositories of {{username}}</h3></div>
+                <div class="col-xs-12" style="height:50px;"></div>
+                <div class="container">
+                   <table class="table">
+                    <thead>
+                      <tr>
+                          <th>Repository name</th>
+                          <th>Organization name</th>
+                          <th>More informations</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for o in repositoriesOfUser%}
+                      <tr>
+                          <td>{{o.name}}</td>
+                          <td>{{o.organization.name}}</td>
+                          <td><a href="{% url 'github:repositoryInfo' o.name %}">More informations</a></td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+            {% endblock %}
+            </div>
         </div>
     </div>
+
+</div>
 {% endblock %}

@@ -394,9 +394,7 @@ def saveRepositoryMembers(request, name):
                               {'repository': repository, 'repositoryMembers': repositoryMembers})
 
 
-def repositoriesShow(request):
-    repositories = Repository.objects.all()
-    return render(request, 'github/repositoriesShow.html', {'repositories':repositories})
+
 
 # shows all organisations
 def organizationsShow(request):
@@ -454,6 +452,19 @@ def getRepositoryByName(nameRepository):
         if r.name == nameRepository:
             repository = r
     return repository
+
+# get repositories of user
+def repositoriesShow(request):
+    username = request.session['uname_user']
+    repositories = Repository.objects.all()
+    repositoriesOfUser = []
+    for o in repositories:
+        for m in o.members.all():
+            if m.username == username:
+                repositoriesOfUser.append(o)
+
+    return render(request, 'github/repositoriesShow.html', {'username': username, 'repositoriesOfUser':repositoriesOfUser })
+
 
 # returns all repositories of organization
 def getRepositoriesByOrganization(nameOrganization):

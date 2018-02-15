@@ -97,15 +97,18 @@
                    <table class="table">
                     <thead>
                       <tr>
-                        <th>Repository name</th>
+                          <th>Repository name</th>
+                          <th>Organization name</th>
+                          <th>More informations</th>
                       </tr>
                     </thead>
                     <tbody>
                     {% for r in organizationRepositories%}
-                      <tr>
-                          <td>{{r.name}}</td>
-                          <td><a href="{% url 'github:repositoryInfo' r.name %}">Info</a></td>
-                      </tr>
+                        <tr>
+                            <td>{{r.name}}</td>
+                            <td>{{r.organization.name}}</td>
+                            <td><a href="{% url 'github:repositoryInfo' r.name %}">Info</a></td>
+                        </tr>
                     {% endfor %}
                     </tbody>
                   </table>
