@@ -34,7 +34,7 @@ urlpatterns = [
     path('saveOrganization', views.saveOrganization, name='saveOrganization'),
     path('saveOrganizationDetails', views.saveOrganizationDetails, name='saveOrganizationDetails'),
 
-
+    #issue
     path('switch_all_issues', views.switch_issue_show_all, name='switch_all_issues'),
     path('issue_show_all_open', views.issue_show_all_open, name='issue_show_all_open'),
     path('issue_show_all_closed', views.issue_show_all_closed, name='issue_show_all_closed'),
@@ -46,10 +46,16 @@ urlpatterns = [
     path('issue_close/<id>', views.issue_close, name='issue_close'),
     path('issue_reopen/<id>', views.issue_reopen, name='issue_reopen'),
 
+    #comment
     path('comment_new/<id>', views.comment_new, name='comment_new'),
     path('comment_edit/<idIssue>/<idComment>', views.comment_edit, name='comment_edit'),
     path('comment_delete/<id>', views.comment_delete, name='comment_delete'),
     path('comment_reply/<idIssue>/<idComment>', views.comment_reply, name='comment_reply'),
+
+    #label
+    path('switch_label_show_all', views.switch_label_show_all, name='switch_label_show_all'),
+    path('switch_label_new', views.switch_label_new, name='switch_label_new'),
+    path('label_new', views.label_new, name='label_new'),
 
 
     path('saveOrganizationMembers/<str:name>', views.saveOrganizationMembers, name='saveOrganizationMembers'),

@@ -1,0 +1,23 @@
+{% extends "github/label.html" %}
+
+{% block content %}
+<h1 class="text-primary">Show all for <a href="{% url 'github:repositoryInfo' request.session.repository_name %}">{{request.session.repository_name}}</a></h1>
+
+<div class="container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for label in labels %}
+                <tr>
+                    <td><div style="width:200px;height:auto;border:1px solid {{label.color}};background-color:{{label.color}};color:white;">{{label.name}}</div></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

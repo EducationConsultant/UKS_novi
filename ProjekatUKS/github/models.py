@@ -85,3 +85,12 @@ class Comment(models.Model):
         return self.description
 
 
+class Label(models.Model):
+    name = models.CharField(max_length=50)
+    color = models.CharField(max_length=7)
+    repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name + " " + self.color
+
+

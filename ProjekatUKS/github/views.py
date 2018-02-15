@@ -7,7 +7,7 @@ from django.contrib.sites.shortcuts import get_current_site
 
 
 
-from github.models import User, Organization, Repository, Issue, Comment
+from github.models import User, Organization, Repository, Issue, Comment, Label
 
 
 # switch from some page to home.html
@@ -777,7 +777,6 @@ def repositoryInfo(request, name):
                                                                     })
 
 
-
 def switch_issue_show_all(request):
     repository_pk = request.session['repository_id']
     repository = Repository.objects.get(pk=repository_pk)
@@ -1009,3 +1008,30 @@ def comment_reply(request, idIssue, idComment):
             comments.append(comm)
 
     return render(request, "github/issue_view_one.html", {'issue': issue, 'comments': comments})
+
+def switch_label_show_all(request):
+    repository_pk = request.session['repository_id']
+    repository = Repository.objects.get(pk=repository_pk)
+
+    labels = Label.objects.filter(repository=repository.pk)
+    return render(request, "github/label_show_all.html", {'labels': labels})
+
+def switch_label_new(request):
+    return render(request, "github/label_new.html")
+
+def label_new(request):
+    repository_pk = request.session['repository_id']
+    repository = Repository.objects.get(pk=repository_pk)
+
+    name = request.POST.get('name')
+    color = request.POST.get('color')
+
+    label = Label()
+    label.name = name
+    label.color = color
+    label.repository = repository
+
+    label.save()
+
+    labels = Label.objects.filter(repository=repository.pk)
+    return render(request, "github/label_show_all.html", {'labels': labels})
