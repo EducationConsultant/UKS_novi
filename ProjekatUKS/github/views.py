@@ -537,7 +537,7 @@ def issue_reopen(request,id):
 
     comment = Comment()
 
-    if description is None:
+    if (description is None) or (description == ""):
         comment.description = 'reopend this'
     else:
         comment.description = description
@@ -548,6 +548,10 @@ def issue_reopen(request,id):
     comment.save()
 
     comments = Comment.objects.filter(issue=issue.pk)
+
+    print("JJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ")
+    for com in comments:
+        print(com.description)
 
     return render(request, "github/issue_view_one.html", {'issue': issue,'comments':comments})
 
