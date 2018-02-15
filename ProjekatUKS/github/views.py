@@ -470,6 +470,53 @@ def edit_organization(request, name):
     organization.save()
     return render(request, 'github/home.html')
 
+def switch_delete_organization(request, name):
+    return render(request, 'github/delete_organization.html', {'name':name})
+
+def switch_delete_repository(request, name):
+    return render(request, 'github/delete_repository.html', {'name':name})
+
+
+def delete_organization(request, name):
+    organization = Organization.objects.get(name=name)
+    nameDelete = request.POST.get('nameDelete')
+    if name == nameDelete:
+        organization.delete()
+        return render(request, 'github/home.html')
+    else:
+        return render(request, 'github/delete_organization.html', {'name': name, 'message': 'Name is not valid'})
+
+def delete_repository(request, name):
+    repository = Repository.objects.get(name=name)
+    nameDelete = request.POST.get('nameDelete')
+    if name == nameDelete:
+        repository.delete()
+        return render(request, 'github/home.html')
+    else:
+        return render(request, 'github/delete_repository.html', {'name': name, 'message': 'Name is not valid'})
+
+
+def switch_edit_repository(request, name):
+    return render(request, 'github/edit_repository.html', {'name':name})
+
+def edit_repository(request, name):
+    nameEdit = request.POST.get('nameEdit')
+    repository = Repository.objects.get(name=name)
+    repository.name = nameEdit
+    repository.save()
+    return render(request, 'github/home.html')
+
+
+def switch_edit_organization(request, name):
+    return render(request, 'github/edit_organization.html', {'name':name})
+
+def edit_organization(request, name):
+    nameEdit = request.POST.get('nameEdit')
+    organization = Organization.objects.get(name=name)
+    organization.name = nameEdit
+    organization.save()
+    return render(request, 'github/home.html')
+
 def organization(request):
     organization = Organization()
     return render(request, 'github/organization.html', {'organization' : organization})
