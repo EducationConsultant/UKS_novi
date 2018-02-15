@@ -14,6 +14,7 @@
             <li><a href="{% url 'github:repositoryInfo' repository.name %}">About repository</a></li>
             <li><a href="{% url 'github:addNewMemberRepository' repository.name %}">Add member</a></li>
             <li><a href="{% url 'github:organizationInfo' repository.organization.name %}">Back to organization</a></li>
+            <li><a href="{% url 'github:repository' repository.organization.name %}">New repository</a></li>
             </ul>
         </ul>
     </nav>
