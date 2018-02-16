@@ -1088,3 +1088,30 @@ def milestone_close(request, id):
     milestone.save()
     return render(request, "github/milestoneInformation.html", {'milestone': milestone})
 
+def switch_milestone_edit(request, id):
+    milestone = Milestone.objects.get(pk=id)
+    print("*******************" + str(milestone.date))
+    dateEdit = str(milestone.date)
+    return render(request, "github/edit_milestone.html", {'dateEdit' : dateEdit,'milestone': milestone})
+
+def milestone_edit(request, id):
+    milestone = Milestone.objects.get(pk=id)
+    title = request.POST.get('title')
+    description = request.POST.get('description')
+    date = request.POST.get('date')
+    milestone.title = title
+    milestone.description = description
+    milestone.date = date
+    milestone.save()
+    return render(request, "github/milestoneInformation.html", {'milestone': milestone})
+
+
+
+def delete_milestone(request, id):
+    milestone = Milestone.objects.get(pk=id)
+    name = milestone.repository.name
+    milestone.delete()
+    milestonesOfRepository = getMilestonesOfRepository(name)
+    return render(request, 'github/milestonesShow.html', {'nameRepository': name,
+                                                          'milestonesOfRepository': milestonesOfRepository})
+
