@@ -1043,6 +1043,27 @@ def getAllMilestones(request, name):
     return render(request, 'github/milestonesShow.html', {'nameRepository':name,
                                                           'milestonesOfRepository': milestonesOfRepository})
 
+
+def getAllMilestones_open(request, name):
+    milestones = Milestone.objects.filter(opened=True)
+    milestonesOfRepository=[]
+    for m in milestones:
+        if m.repository.name==name:
+            milestonesOfRepository.append(m)
+    return render(request, 'github/milestonesShow.html', {'nameRepository': name,
+                                                          'milestonesOfRepository': milestonesOfRepository})
+
+
+def getAllMilestones_closed(request, name):
+    milestones = Milestone.objects.filter(opened=False)
+    milestonesOfRepository = []
+    for m in milestones:
+        if m.repository.name == name:
+            milestonesOfRepository.append(m)
+    return render(request, 'github/milestonesShow.html', {'nameRepository': name,
+                                                          'milestonesOfRepository': milestonesOfRepository})
+
+
 # side method
 # name is repositoryName
 def getMilestonesOfRepository(name):
@@ -1066,3 +1087,4 @@ def milestone_close(request, id):
     milestone.opened = False
     milestone.save()
     return render(request, "github/milestoneInformation.html", {'milestone': milestone})
+

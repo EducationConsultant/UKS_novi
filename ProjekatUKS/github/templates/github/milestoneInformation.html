@@ -19,7 +19,7 @@
         <div class="row">
             <div class="col-md-8">
             {% block content %}
-               <div><h4>About milestone</h4></div>
+               <div><h4>About {{milestone.title}}</h4></div>
                <div class="form-group">
                     <span
                         {% if milestone.opened %}class="label label-success"{% endif %}
@@ -27,7 +27,6 @@
                         {% if milestone.opened %}
                             Open
                         {% endif %}
-
                         {% if not milestone.opened %}
                             Closed
                         {% endif %}
@@ -52,7 +51,8 @@
                         <textarea class="form-control" rows="5" id="description" name="description"  disabled>{{milestone.description}}</textarea>
                     </div>
                </div>
-                <div class="form-group">
+               <div class="col-xs-12" style="height:50px;"></div>
+               <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
                             {% if not milestone.opened %}
                             <button type="button" class="btn btn-info" onclick="location.href='{% url 'github:milestone_reopen' milestone.pk %}'">Reopen</button>
@@ -61,7 +61,7 @@
                             <button type="button" class="btn btn-danger" onclick="location.href='{% url 'github:milestone_close' milestone.pk %}'">Close</button>
                             {% endif %}
                         </div>
-                </div>
+               </div>
 
             {% endblock %}
             </div>

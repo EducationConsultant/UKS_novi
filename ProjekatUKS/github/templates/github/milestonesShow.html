@@ -22,18 +22,39 @@
                 <div><h3>Milestones of {{nameRepository}}</h3></div>
                 <div class="col-xs-12" style="height:50px;"></div>
                 <div class="container">
+                     <div class="col-md-8">
+                   <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle" type="button" id="filters" data-toggle="dropdown">Filters
+                            <span class="caret"></span>
+                        </button>
+
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="filters">
+                            <li role="presentation">
+                                <a role="menuitem" tabindex="-1" href="{% url 'github:getAllMilestones_open' nameRepository %}">Open</a>
+                            </li>
+
+                            <li role="presentation">
+                                <a role="menuitem" tabindex="-1" href="{% url 'github:getAllMilestones_closed'  nameRepository%}">Closed</a>
+                            </li>
+                        </ul>
+
+                        <a href="{% url 'github:getAllMilestones' nameRepository%}"><button class="btn btn-default">Choose filter</button></a>
+                   </div>
+
+
+
                    <table class="table">
                     <thead>
                       <tr>
-                        <th style="width:10%">Title</th>
-                        <th style="width:10%">Due date</th>
+                        <th style="width:15%">Title</th>
+                        <th style="width:15%">Due date</th>
                         <th style="width:10%">Description</th>
-                        <th></th>
+                        <th ></th>
                       </tr>
                     </thead>
                     <tbody>
                     {% for m in milestonesOfRepository%}
-                      <tr>
+                      <tr {% if  m.opened %} class="success" {% endif %} {% if not m.opened %} class="danger" {% endif %}>
                           <td>{{m.title}}</td>
                           <td>{{m.date}}</td>
                           <td>{{m.description}}</td>
@@ -44,6 +65,7 @@
                   </table>
                 </div>
             {% endblock %}
+                </div>
             </div>
         </div>
     </div>
