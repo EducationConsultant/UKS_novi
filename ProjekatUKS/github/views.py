@@ -1017,7 +1017,7 @@ def comment_reply(request, idIssue, idComment):
 def switch_milestone(request, name):
     return render(request, 'github/milestone.html', {'nameRepository': name})
 
-# informations od repository
+# new milestone
 # name is nameRepository
 def milestone(request, name):
     date = request.POST.get('date')
@@ -1028,6 +1028,7 @@ def milestone(request, name):
     milestone.title = title
     milestone.description = description
     milestone.repository = Repository.objects.get(name=name)
+    milestone.opened = True
     milestone.save()
     return render(request, 'github/milestoneInformation.html', {'milestone':milestone})
 
@@ -1036,11 +1037,13 @@ def milestoneInfo(request, name ) :
     milestone = Milestone.objects.get(title=name)
     return render(request, 'github/milestoneInformation.html', {'milestone': milestone})
 
-
+# shows all milestones of one repository
 def getAllMilestones(request, name):
     milestonesOfRepository = getMilestonesOfRepository(name)
-    return render(request, 'github/milestonesShow.html', {'nameRepository':name,  'milestonesOfRepository': milestonesOfRepository})
+    return render(request, 'github/milestonesShow.html', {'nameRepository':name,
+                                                          'milestonesOfRepository': milestonesOfRepository})
 
+# side method
 # name is repositoryName
 def getMilestonesOfRepository(name):
     milestones = Milestone.objects.all()
@@ -1050,3 +1053,16 @@ def getMilestonesOfRepository(name):
             milestonesOfRepository.append(m)
     return milestonesOfRepository
 
+
+def milestone_reopen(request,id):
+    milestone = Milestone.objects.get(pk=id)
+    milestone.opened = True
+    milestone.save()
+    return render(request, "github/milestoneInformation.html", {'milestone':milestone})
+
+
+def milestone_close(request, id):
+    milestone = Milestone.objects.get(pk=id)
+    milestone.opened = False
+    milestone.save()
+    return render(request, "github/milestoneInformation.html", {'milestone': milestone})

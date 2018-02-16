@@ -19,26 +19,50 @@
         <div class="row">
             <div class="col-md-8">
             {% block content %}
-                <div><h4>About milestone</h4></div>
+               <div><h4>About milestone</h4></div>
+               <div class="form-group">
+                    <span
+                        {% if milestone.opened %}class="label label-success"{% endif %}
+                        {% if not milestone.opened %}class="label label-danger"{% endif %}>
+                        {% if milestone.opened %}
+                            Open
+                        {% endif %}
 
+                        {% if not milestone.opened %}
+                            Closed
+                        {% endif %}
+                    </span>
+               </div>
                <div class="form-group">
                     <label class="control-label col-sm-2" for="title">Title:</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" id="title" placeholder="Enter title" name="title" rows="5" value="{{milestone.title}}"  disabled />
                     </div>
-                </div>
-                <div class="form-group">
+               </div>
+               <div class="form-group">
                     <label class="control-label col-sm-2" for="date">Date</label>
                      <div class="col-sm-10">
                          <input class="form-control" id="date" name="date" placeholder="YYYY-MM-DD" type="text" rows="5" value="{{milestone.date}}" disabled/>
                      </div>
-                </div>
-                <div class="form-group">
+               </div>
+
+               <div class="form-group">
                     <label class="control-label col-sm-2" for="description">Description:</label>
                     <div class="col-sm-5">
                         <textarea class="form-control" rows="5" id="description" name="description"  disabled>{{milestone.description}}</textarea>
                     </div>
+               </div>
+                <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            {% if not milestone.opened %}
+                            <button type="button" class="btn btn-info" onclick="location.href='{% url 'github:milestone_reopen' milestone.pk %}'">Reopen</button>
+                            {% endif %}
+                            {% if milestone.opened %}
+                            <button type="button" class="btn btn-danger" onclick="location.href='{% url 'github:milestone_close' milestone.pk %}'">Close</button>
+                            {% endif %}
+                        </div>
                 </div>
+
             {% endblock %}
             </div>
         </div>
@@ -46,3 +70,4 @@
 
 </div>
 {% endblock %}
+

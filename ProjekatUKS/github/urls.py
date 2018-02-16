@@ -75,5 +75,6 @@ urlpatterns = [
     path('milestone/<str:name>', views.milestone, name='milestone'),
     path('getAllMilestones/<str:name>', views.getAllMilestones, name='getAllMilestones'),
     path('milestoneInfo/<str:name>', views.milestoneInfo, name='milestoneInfo'),
-
+    path('milestone_reopen/<id>', views.milestone_reopen, name='milestone_reopen'),
+    path('milestone_close/<id>', views.milestone_close, name='milestone_close'),
 ]
