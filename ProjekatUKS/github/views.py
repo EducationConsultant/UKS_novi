@@ -1169,7 +1169,7 @@ def comment_reply(request, idIssue, idComment):
 def switch_milestone(request, name):
     return render(request, 'github/milestone.html', {'nameRepository': name})
 
-# informations od repository
+# new milestone
 # name is nameRepository
 def milestone(request, name):
     date = request.POST.get('date')
@@ -1180,6 +1180,7 @@ def milestone(request, name):
     milestone.title = title
     milestone.description = description
     milestone.repository = Repository.objects.get(name=name)
+    milestone.opened = True
     milestone.save()
     return render(request, 'github/milestoneInformation.html', {'milestone':milestone})
 
@@ -1188,11 +1189,34 @@ def milestoneInfo(request, name ) :
     milestone = Milestone.objects.get(title=name)
     return render(request, 'github/milestoneInformation.html', {'milestone': milestone})
 
-
+# shows all milestones of one repository
 def getAllMilestones(request, name):
     milestonesOfRepository = getMilestonesOfRepository(name)
-    return render(request, 'github/milestonesShow.html', {'nameRepository':name,  'milestonesOfRepository': milestonesOfRepository})
+    return render(request, 'github/milestonesShow.html', {'nameRepository':name,
+                                                          'milestonesOfRepository': milestonesOfRepository})
 
+
+def getAllMilestones_open(request, name):
+    milestones = Milestone.objects.filter(opened=True)
+    milestonesOfRepository=[]
+    for m in milestones:
+        if m.repository.name==name:
+            milestonesOfRepository.append(m)
+    return render(request, 'github/milestonesShow.html', {'nameRepository': name,
+                                                          'milestonesOfRepository': milestonesOfRepository})
+
+
+def getAllMilestones_closed(request, name):
+    milestones = Milestone.objects.filter(opened=False)
+    milestonesOfRepository = []
+    for m in milestones:
+        if m.repository.name == name:
+            milestonesOfRepository.append(m)
+    return render(request, 'github/milestonesShow.html', {'nameRepository': name,
+                                                          'milestonesOfRepository': milestonesOfRepository})
+
+
+# side method
 # name is repositoryName
 def getMilestonesOfRepository(name):
     milestones = Milestone.objects.all()
@@ -1201,6 +1225,7 @@ def getMilestonesOfRepository(name):
         if m.repository.name == name:
             milestonesOfRepository.append(m)
     return milestonesOfRepository
+
 
 
 def switch_label_show_all(request):
@@ -1265,3 +1290,45 @@ def label_delete(request):
     labels = Label.objects.filter(repository=repository.pk)
     return render(request, "github/label_show_all.html",
                   {'labels': labels, 'messageSuccess': 'Label successfully deleted.'})
+
+def milestone_reopen(request,id):
+    milestone = Milestone.objects.get(pk=id)
+    milestone.opened = True
+    milestone.save()
+    return render(request, "github/milestoneInformation.html", {'milestone':milestone})
+
+
+def milestone_close(request, id):
+    milestone = Milestone.objects.get(pk=id)
+    milestone.opened = False
+    milestone.save()
+    return render(request, "github/milestoneInformation.html", {'milestone': milestone})
+
+def switch_milestone_edit(request, id):
+    milestone = Milestone.objects.get(pk=id)
+    print("*******************" + str(milestone.date))
+    dateEdit = str(milestone.date)
+    return render(request, "github/edit_milestone.html", {'dateEdit' : dateEdit,'milestone': milestone})
+
+def milestone_edit(request, id):
+    milestone = Milestone.objects.get(pk=id)
+    title = request.POST.get('title')
+    description = request.POST.get('description')
+    date = request.POST.get('date')
+    milestone.title = title
+    milestone.description = description
+    milestone.date = date
+    milestone.save()
+    return render(request, "github/milestoneInformation.html", {'milestone': milestone})
+
+
+
+def delete_milestone(request, id):
+    milestone = Milestone.objects.get(pk=id)
+    name = milestone.repository.name
+    milestone.delete()
+    milestonesOfRepository = getMilestonesOfRepository(name)
+    return render(request, 'github/milestonesShow.html', {'nameRepository': name,
+                                                          'milestonesOfRepository': milestonesOfRepository})
+
+

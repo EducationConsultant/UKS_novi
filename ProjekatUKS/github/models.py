@@ -99,7 +99,7 @@ class Milestone(models.Model):
     title = models.CharField(max_length=50)
     description = models.CharField(max_length=50)
     repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
-
+    opened = models.BooleanField(default=True)
 
     def __str__(self):
         return self.title

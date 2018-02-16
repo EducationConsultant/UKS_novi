@@ -87,5 +87,14 @@ urlpatterns = [
     path('milestone/<str:name>', views.milestone, name='milestone'),
     path('getAllMilestones/<str:name>', views.getAllMilestones, name='getAllMilestones'),
     path('milestoneInfo/<str:name>', views.milestoneInfo, name='milestoneInfo'),
+    path('milestone_reopen/<id>', views.milestone_reopen, name='milestone_reopen'),
+    path('milestone_close/<id>', views.milestone_close, name='milestone_close'),
+    path('getAllMilestones_open/<str:name>', views.getAllMilestones_open, name='getAllMilestones_open'),
+    path('getAllMilestones_closed/<str:name>', views.getAllMilestones_closed, name='getAllMilestones_closed'),
+    path('delete_milestone/<id>', views.delete_milestone, name='delete_milestone'),
+    path('switch_milestone_edit/<id>', views.switch_milestone_edit, name='switch_milestone_edit'),
+    path('milestone_edit/<id>', views.milestone_edit, name='milestone_edit'),
+
+
 
 ]
