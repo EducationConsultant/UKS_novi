@@ -58,7 +58,7 @@ def save_user(request):
          "\n\n"
          "Thanks for signing up with BooHub!" 
          " You must follow this link to activate your account:"
-         "\n\n" + domain + "/github/activate_user/" + user.username +
+         "\n\n" + domain + "/boohub/activate_user/" + user.username +
          "\n\n"
          "Have fun! :)"
          "\n\n"
@@ -1265,3 +1265,51 @@ def label_delete(request):
     labels = Label.objects.filter(repository=repository.pk)
     return render(request, "github/label_show_all.html",
                   {'labels': labels, 'messageSuccess': 'Label successfully deleted.'})
+
+def create_label_from_issue(request):
+    repository_pk = request.session['repository_id']
+    repository = Repository.objects.get(pk=repository_pk)
+
+    users = []
+    if repository.members.all() is not None:
+        for member in repository.members.all():
+            users.append(member.username)
+
+    #label
+    name = request.POST.get('name')
+    color = request.POST.get('color')
+
+    label = Label()
+    label.name = name
+    label.color = color
+    label.repository = repository
+
+    label.save()
+
+    title = request.POST.get('titleIssue')
+    description = request.POST.get('descriptionIssue')
+    listAssignees = request.POST.getlist('assignees')
+    listLabels = request.POST.getlist('labels')
+
+    #author
+    username = request.session['uname_user']
+    user = User.objects.get(username=username)
+
+    issue = Issue()
+    issue.title = title
+    issue.description = description
+    issue.author = user
+    issue.repository = repository
+
+    for ass in listAssignees:
+        user = User.objects.get(username=ass)
+        issue.assignees.add(user)
+
+    for lab in listLabels:
+        label = Label.objects.get(name=lab)
+        issue.labels.add(label)
+
+    labels = Label.objects.filter(repository=repository.pk)
+    return render(request, "github/issue_new.html",
+                  {'issue': issue, 'users': users, 'labels': labels})
+
