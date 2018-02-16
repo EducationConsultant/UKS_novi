@@ -19,6 +19,7 @@ def switch_home(requset):
 def switch_registration(request):
     return render(request, "github/registration.html")
 
+
 # registrate new user
 # unique username and email
 # switch to activate.html
@@ -72,6 +73,7 @@ def save_user(request):
 
     return render(request, "github/activate.html", {'user':user})
 
+
 # from email link to login.html
 def activate_user(request,username):
     user = User.objects.get(username=username)
@@ -79,9 +81,11 @@ def activate_user(request,username):
     user.save()
     return render(request, "github/login.html")
 
+
 # from some page to login.html
 def switch_login(requset):
     return render(requset, "github/login.html")
+
 
 def login_user(request):
     username = request.POST['username']
@@ -105,9 +109,11 @@ def login_user(request):
     except User.DoesNotExist:
         return render(request, "github/login.html", {'message': 'User does not exist.'})
 
+
 # from some page to forgot_password.html
 def switch_forgot_password(request):
     return render(request, "github/forgot_password.html")
+
 
 def send_email_reset_password(request):
     email = request.POST.get('email')
@@ -137,9 +143,11 @@ def send_email_reset_password(request):
     except User.DoesNotExist:
         return render(request, "github/forgot_password.html", {'message': 'User does not exist.'})
 
+
 def switch_forgot_password_reset(request,username):
     request.session['uname_user'] = username
     return render(request, "github/forgot_password_reset.html",{'username':username})
+
 
 def reset_password(request):
     newpassword = request.POST.get('newpassword')
@@ -160,6 +168,7 @@ def reset_password(request):
     except User.DoesNotExist:
         return render(request, "github/forgot_password_reset.html", {'message': 'User does not exist.'})
 
+
 def logout(request):
     username = request.session['uname_user']
     user = User.objects.get(username=username)
@@ -176,8 +185,10 @@ def about_user(request):
 
     return render(request, "github/about_user.html",{'user':user})
 
+
 def switch_change_username(request):
     return render(request, "github/change_username.html")
+
 
 def change_username(request):
     newusername = request.POST.get('newusername')
@@ -190,8 +201,10 @@ def change_username(request):
 
     return render(request, "github/change_username.html", {'message': 'Username successfully changed.'})
 
+
 def switch_change_password(request):
     return render(request, "github/change_password.html")
+
 
 def change_password(request):
     oldpassword = request.POST.get('oldpassword')
@@ -212,8 +225,10 @@ def change_password(request):
     else:
         return render(request, "github/change_password.html", {'messageOldPass': 'Old password is not valid.'})
 
+
 def switch_delete_account(request):
     return render(request, "github/delete_account.html")
+
 
 def delete_account(request):
     usernameI = request.POST.get('username')
@@ -234,8 +249,10 @@ def delete_account(request):
     else:
         return render(request, "github/delete_account.html", {'messageUsername': 'Username is not valid.'})
 
+
 def switch_delete_organization(request, name):
     return render(request, 'github/delete_organization.html', {'name':name})
+
 
 def switch_delete_repository(request, name):
     return render(request, 'github/delete_repository.html', {'name':name})
@@ -263,6 +280,7 @@ def delete_repository(request, name):
 def switch_edit_repository(request, name):
     return render(request, 'github/edit_repository.html', {'name':name})
 
+
 def edit_repository(request, name):
     nameEdit = request.POST.get('nameEdit')
     repository = Repository.objects.get(name=name)
@@ -274,6 +292,7 @@ def edit_repository(request, name):
 def switch_edit_organization(request, name):
     return render(request, 'github/edit_organization.html', {'name':name})
 
+
 def edit_organization(request, name):
     nameEdit = request.POST.get('nameEdit')
     organization = Organization.objects.get(name=name)
@@ -281,8 +300,10 @@ def edit_organization(request, name):
     organization.save()
     return render(request, 'github/home.html')
 
+
 def switch_delete_organization(request, name):
     return render(request, 'github/delete_organization.html', {'name':name})
+
 
 def switch_delete_repository(request, name):
     return render(request, 'github/delete_repository.html', {'name':name})
@@ -296,6 +317,215 @@ def delete_organization(request, name):
         return render(request, 'github/home.html')
     else:
         return render(request, 'github/delete_organization.html', {'name': name, 'message': 'Name is not valid'})
+
+
+def delete_repository(request, name):
+    repository = Repository.objects.get(name=name)
+    nameDelete = request.POST.get('nameDelete')
+    if name == nameDelete:
+        repository.delete()
+        return render(request, 'github/home.html')
+    else:
+        return render(request, 'github/delete_repository.html', {'name': name, 'message': 'Name is not valid'})
+
+
+def switch_edit_repository(request, name):
+    return render(request, 'github/edit_repository.html', {'name':name})
+
+
+def edit_repository(request, name):
+    nameEdit = request.POST.get('nameEdit')
+    repository = Repository.objects.get(name=name)
+    repository.name = nameEdit
+    repository.save()
+    return render(request, 'github/home.html')
+
+
+def switch_edit_organization(request, name):
+    return render(request, 'github/edit_organization.html', {'name':name})
+
+
+def edit_organization(request, name):
+    nameEdit = request.POST.get('nameEdit')
+    organization = Organization.objects.get(name=name)
+    organization.name = nameEdit
+    organization.save()
+    return render(request, 'github/home.html')
+
+
+def switch_delete_organization(request, name):
+    return render(request, 'github/delete_organization.html', {'name':name})
+
+
+def switch_delete_repository(request, name):
+    return render(request, 'github/delete_repository.html', {'name':name})
+
+
+def delete_organization(request, name):
+    organization = Organization.objects.get(name=name)
+    nameDelete = request.POST.get('nameDelete')
+    if name == nameDelete:
+        organization.delete()
+        return render(request, 'github/home.html')
+    else:
+        return render(request, 'github/delete_organization.html', {'name': name, 'message': 'Name is not valid'})
+
+
+def delete_repository(request, name):
+    repository = Repository.objects.get(name=name)
+    nameDelete = request.POST.get('nameDelete')
+    if name == nameDelete:
+        repository.delete()
+        return render(request, 'github/home.html')
+    else:
+        return render(request, 'github/delete_repository.html', {'name': name, 'message': 'Name is not valid'})
+
+
+def switch_edit_repository(request, name):
+    return render(request, 'github/edit_repository.html', {'name':name})
+
+
+def edit_repository(request, name):
+    nameEdit = request.POST.get('nameEdit')
+    repository = Repository.objects.get(name=name)
+    repository.name = nameEdit
+    repository.save()
+    return render(request, 'github/home.html')
+
+
+def switch_edit_organization(request, name):
+    return render(request, 'github/edit_organization.html', {'name':name})
+
+
+def edit_organization(request, name):
+    nameEdit = request.POST.get('nameEdit')
+    organization = Organization.objects.get(name=name)
+    organization.name = nameEdit
+    organization.save()
+    return render(request, 'github/home.html')
+
+
+def switch_delete_organization(request, name):
+    return render(request, 'github/delete_organization.html', {'name':name})
+
+
+def switch_delete_repository(request, name):
+    return render(request, 'github/delete_repository.html', {'name':name})
+
+
+def delete_organization(request, name):
+    organization = Organization.objects.get(name=name)
+    nameDelete = request.POST.get('nameDelete')
+    if name == nameDelete:
+        organization.delete()
+        return render(request, 'github/home.html')
+    else:
+        return render(request, 'github/delete_organization.html', {'name': name, 'message': 'Name is not valid'})
+
+
+def delete_repository(request, name):
+    repository = Repository.objects.get(name=name)
+    nameDelete = request.POST.get('nameDelete')
+    if name == nameDelete:
+        repository.delete()
+        return render(request, 'github/home.html')
+    else:
+        return render(request, 'github/delete_repository.html', {'name': name, 'message': 'Name is not valid'})
+
+
+def switch_edit_repository(request, name):
+    return render(request, 'github/edit_repository.html', {'name':name})
+
+
+def edit_repository(request, name):
+    nameEdit = request.POST.get('nameEdit')
+    repository = Repository.objects.get(name=name)
+    repository.name = nameEdit
+    repository.save()
+    return render(request, 'github/home.html')
+
+
+def switch_edit_organization(request, name):
+    return render(request, 'github/edit_organization.html', {'name':name})
+
+
+def edit_organization(request, name):
+    nameEdit = request.POST.get('nameEdit')
+    organization = Organization.objects.get(name=name)
+    organization.name = nameEdit
+    organization.save()
+    return render(request, 'github/home.html')
+
+
+def switch_delete_organization(request, name):
+    return render(request, 'github/delete_organization.html', {'name':name})
+
+
+def switch_delete_repository(request, name):
+    return render(request, 'github/delete_repository.html', {'name':name})
+
+
+def delete_organization(request, name):
+    organization = Organization.objects.get(name=name)
+    nameDelete = request.POST.get('nameDelete')
+    if name == nameDelete:
+        organization.delete()
+        return render(request, 'github/home.html')
+    else:
+        return render(request, 'github/delete_organization.html', {'name': name, 'message': 'Name is not valid'})
+
+
+def delete_repository(request, name):
+    repository = Repository.objects.get(name=name)
+    nameDelete = request.POST.get('nameDelete')
+    if name == nameDelete:
+        repository.delete()
+        return render(request, 'github/home.html')
+    else:
+        return render(request, 'github/delete_repository.html', {'name': name, 'message': 'Name is not valid'})
+
+
+def switch_edit_repository(request, name):
+    return render(request, 'github/edit_repository.html', {'name':name})
+
+
+def edit_repository(request, name):
+    nameEdit = request.POST.get('nameEdit')
+    repository = Repository.objects.get(name=name)
+    repository.name = nameEdit
+    repository.save()
+    return render(request, 'github/home.html')
+
+
+def switch_edit_organization(request, name):
+    return render(request, 'github/edit_organization.html', {'name':name})
+
+
+def edit_organization(request, name):
+    nameEdit = request.POST.get('nameEdit')
+    organization = Organization.objects.get(name=name)
+    organization.name = nameEdit
+    organization.save()
+    return render(request, 'github/home.html')
+
+
+def switch_delete_organization(request, name):
+    return render(request, 'github/delete_organization.html', {'name':name})
+
+
+def switch_delete_repository(request, name):
+    return render(request, 'github/delete_repository.html', {'name':name})
+
+
+def delete_organization(request, name):
+    organization = Organization.objects.get(name=name)
+    nameDelete = request.POST.get('nameDelete')
+    if name == nameDelete:
+        organization.delete()
+        return render(request, 'github/home.html')
+    else:
+        return render(request, 'github/delete_organization.html', {'name': name, 'message': 'Name is not valid'})
+
 
 def delete_repository(request, name):
     repository = Repository.objects.get(name=name)
@@ -321,52 +551,6 @@ def edit_repository(request, name):
 def switch_edit_organization(request, name):
     return render(request, 'github/edit_organization.html', {'name':name})
 
-def edit_organization(request, name):
-    nameEdit = request.POST.get('nameEdit')
-    organization = Organization.objects.get(name=name)
-    organization.name = nameEdit
-    organization.save()
-    return render(request, 'github/home.html')
-
-def switch_delete_organization(request, name):
-    return render(request, 'github/delete_organization.html', {'name':name})
-
-def switch_delete_repository(request, name):
-    return render(request, 'github/delete_repository.html', {'name':name})
-
-
-def delete_organization(request, name):
-    organization = Organization.objects.get(name=name)
-    nameDelete = request.POST.get('nameDelete')
-    if name == nameDelete:
-        organization.delete()
-        return render(request, 'github/home.html')
-    else:
-        return render(request, 'github/delete_organization.html', {'name': name, 'message': 'Name is not valid'})
-
-def delete_repository(request, name):
-    repository = Repository.objects.get(name=name)
-    nameDelete = request.POST.get('nameDelete')
-    if name == nameDelete:
-        repository.delete()
-        return render(request, 'github/home.html')
-    else:
-        return render(request, 'github/delete_repository.html', {'name': name, 'message': 'Name is not valid'})
-
-
-def switch_edit_repository(request, name):
-    return render(request, 'github/edit_repository.html', {'name':name})
-
-def edit_repository(request, name):
-    nameEdit = request.POST.get('nameEdit')
-    repository = Repository.objects.get(name=name)
-    repository.name = nameEdit
-    repository.save()
-    return render(request, 'github/home.html')
-
-
-def switch_edit_organization(request, name):
-    return render(request, 'github/edit_organization.html', {'name':name})
 
 def edit_organization(request, name):
     nameEdit = request.POST.get('nameEdit')
@@ -375,150 +559,11 @@ def edit_organization(request, name):
     organization.save()
     return render(request, 'github/home.html')
 
-def switch_delete_organization(request, name):
-    return render(request, 'github/delete_organization.html', {'name':name})
-
-def switch_delete_repository(request, name):
-    return render(request, 'github/delete_repository.html', {'name':name})
-
-
-def delete_organization(request, name):
-    organization = Organization.objects.get(name=name)
-    nameDelete = request.POST.get('nameDelete')
-    if name == nameDelete:
-        organization.delete()
-        return render(request, 'github/home.html')
-    else:
-        return render(request, 'github/delete_organization.html', {'name': name, 'message': 'Name is not valid'})
-
-def delete_repository(request, name):
-    repository = Repository.objects.get(name=name)
-    nameDelete = request.POST.get('nameDelete')
-    if name == nameDelete:
-        repository.delete()
-        return render(request, 'github/home.html')
-    else:
-        return render(request, 'github/delete_repository.html', {'name': name, 'message': 'Name is not valid'})
-
-
-def switch_edit_repository(request, name):
-    return render(request, 'github/edit_repository.html', {'name':name})
-
-def edit_repository(request, name):
-    nameEdit = request.POST.get('nameEdit')
-    repository = Repository.objects.get(name=name)
-    repository.name = nameEdit
-    repository.save()
-    return render(request, 'github/home.html')
-
-
-def switch_edit_organization(request, name):
-    return render(request, 'github/edit_organization.html', {'name':name})
-
-def edit_organization(request, name):
-    nameEdit = request.POST.get('nameEdit')
-    organization = Organization.objects.get(name=name)
-    organization.name = nameEdit
-    organization.save()
-    return render(request, 'github/home.html')
-
-def switch_delete_organization(request, name):
-    return render(request, 'github/delete_organization.html', {'name':name})
-
-def switch_delete_repository(request, name):
-    return render(request, 'github/delete_repository.html', {'name':name})
-
-
-def delete_organization(request, name):
-    organization = Organization.objects.get(name=name)
-    nameDelete = request.POST.get('nameDelete')
-    if name == nameDelete:
-        organization.delete()
-        return render(request, 'github/home.html')
-    else:
-        return render(request, 'github/delete_organization.html', {'name': name, 'message': 'Name is not valid'})
-
-def delete_repository(request, name):
-    repository = Repository.objects.get(name=name)
-    nameDelete = request.POST.get('nameDelete')
-    if name == nameDelete:
-        repository.delete()
-        return render(request, 'github/home.html')
-    else:
-        return render(request, 'github/delete_repository.html', {'name': name, 'message': 'Name is not valid'})
-
-
-def switch_edit_repository(request, name):
-    return render(request, 'github/edit_repository.html', {'name':name})
-
-def edit_repository(request, name):
-    nameEdit = request.POST.get('nameEdit')
-    repository = Repository.objects.get(name=name)
-    repository.name = nameEdit
-    repository.save()
-    return render(request, 'github/home.html')
-
-
-def switch_edit_organization(request, name):
-    return render(request, 'github/edit_organization.html', {'name':name})
-
-def edit_organization(request, name):
-    nameEdit = request.POST.get('nameEdit')
-    organization = Organization.objects.get(name=name)
-    organization.name = nameEdit
-    organization.save()
-    return render(request, 'github/home.html')
-
-def switch_delete_organization(request, name):
-    return render(request, 'github/delete_organization.html', {'name':name})
-
-def switch_delete_repository(request, name):
-    return render(request, 'github/delete_repository.html', {'name':name})
-
-
-def delete_organization(request, name):
-    organization = Organization.objects.get(name=name)
-    nameDelete = request.POST.get('nameDelete')
-    if name == nameDelete:
-        organization.delete()
-        return render(request, 'github/home.html')
-    else:
-        return render(request, 'github/delete_organization.html', {'name': name, 'message': 'Name is not valid'})
-
-def delete_repository(request, name):
-    repository = Repository.objects.get(name=name)
-    nameDelete = request.POST.get('nameDelete')
-    if name == nameDelete:
-        repository.delete()
-        return render(request, 'github/home.html')
-    else:
-        return render(request, 'github/delete_repository.html', {'name': name, 'message': 'Name is not valid'})
-
-
-def switch_edit_repository(request, name):
-    return render(request, 'github/edit_repository.html', {'name':name})
-
-def edit_repository(request, name):
-    nameEdit = request.POST.get('nameEdit')
-    repository = Repository.objects.get(name=name)
-    repository.name = nameEdit
-    repository.save()
-    return render(request, 'github/home.html')
-
-
-def switch_edit_organization(request, name):
-    return render(request, 'github/edit_organization.html', {'name':name})
-
-def edit_organization(request, name):
-    nameEdit = request.POST.get('nameEdit')
-    organization = Organization.objects.get(name=name)
-    organization.name = nameEdit
-    organization.save()
-    return render(request, 'github/home.html')
 
 def organization(request):
     organization = Organization()
     return render(request, 'github/organization.html', {'organization' : organization})
+
 
 def saveOrganization(request):
     name = request.POST['name']
@@ -561,6 +606,7 @@ def saveOrganization(request):
 
     return render(request, 'github/organizationDetails.html', {'organization':organization, 'organizationMembers': organizationMembers})
 
+
 def saveOrganizationDetails(request):
     purpose = request.POST['purpose']
     howLong = request.POST['howLong']
@@ -579,6 +625,7 @@ def saveOrganizationDetails(request):
             o.save()
             organization = o
     return render(request, 'github/addNewMemberOrganization.html', {'organization': organization})
+
 
 def saveOrganizationMembers(request, name):
     memberName=request.POST['member']
@@ -606,6 +653,7 @@ def saveOrganizationMembers(request, name):
                 return render(request, 'github/organizationInformations.html',
                               {'organization': organization, 'organizationMembers': organizationMembers})
 
+
 # get all organizations by user ( owner and member)
 def organizationsByUser(request):
     username = request.session['uname_user']
@@ -623,6 +671,7 @@ def organizationsByUser(request):
 def repository(request, p):
     repository = Repository()
     return render(request, 'github/repository.html', {'repository':repository, 'p' : p})
+
 
 # save new repository
 def saveRepository(request, p):
@@ -650,6 +699,7 @@ def saveRepository(request, p):
     repository.save()
     return render(request, 'github/addNewMemberRepository.html', {'repository': repository, 'repositoryMembers':repositoryMembers})
 
+
 # parametar 'name' is nameRepostiory
 def saveRepositoryMembers(request, name):
     memberName = request.POST['member']
@@ -676,8 +726,6 @@ def saveRepositoryMembers(request, name):
                 repositoryMembers = repository.members.all
                 return render(request, 'github/repositoryInformations.html',
                               {'repository': repository, 'repositoryMembers': repositoryMembers})
-
-
 
 
 # shows all organisations
@@ -804,7 +852,8 @@ def switch_issue_new(request):
         for member in repository.members.all():
             users.append(member.username)
 
-    return render(request, "github/issue_new.html", {'users':users})
+    labels = Label.objects.filter(repository=repository.pk)
+    return render(request, "github/issue_new.html", {'users':users,'labels':labels})
 
 
 def issue_new(request):
@@ -814,6 +863,7 @@ def issue_new(request):
     title = request.POST.get('title')
     description = request.POST.get('description')
     listAssignees = request.POST.getlist('assignees')
+    listLabels = request.POST.getlist('labels')
 
     username = request.session['uname_user']
     user = User.objects.get(username=username)
@@ -831,9 +881,17 @@ def issue_new(request):
         issue.assignees.add(user)
     issue.save()
 
+    for lab in listLabels:
+        label = Label.objects.get(name=lab)
+        issue.labels.add(label)
+    issue.save()
+
     comments = Comment.objects.filter(issue=issue.pk)
 
-    return render(request, "github/issue_view_one.html",{'issue':issue,'comments':comments})
+    issue_labels = issue.labels.all()
+    all_labels = Label.objects.filter(repository=repository.pk)
+    result_labels = list(set(all_labels) - set(issue_labels))
+    return render(request, "github/issue_view_one.html",{'issue':issue,'comments':comments,'labels':result_labels})
 
 
 def switch_issue_view_one(request,id):
@@ -844,7 +902,38 @@ def switch_issue_view_one(request,id):
     for comm in comments_with_reply:
         if not comm.isReply:
             comments.append(comm)
-    return render(request,"github/issue_view_one.html",{'issue':issue,'comments':comments})
+
+    repository_pk = request.session['repository_id']
+    repository = Repository.objects.get(pk=repository_pk)
+
+    issue_labels = issue.labels.all()
+    all_labels = Label.objects.filter(repository=repository.pk)
+    result_labels =list(set(all_labels) - set(issue_labels))
+    return render(request,"github/issue_view_one.html",{'issue':issue,'comments':comments,'labels':result_labels})
+
+
+#delete label form issue
+def issue_delete_label(request,issue_id,label_id):
+    issue = Issue.objects.get(pk=issue_id)
+    label = Label.objects.get(pk=label_id)
+
+    issue.labels.remove(label)
+    issue.save()
+
+    comments_with_reply = Comment.objects.filter(issue=issue.pk)
+    comments = []
+    for comm in comments_with_reply:
+        if not comm.isReply:
+            comments.append(comm)
+
+    repository_pk = request.session['repository_id']
+    repository = Repository.objects.get(pk=repository_pk)
+
+    issue_labels = issue.labels.all()
+    all_labels = Label.objects.filter(repository=repository.pk)
+    result_labels = list(set(all_labels) - set(issue_labels))
+    return render(request, "github/issue_view_one.html",
+                  {'issue': issue, 'comments': comments, 'labels': result_labels})
 
 
 def issue_edit_title(request,id):
@@ -859,7 +948,11 @@ def issue_edit_title(request,id):
     for comm in comments_with_reply:
         if not comm.isReply:
             comments.append(comm)
-    return render(request, "github/issue_view_one.html", {'issue': issue,'comments':comments})
+
+    issue_labels = issue.labels.all()
+    all_labels = Label.objects.filter(repository=repository.pk)
+    result_labels = list(set(all_labels) - set(issue_labels))
+    return render(request, "github/issue_view_one.html", {'issue': issue,'comments':comments,'labels':result_labels})
 
 
 def issue_close(request,id):
@@ -870,8 +963,6 @@ def issue_close(request,id):
     issue = Issue.objects.get(pk=id)
     issue.closed = True
     issue.save()
-
-    description = request.POST.get('comment')
 
     comment = Comment()
     comment.description = 'closed this'
@@ -884,7 +975,11 @@ def issue_close(request,id):
     for comm in comments_with_reply:
         if not comm.isReply:
             comments.append(comm)
-    return render(request, "github/issue_view_one.html", {'issue': issue,'comments':comments})
+
+    issue_labels = issue.labels.all()
+    all_labels = Label.objects.filter(repository=repository.pk)
+    result_labels = list(set(all_labels) - set(issue_labels))
+    return render(request, "github/issue_view_one.html", {'issue': issue,'comments':comments,'labels':result_labels})
 
 
 def issue_reopen(request,id):
@@ -909,7 +1004,11 @@ def issue_reopen(request,id):
     for comm in comments_with_reply:
         if not comm.isReply:
             comments.append(comm)
-    return render(request, "github/issue_view_one.html", {'issue': issue,'comments':comments})
+
+    issue_labels = issue.labels.all()
+    all_labels = Label.objects.filter(repository=repository.pk)
+    result_labels = list(set(all_labels) - set(issue_labels))
+    return render(request, "github/issue_view_one.html", {'issue': issue,'comments':comments,'labels':result_labels})
 
 
 def comment_new(request, id):
@@ -917,6 +1016,10 @@ def comment_new(request, id):
     user = User.objects.get(username=username)
 
     issue = Issue.objects.get(pk=id)
+
+    issue_labels = issue.labels.all()
+    all_labels = Label.objects.filter(repository=repository.pk)
+    result_labels = list(set(all_labels) - set(issue_labels))
 
     description = request.POST.get('comment')
 
@@ -929,7 +1032,7 @@ def comment_new(request, id):
         for comm in comments_with_reply:
             if not comm.isReply:
                 comments.append(comm)
-        return render(request, "github/issue_view_one.html", {'issue': issue, 'comments': comments,'messageNewComm':'Enter comment.'})
+        return render(request, "github/issue_view_one.html", {'issue': issue, 'comments': comments,'messageNewComm':'Enter comment.','labels':result_labels})
 
     comment.author = user
     comment.issue = issue
@@ -941,7 +1044,7 @@ def comment_new(request, id):
     for comm in comments_with_reply:
         if not comm.isReply:
             comments.append(comm)
-    return render(request, "github/issue_view_one.html", {'issue': issue,'comments':comments})
+    return render(request, "github/issue_view_one.html", {'issue': issue,'comments':comments,'labels':result_labels})
 
 
 def comment_edit(request, idIssue, idComment):
@@ -957,7 +1060,11 @@ def comment_edit(request, idIssue, idComment):
     for comm in comments_with_reply:
         if not comm.isReply:
             comments.append(comm)
-    return render(request, "github/issue_view_one.html", {'issue': issue,'comments': comments})
+
+    issue_labels = issue.labels.all()
+    all_labels = Label.objects.filter(repository=repository.pk)
+    result_labels = list(set(all_labels) - set(issue_labels))
+    return render(request, "github/issue_view_one.html", {'issue': issue,'comments': comments,'labels':result_labels})
 
 def comment_delete(request,id):
     issue = Issue.objects.get(pk=id)
@@ -972,7 +1079,11 @@ def comment_delete(request,id):
     for comm in comments_with_reply:
         if not comm.isReply:
             comments.append(comm)
-    return render(request, "github/issue_view_one.html",{'issue': issue,'comments': comments,'messageDelete':'Comment deleted!'})
+
+    issue_labels = issue.labels.all()
+    all_labels = Label.objects.filter(repository=repository.pk)
+    result_labels = list(set(all_labels) - set(issue_labels))
+    return render(request, "github/issue_view_one.html",{'issue': issue,'comments': comments,'messageDelete':'Comment deleted!','labels':result_labels})
 
 
 def comment_reply(request, idIssue, idComment):
@@ -982,6 +1093,10 @@ def comment_reply(request, idIssue, idComment):
     issue = Issue.objects.get(pk=idIssue)
     comment = Comment.objects.get(pk=idComment)
 
+    issue_labels = issue.labels.all()
+    all_labels = Label.objects.filter(repository=repository.pk)
+    result_labels = list(set(all_labels) - set(issue_labels))
+
     replyDescription = request.POST.get('commentReply')
 
     reply = Comment()
@@ -989,7 +1104,7 @@ def comment_reply(request, idIssue, idComment):
         reply.description = "[reply] " + replyDescription
     else:
         comments = Comment.objects.filter(issue=issue.pk)
-        return render(request, "github/issue_view_one.html", {'issue': issue, 'comments': comments,'messageReply':'Enter comment.'})
+        return render(request, "github/issue_view_one.html", {'issue': issue, 'comments': comments,'messageReply':'Enter comment.','labels':result_labels})
 
     reply.author = user
     reply.issue = issue
@@ -1007,7 +1122,7 @@ def comment_reply(request, idIssue, idComment):
         if not comm.isReply:
             comments.append(comm)
 
-    return render(request, "github/issue_view_one.html", {'issue': issue, 'comments': comments})
+    return render(request, "github/issue_view_one.html", {'issue': issue, 'comments': comments,'labels':result_labels})
 
 def switch_label_show_all(request):
     repository_pk = request.session['repository_id']
