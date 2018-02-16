@@ -72,6 +72,7 @@ class Issue(models.Model):
     def __str__(self):
         return self.title + " " + self.description
 
+
 class Comment(models.Model):
     description = models.CharField(max_length=500)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -85,3 +86,12 @@ class Comment(models.Model):
         return self.description
 
 
+class Milestone(models.Model):
+    date = models.DateField()
+    title = models.CharField(max_length=50)
+    description = models.CharField(max_length=50)
+    repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
+
+
+    def __str__(self):
+        return self.title
