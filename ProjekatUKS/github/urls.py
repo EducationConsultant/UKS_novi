@@ -57,6 +57,7 @@ urlpatterns = [
     path('switch_label_new', views.switch_label_new, name='switch_label_new'),
     path('label_new', views.label_new, name='label_new'),
     path('label_edit', views.label_edit, name='label_edit'),
+    path('label_delete', views.label_delete, name='label_delete'),
 
 
     path('saveOrganizationMembers/<str:name>', views.saveOrganizationMembers, name='saveOrganizationMembers'),

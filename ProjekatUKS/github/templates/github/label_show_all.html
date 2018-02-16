@@ -12,6 +12,12 @@
         $(".modal-body #new_color").val( label_color );
         $("#editModal").modal('show');
     }
+
+    function show_delete_modal(pk){
+        var label_pk = document.getElementById("label_pk"+pk).value;
+        $(".modal-body #label_pk_delete").val( label_pk );
+        $("#deleteModal").modal('show');
+    }
 </script>
 {% endblock %}
 
@@ -19,17 +25,21 @@
 <h1 class="text-primary">Show all for <a href="{% url 'github:repositoryInfo' request.session.repository_name %}">{{request.session.repository_name}}</a></h1>
 
 <div class="container">
-    {% if messageEdit %}
-        <div class="alert alert-danger">
-            <strong>Danger!</strong> {{messageEdit}}
-        </div>
-    {% endif %}
+    <div class="row" >
+        <div class="col-xs-4">
+            {% if messageEdit %}
+                <div class="alert alert-danger">
+                    <strong>Danger!</strong> {{messageEdit}}
+                </div>
+            {% endif %}
 
-    {% if messageEditSuccess %}
-        <div class="alert alert-success">
-            <strong>Success!</strong> {{messageEditSuccess}}
+            {% if messageSuccess %}
+                <div class="alert alert-success">
+                    <strong>Success!</strong> {{messageSuccess}}
+                </div>
+            {% endif %}
         </div>
-    {% endif %}
+    </div>
     <table class="table">
         <thead>
             <tr>
@@ -45,9 +55,16 @@
         <tbody>
             {% for label in labels %}
                 <tr>
-                    <td><div id="label_name{{label.name}}" style="width:200px;height:auto;border:1px solid {{label.color}};background-color:{{label.color}};font-weight: bold;font-size: 20px;">{{label.name}}</div></td>
-                    <td><button type="button" onclick="show_edit_modal({{label.pk}},'{{label.name}}','{{label.color}}')"><span class="glyphicon glyphicon-pencil"></span></button></td>
-                    <td>Delete</td>
+                    <td><div id="label_name{{label.name}}" style="width:auto;height:auto;border:1px solid {{label.color}};background-color:{{label.color}};font-weight: bold;font-size: 20px;">{{label.name}}</div></td>
+                    <td>
+                        <button type="button" onclick="show_edit_modal({{label.pk}},'{{label.name}}','{{label.color}}')">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </button>
+
+                        <button type="button" onclick="show_delete_modal({{label.pk}})">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                    </td>
                     <td><input type="text" id="label_pk{{label.pk}}" value="{{label.pk}}" hidden/></td>
                     <td><input type="text" id="label_color{{label.color}}" value="{{label.color}}" hidden/></td>
                 </tr>
@@ -89,6 +106,40 @@
                             <div class="col-sm-offset-2 col-sm-2">
                                 <button type="submit" class="btn btn-success">Confirm</button>
                                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: DELETE LABEL -->
+<div id="deleteModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><b>Delete label</b></h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="container">
+                    <form class="form-horizontal" action="{% url 'github:label_delete' %}" method="post">
+                    {% csrf_token %}
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">Are you sure you want to do this?</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="label_pk_delete" name="label_pk" hidden/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-2">
+                                <button type="submit" class="btn btn-success">Yes</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
                             </div>
                         </div>
                     </form>

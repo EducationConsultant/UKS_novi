@@ -1058,4 +1058,16 @@ def label_edit(request):
     labelToEdit.save()
 
     labels = Label.objects.filter(repository=repository.pk)
-    return render(request, "github/label_show_all.html", {'labels': labels,'messageEditSuccess':'Label successfully changed.'})
+    return render(request, "github/label_show_all.html", {'labels': labels,'messageSuccess':'Label successfully changed.'})
+
+def label_delete(request):
+    label_pk = request.POST.get('label_pk')
+    label = Label.objects.get(pk=label_pk)
+
+    label.delete()
+
+    repository_pk = request.session['repository_id']
+    repository = Repository.objects.get(pk=repository_pk)
+    labels = Label.objects.filter(repository=repository.pk)
+    return render(request, "github/label_show_all.html",
+                  {'labels': labels, 'messageSuccess': 'Label successfully deleted.'})
