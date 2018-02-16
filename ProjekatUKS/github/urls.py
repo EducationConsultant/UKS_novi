@@ -48,6 +48,7 @@ urlpatterns = [
 
     #issue and label
     path('issue_delete_label/<issue_id>/<label_id>', views.issue_delete_label, name='issue_delete_label'),
+    path('issue_add_label/<issue_id>/<label_id>', views.issue_add_label, name='issue_add_label'),
 
     #comment
     path('comment_new/<id>', views.comment_new, name='comment_new'),

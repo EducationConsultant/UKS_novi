@@ -211,21 +211,25 @@
         <h5>
             <b>Labels:</b>
 
+            {% if labels  %}
             <div class="dropdown">
                 <button class="btn btn-default dropdown-toggle" type="button" id="context_menu" data-toggle="dropdown">
                     <span class="glyphicon glyphicon-pencil"></span>
                 </button>
 
                 <ul class="dropdown-menu" role="menu" aria-labelledby="filters">
+                    <li><p>Click on label to add</p></li>
+                    <li class="divider"></li>
                     {% for lab in labels %}
                     <li role="presentation">
-                        <a role="menuitem" tabindex="-1" href="#">
+                        <a href="{% url 'github:issue_add_label' issue.pk lab.pk %}" role="menuitem" tabindex="-1">
                             {{lab.name}}
                         </a>
                     </li>
                     {% endfor %}
                 </ul>
             </div>
+            {% endif %}
         </h5>
 
         <ul class="list-group">

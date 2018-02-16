@@ -920,6 +920,47 @@ def issue_delete_label(request,issue_id,label_id):
     issue.labels.remove(label)
     issue.save()
 
+    username = request.session['uname_user']
+    user = User.objects.get(username=username)
+    
+    comment = Comment()
+    comment.description = '[label deleted]: ' + label.name
+    comment.author = user
+    comment.issue = issue
+    comment.save()
+
+    comments_with_reply = Comment.objects.filter(issue=issue.pk)
+    comments = []
+    for comm in comments_with_reply:
+        if not comm.isReply:
+            comments.append(comm)
+
+    repository_pk = request.session['repository_id']
+    repository = Repository.objects.get(pk=repository_pk)
+
+    issue_labels = issue.labels.all()
+    all_labels = Label.objects.filter(repository=repository.pk)
+    result_labels = list(set(all_labels) - set(issue_labels))
+    return render(request, "github/issue_view_one.html",
+                  {'issue': issue, 'comments': comments, 'labels': result_labels})
+
+
+def issue_add_label(request,issue_id,label_id):
+    issue = Issue.objects.get(pk=issue_id)
+    label = Label.objects.get(pk=label_id)
+
+    issue.labels.add(label)
+    issue.save()
+
+    username = request.session['uname_user']
+    user = User.objects.get(username=username)
+
+    comment = Comment()
+    comment.description = '[label added]: ' + label.name
+    comment.author = user
+    comment.issue = issue
+    comment.save()
+
     comments_with_reply = Comment.objects.filter(issue=issue.pk)
     comments = []
     for comm in comments_with_reply:
