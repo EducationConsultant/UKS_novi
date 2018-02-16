@@ -1035,3 +1035,27 @@ def label_new(request):
 
     labels = Label.objects.filter(repository=repository.pk)
     return render(request, "github/label_show_all.html", {'labels': labels})
+
+def label_edit(request):
+    repository_pk = request.session['repository_id']
+    repository = Repository.objects.get(pk=repository_pk)
+    labels = Label.objects.filter(repository=repository.pk)
+
+    label_pk = request.POST.get('label_pk')
+    labelToEdit = Label.objects.get(pk=label_pk)
+
+    #uniqie name
+    new_name = request.POST.get('new_name')
+    for lab in labels:
+        if lab.name == new_name:
+            return render(request, "github/label_show_all.html", {'labels': labels,'messageEdit':'Label name must be unique.'})
+
+    new_color = request.POST.get('new_color')
+
+    labelToEdit.name = new_name
+    labelToEdit.color = new_color
+
+    labelToEdit.save()
+
+    labels = Label.objects.filter(repository=repository.pk)
+    return render(request, "github/label_show_all.html", {'labels': labels,'messageEditSuccess':'Label successfully changed.'})
