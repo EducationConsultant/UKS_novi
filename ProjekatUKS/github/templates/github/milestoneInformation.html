@@ -10,6 +10,7 @@
         <ul class="nav nav-stacked">
             <li><a href="{% url 'github:switch_milestone' milestone.repository.name %}">New milestone</a></li>
             <li><a href="{% url 'github:getAllMilestones' milestone.repository.name %}">Milestones</a></li>
+            <li><a href="{% url 'github:repositoryInfo'  milestone.repository.name  %}">Back to repository</a></li>
         </ul>
 
     </nav>
