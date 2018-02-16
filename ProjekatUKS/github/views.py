@@ -1259,10 +1259,18 @@ def milestone(request, name):
     milestone.save()
     return render(request, 'github/milestoneInformation.html', {'milestone':milestone})
 
-# name is milestoneName
+# name is milestoneTitle
 def milestoneInfo(request, name ) :
     milestone = Milestone.objects.get(title=name)
-    return render(request, 'github/milestoneInformation.html', {'milestone': milestone})
+    issuesOfMilestone = []
+    issuesAll = Issue.objects.all()
+
+    for i in issuesAll.all():
+        if str(i.milestone) == name:
+            issuesOfMilestone.append(i)
+
+    return render(request, 'github/milestoneInformation.html', {'milestone': milestone,
+                                                                'issuesOfMilestone': issuesOfMilestone,})
 
 # shows all milestones of one repository
 def getAllMilestones(request, name):
