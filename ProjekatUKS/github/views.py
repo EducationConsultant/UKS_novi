@@ -922,7 +922,7 @@ def issue_delete_label(request,issue_id,label_id):
 
     username = request.session['uname_user']
     user = User.objects.get(username=username)
-    
+
     comment = Comment()
     comment.description = '[label deleted]: ' + label.name
     comment.author = user
