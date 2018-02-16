@@ -1,6 +1,7 @@
 from django.db import models
 import datetime
 
+
 # Create your models here.
 class User(models.Model):
     firstname = models.CharField(max_length=50)
@@ -46,7 +47,6 @@ class Organization(models.Model):
         return self.name
 
 
-
 class Repository(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=50)
@@ -59,6 +59,13 @@ class Repository(models.Model):
         return self.name
 
 
+class Label(models.Model):
+    name = models.CharField(max_length=50)
+    color = models.CharField(max_length=7)
+    repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name + " " + self.color
 
 
 class Issue(models.Model):
@@ -68,6 +75,7 @@ class Issue(models.Model):
     assignees = models.ManyToManyField(User, related_name='assignees')
     closed = models.BooleanField(default=False)
     repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
+    labels = models.ManyToManyField(Label)
 
     def __str__(self):
         return self.title + " " + self.description

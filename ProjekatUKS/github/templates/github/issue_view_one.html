@@ -206,6 +206,45 @@
             {% endfor %}
         </ul>
     </li>
+
+    <li>
+        <h5>
+            <b>Labels:</b>
+
+            {% if labels  %}
+            <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="context_menu" data-toggle="dropdown">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+
+                <ul class="dropdown-menu" role="menu" aria-labelledby="filters">
+                    <li><p>Click on label to add</p></li>
+                    <li class="divider"></li>
+                    {% for lab in labels %}
+                    <li role="presentation">
+                        <a href="{% url 'github:issue_add_label' issue.pk lab.pk %}" role="menuitem" tabindex="-1">
+                            {{lab.name}}
+                        </a>
+                    </li>
+                    {% endfor %}
+                    <li class="divider"></li>
+                    <li><a href="{% url 'github:switch_label_show_all' %}">Edit labels</a></li>
+                </ul>
+            </div>
+            {% endif %}
+        </h5>
+
+        <ul class="list-group">
+            {% for label in issue.labels.all %}
+            <li class="list-group-item" style="background-color:{{label.color}};font-weight: bold;font-size: 15px;">
+                <a href="{% url 'github:issue_delete_label' issue.pk label.pk %}">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </a>
+                {{label.name}}
+            </li>
+            {% endfor %}
+        </ul>
+    </li>
 </ul>
 
 <!-- Modal: EDIT ISSUE-->
