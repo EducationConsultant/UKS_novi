@@ -661,8 +661,8 @@ def organizationsByUser(request):
         for m in o.members.all():
             if m.username == username:
                 organizationsOfUser.append(o)
-
-    return render(request, 'github/organizationsShow.html', {'username': username, 'organizationsOfUser':organizationsOfUser })
+    return render(request, 'github/organizationsShow.html', {'username': username,
+                                                             'organizationsOfUser':organizationsOfUser})
 
 
 # new repository
@@ -729,7 +729,7 @@ def saveRepositoryMembers(request, name):
 # shows all organisations
 def organizationsShow(request):
     organizations = Organization.objects.all()
-    return render(request, 'github/organizationsShow.html', {'organizations':organizations})
+    return render(request, 'github/organizationsShow.html', {'organizations':organizations })
 
 # informations about one organization
 def organizationInfo(request, name):
