@@ -905,6 +905,68 @@ def issue_new(request):
     return render(request, "github/issue_view_one.html",{'issue':issue,'comments':comments,'labels':result_labels})
 
 
+# CREATE ISSUE FROM MILESTONE
+# name is nameMilestone
+def switch_issue_new_from_milestone(request, name):
+    repository_pk = request.session['repository_id']
+    repository = Repository.objects.get(pk=repository_pk)
+    users = []
+    if repository.members.all() is not None:
+        for member in repository.members.all():
+            users.append(member.username)
+    labels = Label.objects.filter(repository=repository.pk)
+    return render(request, "github/issue_new_from_milestone.html", {'users': users, 'labels': labels,
+                                                     'milestoneTitle': name})
+# FROM MILESTONE
+def issue_new_from_milestone(request, name):
+    repository_pk = request.session['repository_id']
+    repository = Repository.objects.get(pk=repository_pk)
+
+    title = request.POST.get('title')
+    description = request.POST.get('description')
+    listAssignees = request.POST.getlist('assignees')
+    listLabels = request.POST.getlist('labels')
+    #milestone = Milestone.objects.get(title = name)
+
+    username = request.session['uname_user']
+    user = User.objects.get(username=username)
+
+    issue = Issue()
+    issue.title = title
+    issue.description = description
+    issue.author = user
+    issue.repository = repository
+
+    print("*************************" + name + "********************")
+    if name != "":
+        milestone = Milestone.objects.get(title=name)
+        issue.milestone = milestone
+    
+    #issue.milestone = milestone
+
+    issue.save()
+
+    for ass in listAssignees:
+        user = User.objects.get(username=ass)
+        issue.assignees.add(user)
+    issue.save()
+
+    for lab in listLabels:
+        label = Label.objects.get(name=lab)
+        issue.labels.add(label)
+    issue.save()
+
+    comments = Comment.objects.filter(issue=issue.pk)
+
+    issue_labels = issue.labels.all()
+    all_labels = Label.objects.filter(repository=repository.pk)
+    result_labels = list(set(all_labels) - set(issue_labels))
+    return render(request, "github/issue_view_one.html",{'issue':issue,'comments':comments,'labels':result_labels})
+
+
+
+
+
 def switch_issue_view_one(request,id):
     issue = Issue.objects.get(pk=id)
 

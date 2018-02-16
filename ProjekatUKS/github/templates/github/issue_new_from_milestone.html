@@ -1,0 +1,62 @@
+{% extends "github/issue.html" %}
+
+{% block content %}
+<h1 class="text-primary">New issue</h1>
+
+<div class="container">
+    <form class="form-horizontal" action="{% url 'github:issue_new_from_milestone' milestoneTitle %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="title">Title:</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" id="title" placeholder="Enter issue title" name="title" required/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="description">Description:</label>
+            <div class="col-sm-5">
+                <textarea class="form-control" rows="5" id="description" name="description"></textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2">Asssignees:</label>
+            <div class="col-sm-5">
+                {% for user in users %}
+                <div class="checkbox">
+                    <label for="{{user}}"><input type="checkbox" value="{{user}}" id="{{user}}" name="asssignees" />{{user}}</label>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2">Labels:</label>
+            <div class="col-sm-5">
+                {% for label in labels %}
+                <div class="checkbox">
+                    <input type="checkbox" value="{{label.name}}" id="{{label.name}}" name="labels" />
+                    <label for="{{label.name}}" style="background-color:{{label.color}};font-weight: bold;font-size: 16px;">{{label.name}}</label>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+         <div class="form-group">
+            <label class="control-label col-sm-2">Milestone:</label>
+            <div class="col-sm-5">
+                <select class="form-control" id="milestone" name="milestone" disabled>
+                    <option>{{milestoneTitle}}</option>
+                </select>
+            </div>
+        </div>
+
+         <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-default">Submit new issue</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
