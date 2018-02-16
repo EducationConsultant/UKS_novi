@@ -844,6 +844,13 @@ def issue_show_all_closed(request):
 def switch_issue_new(request):
     repository_pk = request.session['repository_id']
     repository = Repository.objects.get(pk=repository_pk)
+    milestonesAll = Milestone.objects.all()
+    milestones = []   # just opened milestones
+
+    for m in milestonesAll:
+        if m.repository.name == repository.name:
+            if m.opened:
+                milestones.append(m)
 
     users=[]
     if repository.members.all() is not None:
@@ -851,7 +858,8 @@ def switch_issue_new(request):
             users.append(member.username)
 
     labels = Label.objects.filter(repository=repository.pk)
-    return render(request, "github/issue_new.html", {'users':users,'labels':labels})
+    return render(request, "github/issue_new.html", {'users':users,'labels':labels,
+                                                     'milestones': milestones})
 
 
 def issue_new(request):
@@ -862,6 +870,7 @@ def issue_new(request):
     description = request.POST.get('description')
     listAssignees = request.POST.getlist('assignees')
     listLabels = request.POST.getlist('labels')
+    milestoneTitle = request.POST.get('milestone')
 
     username = request.session['uname_user']
     user = User.objects.get(username=username)
@@ -871,6 +880,10 @@ def issue_new(request):
     issue.description = description
     issue.author = user
     issue.repository = repository
+
+    if milestoneTitle != "":
+        milestone = Milestone.objects.get(title=milestoneTitle)
+        issue.milestone = milestone
 
     issue.save()
 

@@ -68,6 +68,18 @@ class Label(models.Model):
         return self.name + " " + self.color
 
 
+class Milestone(models.Model):
+    date = models.DateField()
+    title = models.CharField(max_length=50)
+    description = models.CharField(max_length=50)
+    repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
+    opened = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.title
+
+
+
 class Issue(models.Model):
     title = models.CharField(max_length=50)
     description = models.CharField(max_length=500)
@@ -76,6 +88,7 @@ class Issue(models.Model):
     closed = models.BooleanField(default=False)
     repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
     labels = models.ManyToManyField(Label)
+    milestone = models.ForeignKey(Milestone, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title + " " + self.description
@@ -93,13 +106,3 @@ class Comment(models.Model):
     def __str__(self):
         return self.description
 
-
-class Milestone(models.Model):
-    date = models.DateField()
-    title = models.CharField(max_length=50)
-    description = models.CharField(max_length=50)
-    repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
-    opened = models.BooleanField(default=True)
-
-    def __str__(self):
-        return self.title
