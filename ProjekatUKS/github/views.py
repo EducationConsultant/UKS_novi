@@ -175,6 +175,7 @@ def logout(request):
 
     request.session['uname_user'] = None
     request.session['loggedin'] = None
+    request.session['repository_id'] = None
     return render(request, "github/login.html")
 
 def about_user(request):
