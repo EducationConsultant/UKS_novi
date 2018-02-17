@@ -27,7 +27,6 @@
                       <tr>
                           <th  style="width:10%">Repository name</th>
                           <th  style="width:10%">Organization name</th>
-                          <th  style="width:10%">More informations</th>
                           <th  style="width:10%"></th>
                           <th style="width:10%"></th>
                       </tr>
@@ -35,9 +34,8 @@
                     <tbody>
                     {% for o in repositoriesOfUser%}
                       <tr>
-                          <td>{{o.name}}</td>
+                          <td><a href="{% url 'github:repositoryInfo' o.name %}">{{o.name}}</a></td>
                           <td>{{o.organization.name}}</td>
-                          <td><a href="{% url 'github:repositoryInfo' o.name %}">More informations</a></td>
                           {% if o.owner == username %}
                           <td><a href="{% url 'github:switch_delete_repository' o.name %}">Delete</a></td>
                           {% endif %}

@@ -49,18 +49,16 @@
                         <th style="width:15%">Title</th>
                         <th style="width:15%">Due date</th>
                         <th style="width:10%">Description</th>
-                        <th></th>
-                        <th></th>
+                        <th style="width:10%"></th>
                         <th></th>
                       </tr>
                     </thead>
                     <tbody>
                     {% for m in milestonesOfRepository%}
                       <tr {% if  m.opened %} class="success" {% endif %} {% if not m.opened %} class="danger" {% endif %}>
-                          <td>{{m.title}}</td>
+                          <td><a href="{% url 'github:milestoneInfo' m.title %}">{{m.title}}</a></td>
                           <td>{{m.date}}</td>
                           <td>{{m.description}}</td>
-                          <td><a href="{% url 'github:milestoneInfo' m.title %}">More</a></td>
                           <td><a href="{% url 'github:delete_milestone' m.pk %}">Delete</a></td>
                           <td><a href="{% url 'github:switch_milestone_edit' m.pk %}">Edit</a></td>
                       </tr>

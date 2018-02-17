@@ -28,14 +28,12 @@
                         <th style="width:10%">Organization name</th>
                         <th style="width:10%"></th>
                         <th style="width:10%"></th>
-                        <th style="width:10%"></th>
                       </tr>
                     </thead>
                     <tbody>
                     {% for o in organizationsOfUser%}
                       <tr>
-                          <td>{{o.name}}</td>
-                          <td><a href="{% url 'github:organizationInfo' o.name %}">More</a></td>
+                          <td><a href="{% url 'github:organizationInfo' o.name %}">{{o.name}}</a></td>
                           {% if o.owner == username %}
                           <td><a href="{% url 'github:switch_delete_organization' o.name %}">Delete</a></td>
                           {% endif %}
