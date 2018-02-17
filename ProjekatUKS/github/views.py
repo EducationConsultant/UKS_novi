@@ -979,6 +979,9 @@ def issue_edit_title(request,id):
     newtitle = request.POST.get('newtitle')
     issue = Issue.objects.get(pk=id)
 
+    repository_pk = request.session['repository_id']
+    repository = Repository.objects.get(pk=repository_pk)
+
     issue.title = newtitle
     issue.save()
 
