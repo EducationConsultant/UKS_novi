@@ -88,7 +88,7 @@ class Issue(models.Model):
     closed = models.BooleanField(default=False)
     repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
     labels = models.ManyToManyField(Label)
-    milestone = models.ForeignKey(Milestone, null=True, on_delete=models.CASCADE)
+    milestone = models.ForeignKey(Milestone, null=True, on_delete = models.SET_NULL)
 
     def __str__(self):
         return self.title + " " + self.description
