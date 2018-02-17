@@ -86,9 +86,7 @@ class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
     createdDate = models.DateField(("Date"), default=datetime.date.today)
-    reply = models.ForeignKey('self', null=True, on_delete=models.CASCADE, related_name='comment')
-    replies = []
-    isReply = models.BooleanField(default=False)
+    parent = models.ForeignKey('self', null=True, on_delete=models.CASCADE,related_name='replies')
 
     def __str__(self):
         return self.description

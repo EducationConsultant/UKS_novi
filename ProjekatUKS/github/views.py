@@ -895,11 +895,10 @@ def issue_new(request):
 def switch_issue_view_one(request,id):
     issue = Issue.objects.get(pk=id)
 
-    comments_with_reply = Comment.objects.filter(issue=issue.pk)
-    comments = []
-    for comm in comments_with_reply:
-        if not comm.isReply:
-            comments.append(comm)
+    #comments and replies
+    comments_all = Comment.objects.filter(issue=issue.pk)
+    #only comments
+    comments = comments_all.filter(parent=None)
 
     repository_pk = request.session['repository_id']
     repository = Repository.objects.get(pk=repository_pk)
@@ -907,6 +906,7 @@ def switch_issue_view_one(request,id):
     issue_labels = issue.labels.all()
     all_labels = Label.objects.filter(repository=repository.pk)
     result_labels =list(set(all_labels) - set(issue_labels))
+
     return render(request,"github/issue_view_one.html",{'issue':issue,'comments':comments,'labels':result_labels})
 
 
@@ -918,20 +918,8 @@ def issue_delete_label(request,issue_id,label_id):
     issue.labels.remove(label)
     issue.save()
 
-    username = request.session['uname_user']
-    user = User.objects.get(username=username)
-
-    comment = Comment()
-    comment.description = '[label deleted]: ' + label.name
-    comment.author = user
-    comment.issue = issue
-    comment.save()
-
-    comments_with_reply = Comment.objects.filter(issue=issue.pk)
-    comments = []
-    for comm in comments_with_reply:
-        if not comm.isReply:
-            comments.append(comm)
+    comments_all = Comment.objects.filter(issue=issue.pk)
+    comments = comments_all.filter(parent=None)
 
     repository_pk = request.session['repository_id']
     repository = Repository.objects.get(pk=repository_pk)
@@ -950,20 +938,8 @@ def issue_add_label(request,issue_id,label_id):
     issue.labels.add(label)
     issue.save()
 
-    username = request.session['uname_user']
-    user = User.objects.get(username=username)
-
-    comment = Comment()
-    comment.description = '[label added]: ' + label.name
-    comment.author = user
-    comment.issue = issue
-    comment.save()
-
-    comments_with_reply = Comment.objects.filter(issue=issue.pk)
-    comments = []
-    for comm in comments_with_reply:
-        if not comm.isReply:
-            comments.append(comm)
+    comments_all = Comment.objects.filter(issue=issue.pk)
+    comments = comments_all.filter(parent=None)
 
     repository_pk = request.session['repository_id']
     repository = Repository.objects.get(pk=repository_pk)
@@ -985,11 +961,8 @@ def issue_edit_title(request,id):
     issue.title = newtitle
     issue.save()
 
-    comments_with_reply = Comment.objects.filter(issue=issue.pk)
-    comments = []
-    for comm in comments_with_reply:
-        if not comm.isReply:
-            comments.append(comm)
+    comments_all = Comment.objects.filter(issue=issue.pk)
+    comments = comments_all.filter(parent=None)
 
     issue_labels = issue.labels.all()
     all_labels = Label.objects.filter(repository=repository.pk)
@@ -998,25 +971,15 @@ def issue_edit_title(request,id):
 
 
 def issue_close(request,id):
-
-    username = request.session['uname_user']
-    user = User.objects.get(username=username)
+    repository_pk = request.session['repository_id']
+    repository = Repository.objects.get(pk=repository_pk)
 
     issue = Issue.objects.get(pk=id)
     issue.closed = True
     issue.save()
 
-    comment = Comment()
-    comment.description = 'closed this'
-    comment.author = user
-    comment.issue = issue
-    comment.save()
-
-    comments_with_reply = Comment.objects.filter(issue=issue.pk)
-    comments = []
-    for comm in comments_with_reply:
-        if not comm.isReply:
-            comments.append(comm)
+    comments_all = Comment.objects.filter(issue=issue.pk)
+    comments = comments_all.filter(parent=None)
 
     issue_labels = issue.labels.all()
     all_labels = Label.objects.filter(repository=repository.pk)
@@ -1025,27 +988,15 @@ def issue_close(request,id):
 
 
 def issue_reopen(request,id):
-    username = request.session['uname_user']
-    user = User.objects.get(username=username)
+    repository_pk = request.session['repository_id']
+    repository = Repository.objects.get(pk=repository_pk)
 
     issue = Issue.objects.get(pk=id)
     issue.closed = False
     issue.save()
 
-    description = request.POST.get('comment')
-
-    comment = Comment()
-    comment.description = 'reopend this'
-    comment.author = user
-    comment.issue = issue
-
-    comment.save()
-
-    comments_with_reply = Comment.objects.filter(issue=issue.pk)
-    comments = []
-    for comm in comments_with_reply:
-        if not comm.isReply:
-            comments.append(comm)
+    comments_all = Comment.objects.filter(issue=issue.pk)
+    comments = comments_all.filter(parent=None)
 
     issue_labels = issue.labels.all()
     all_labels = Label.objects.filter(repository=repository.pk)
@@ -1054,6 +1005,9 @@ def issue_reopen(request,id):
 
 
 def comment_new(request, id):
+    repository_pk = request.session['repository_id']
+    repository = Repository.objects.get(pk=repository_pk)
+
     username = request.session['uname_user']
     user = User.objects.get(username=username)
 
@@ -1063,45 +1017,33 @@ def comment_new(request, id):
     all_labels = Label.objects.filter(repository=repository.pk)
     result_labels = list(set(all_labels) - set(issue_labels))
 
+    # CREATE COMMENT
     description = request.POST.get('comment')
 
     comment = Comment()
-    if description != "":
-        comment.description = description
-    else:
-        comments_with_reply = Comment.objects.filter(issue=issue.pk)
-        comments = []
-        for comm in comments_with_reply:
-            if not comm.isReply:
-                comments.append(comm)
-        return render(request, "github/issue_view_one.html", {'issue': issue, 'comments': comments,'messageNewComm':'Enter comment.','labels':result_labels})
-
+    comment.description = description
     comment.author = user
     comment.issue = issue
-
     comment.save()
 
-    comments_with_reply = Comment.objects.filter(issue=issue.pk)
-    comments = []
-    for comm in comments_with_reply:
-        if not comm.isReply:
-            comments.append(comm)
+    comments_all = Comment.objects.filter(issue=issue.pk)
+    comments = comments_all.filter(parent=None)
     return render(request, "github/issue_view_one.html", {'issue': issue,'comments':comments,'labels':result_labels})
 
 
 def comment_edit(request, idIssue, idComment):
+    repository_pk = request.session['repository_id']
+    repository = Repository.objects.get(pk=repository_pk)
+
     issue = Issue.objects.get(pk=idIssue)
     comment = Comment.objects.get(pk=idComment)
 
     newDescription = request.POST.get('comment')
-    comment.description = '[edited] ' + newDescription
+    comment.description = newDescription
     comment.save()
 
-    comments_with_reply = Comment.objects.filter(issue=issue.pk)
-    comments = []
-    for comm in comments_with_reply:
-        if not comm.isReply:
-            comments.append(comm)
+    comments_all = Comment.objects.filter(issue=issue.pk)
+    comments = comments_all.filter(parent=None)
 
     issue_labels = issue.labels.all()
     all_labels = Label.objects.filter(repository=repository.pk)
@@ -1109,18 +1051,17 @@ def comment_edit(request, idIssue, idComment):
     return render(request, "github/issue_view_one.html", {'issue': issue,'comments': comments,'labels':result_labels})
 
 def comment_delete(request,id):
+    repository_pk = request.session['repository_id']
+    repository = Repository.objects.get(pk=repository_pk)
+
     issue = Issue.objects.get(pk=id)
 
     comment_pk = request.POST.get('commentid')
     comment = Comment.objects.get(pk=comment_pk)
-
     comment.delete()
 
-    comments_with_reply = Comment.objects.filter(issue=issue.pk)
-    comments = []
-    for comm in comments_with_reply:
-        if not comm.isReply:
-            comments.append(comm)
+    comments_all = Comment.objects.filter(issue=issue.pk)
+    comments = comments_all.filter(parent=None)
 
     issue_labels = issue.labels.all()
     all_labels = Label.objects.filter(repository=repository.pk)
@@ -1129,6 +1070,9 @@ def comment_delete(request,id):
 
 
 def comment_reply(request, idIssue, idComment):
+    repository_pk = request.session['repository_id']
+    repository = Repository.objects.get(pk=repository_pk)
+
     username = request.session['uname_user']
     user = User.objects.get(username=username)
 
@@ -1139,32 +1083,18 @@ def comment_reply(request, idIssue, idComment):
     all_labels = Label.objects.filter(repository=repository.pk)
     result_labels = list(set(all_labels) - set(issue_labels))
 
+    # CREATE REPLY
     replyDescription = request.POST.get('commentReply')
 
     reply = Comment()
-    if replyDescription != "":
-        reply.description = "[reply] " + replyDescription
-    else:
-        comments = Comment.objects.filter(issue=issue.pk)
-        return render(request, "github/issue_view_one.html", {'issue': issue, 'comments': comments,'messageReply':'Enter comment.','labels':result_labels})
-
+    reply.description = "[reply] " + replyDescription
     reply.author = user
     reply.issue = issue
-    reply.isReply = True
-
+    reply.parent = comment
     reply.save()
 
-    comment.replies.append(reply)
-    comment.save()
-
-
-    comments_with_reply = Comment.objects.filter(issue=issue.pk)
-
-    comments = []
-    for comm in comments_with_reply:
-        if not comm.isReply:
-            comments.append(comm)
-
+    comments_all = Comment.objects.filter(issue=issue.pk)
+    comments = comments_all.filter(parent=None)
     return render(request, "github/issue_view_one.html", {'issue': issue, 'comments': comments,'labels':result_labels})
 
 # new milestone
