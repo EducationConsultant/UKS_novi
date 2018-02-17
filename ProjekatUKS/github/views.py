@@ -982,7 +982,41 @@ def switch_issue_view_one(request,id):
     issue_labels = issue.labels.all()
     all_labels = Label.objects.filter(repository=repository.pk)
     result_labels =list(set(all_labels) - set(issue_labels))
-    return render(request,"github/issue_view_one.html",{'issue':issue,'comments':comments,'labels':result_labels})
+
+    milestones = Milestone.objects.filter(repository = repository.pk)
+
+    return render(request,"github/issue_view_one.html",{'issue':issue,
+                                                        'comments':comments,
+                                                        'labels':result_labels,
+                                                        'milestones': milestones})
+
+# EDIT MILESTONE IN ISSUE
+def issue_edit_milestone(request, issue_id, milestone_id):
+    print("*****USAO U FJU")
+    issue = Issue.objects.get(pk=issue_id)
+    milestone = Milestone.objects.get(pk=milestone_id)
+    issue.milestone = milestone
+    print("*************milestone" + milestone.title)
+    issue.save()
+
+    comments_with_reply = Comment.objects.filter(issue=issue.pk)
+    comments = []
+    for comm in comments_with_reply:
+        if not comm.isReply:
+            comments.append(comm)
+
+    repository_pk = request.session['repository_id']
+    repository = Repository.objects.get(pk=repository_pk)
+
+    issue_labels = issue.labels.all()
+    all_labels = Label.objects.filter(repository=repository.pk)
+    result_labels =list(set(all_labels) - set(issue_labels))
+
+    milestones = Milestone.objects.filter(repository=repository.pk)
+    return render(request, "github/issue_view_one.html", {'issue': issue,
+                                                          'comments': comments,
+                                                          'labels': result_labels,
+                                                          'milestones': milestones})
 
 
 #delete label form issue

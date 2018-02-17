@@ -207,6 +207,35 @@
         </ul>
     </li>
 
+
+
+
+    <li>
+          <h5>
+            <b>Milestone (again) :</b>
+            <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="context_menu_1" data-toggle="dropdown">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+
+                <ul class="dropdown-menu" role="menu" aria-labelledby="filters">
+
+                    <li class="divider"></li>
+                    {% for m in milestones %}
+                    <li role="presentation">
+                        <a href="{% url 'github:issue_edit_milestone' issue.pk m.pk %}" role="menuitem" tabindex="-1">
+                            {{m.title}}
+                        </a>
+                    </li>
+                    {% endfor %}
+                    <li class="divider"></li>
+
+                </ul>
+            </div>
+
+        </h5>
+    </li>
+
     <li>
         <h5>
             <b>Labels:</b>
