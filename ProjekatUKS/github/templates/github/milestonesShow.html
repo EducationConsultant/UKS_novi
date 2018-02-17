@@ -11,6 +11,7 @@
          <ul class="nav nav-stacked">
             <li><a href="{% url 'github:switch_milestone' nameRepository %}">New milestone</a></li>
             <li><a href="{% url 'github:getAllMilestones' nameRepository %}">Milestones</a></li>
+            <li><a href="{% url 'github:repositoryInfo' nameRepository  %}">Back to repository</a></li>
         </ul>
     </nav>
 
@@ -32,13 +33,12 @@
                             <li role="presentation">
                                 <a role="menuitem" tabindex="-1" href="{% url 'github:getAllMilestones_open' nameRepository %}">Open</a>
                             </li>
-
                             <li role="presentation">
                                 <a role="menuitem" tabindex="-1" href="{% url 'github:getAllMilestones_closed'  nameRepository%}">Closed</a>
                             </li>
                         </ul>
 
-                        <a href="{% url 'github:getAllMilestones' nameRepository%}"><button class="btn btn-default">Choose filter</button></a>
+                        <a href="{% url 'github:getAllMilestones' nameRepository%}"><button class="btn btn-default">Close filter</button></a>
                    </div>
 
 

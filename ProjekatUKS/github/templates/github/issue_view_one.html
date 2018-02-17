@@ -56,6 +56,11 @@
             <li class="list-group-item">{{issue.description}}</li>
         </ul>
 
+        <h5><b>Milestone</b></h5>
+        <ul class="list-group">
+            <li class="list-group-item">{{issue.milestone}}</li>
+        </ul>
+
         <h5><b>Comments</b></h5>
         {% if messageDelete %}
          <div class="alert alert-success">
@@ -205,6 +210,35 @@
             <li class="list-group-item">{{assignee.username}}</li>
             {% endfor %}
         </ul>
+    </li>
+
+
+
+
+    <li>
+          <h5>
+            <b>Milestone (again) :</b>
+            <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="context_menu_1" data-toggle="dropdown">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+
+                <ul class="dropdown-menu" role="menu" aria-labelledby="filters">
+
+                    <li class="divider"></li>
+                    {% for m in milestones %}
+                    <li role="presentation">
+                        <a href="{% url 'github:issue_edit_milestone' issue.pk m.pk %}" role="menuitem" tabindex="-1">
+                            {{m.title}}
+                        </a>
+                    </li>
+                    {% endfor %}
+                    <li class="divider"></li>
+
+                </ul>
+            </div>
+
+        </h5>
     </li>
 
     <li>

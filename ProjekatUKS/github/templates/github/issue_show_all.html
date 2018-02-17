@@ -28,6 +28,7 @@
                 <th>Title</th>
                 <th>Description</th>
                 <th>Author</th>
+                <th>Milestone</th>
             </tr>
         </thead>
 
@@ -37,6 +38,7 @@
                     <td><a href="{% url 'github:switch_issue_view_one' issue.pk %}">{{issue.title}}</a></td>
                     <td>{{issue.description}}</td>
                     <td>{{issue.author.username}}</td>
+                    <td>{{issue.milestone.title}}</td>
                 </tr>
             {% endfor %}
         </tbody>

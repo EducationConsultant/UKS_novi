@@ -46,6 +46,15 @@ urlpatterns = [
     path('issue_close/<id>', views.issue_close, name='issue_close'),
     path('issue_reopen/<id>', views.issue_reopen, name='issue_reopen'),
 
+    # create issue from milestone
+    path('switch_issue_new_from_milestone/<str:name>', views.switch_issue_new_from_milestone, name='switch_issue_new_from_milestone'),
+    path('issue_new_from_milestone/<str:name>', views.issue_new_from_milestone, name='issue_new_from_milestone'),
+
+    # edit milestone in issue
+    path('issue_edit_milestone/<issue_id>/<milestone_id>', views.issue_edit_milestone, name='issue_edit_milestone'),
+
+
+
     #issue and label
     path('issue_delete_label/<issue_id>/<label_id>', views.issue_delete_label, name='issue_delete_label'),
     path('issue_add_label/<issue_id>/<label_id>', views.issue_add_label, name='issue_add_label'),

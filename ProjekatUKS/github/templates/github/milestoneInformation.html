@@ -10,6 +10,10 @@
         <ul class="nav nav-stacked">
             <li><a href="{% url 'github:switch_milestone' milestone.repository.name %}">New milestone</a></li>
             <li><a href="{% url 'github:getAllMilestones' milestone.repository.name %}">Milestones</a></li>
+            <li><a href="{% url 'github:repositoryInfo'  milestone.repository.name  %}">Back to repository</a></li>
+            {% if milestone.opened %}
+            <li><a href="{% url 'github:switch_issue_new_from_milestone' milestone.title %}">New issue</a></li>
+            {% endif %}
         </ul>
 
     </nav>
@@ -66,7 +70,35 @@
                    <div class="col-sm-offset-2 col-sm-10">
                         <button type="button" class="btn btn-info" onclick="location.href='{% url 'github:delete_milestone' milestone.pk %}'">Delete</button>
                     </div>
-                   </div>
+               </div>
+
+
+                <div class="col-xs-12" style="height:50px;"></div>
+                <div class="container">
+                    <div class="col-sm-offset-2 col-sm-10">
+                  <h2>Issues connected to this milestone</h2>
+                    </div>
+                   <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Title</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for i in issuesOfMilestone%}
+                      <tr>
+                        <td>
+                            <a href="{% url 'github:switch_issue_view_one' i.pk %}">{{i.title}}</a>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+
+
+
+
 
             {% endblock %}
             </div>
