@@ -11,9 +11,13 @@
         <!-- Sidebar Links -->
          <ul class="nav nav-stacked">
             <ul class="nav nav-stacked">
-            <li><a href="{% url 'github:repositoryInfo' repository.name %}">About repository</a></li>
-            <li><a href="{% url 'github:addNewMemberRepository' repository.name %}">Add member</a></li>
-            <li><a href="{% url 'github:organizationInfo' repository.organization.name %}">Back to organization</a></li>
+                <li><a href="{% url 'github:repositoryInfo' repository.name %}">About repository</a></li>
+                <li><a href="{% url 'github:addNewMemberRepository' repository.name %}">Add member</a></li>
+                <li><a href="{% url 'github:organizationInfo' repository.organization.name %}">Back to organization</a></li>
+                <li><a href="{% url 'github:repository' repository.organization.name %}">New repository</a></li>
+                <li><a href="{% url 'github:switch_all_issues' %}">Issues</a></li>
+                <li><a href="{% url 'github:getAllMilestones' repository.name  %}">Milestones</a></li>
+                <li><a href="{% url 'github:switch_label_show_all' %}">Labels</a></li>
             </ul>
         </ul>
     </nav>
