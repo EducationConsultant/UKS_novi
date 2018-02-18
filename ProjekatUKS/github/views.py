@@ -484,7 +484,14 @@ def saveRepository(request, p):
     repository.type = type
     repository.organization = organization
     repository.owner = user
-    repository.save()
+
+
+    try:
+        org = Repository.objects.get(name=name)
+        return render(request, 'github/repository.html',
+                      {'repository': repository,'organization':organization, 'p': p, 'messageName': 'That name already exists!'})
+    except Repository.DoesNotExist:
+        repository.save()
 
     # put owner into members of repository
     repository.members.add(user)
