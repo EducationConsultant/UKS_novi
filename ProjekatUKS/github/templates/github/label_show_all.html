@@ -22,7 +22,7 @@
 {% endblock %}
 
 {% block content %}
-<h3>Show all for {{request.session.repository_name}}</h3>
+<h4>Show all for {{request.session.repository_name}}</h4>
 
 <div class="container">
     <div class="row" >
@@ -55,7 +55,7 @@
         <tbody>
             {% for label in labels %}
                 <tr>
-                    <td><div id="label_name{{label.name}}" style="width:auto;height:auto;border:1px solid {{label.color}};background-color:{{label.color}};font-weight: bold;font-size: 20px;">{{label.name}}</div></td>
+                    <td><div id="label_name{{label.name}}" style="width:auto;height:auto;border:1px solid {{label.color}};background-color:{{label.color}};font-weight: bold;font-size: 16px;">{{label.name}}</div></td>
 
                     <td>
                         <a href="#" onclick="show_edit_modal({{label.pk}},'{{label.name}}','{{label.color}}')">

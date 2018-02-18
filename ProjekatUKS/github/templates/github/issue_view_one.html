@@ -267,7 +267,6 @@
 
     <li>
         <h5>
-            {% if labels  %}
             <div class="dropdown">
                 <b>Labels:</b>
                 <button class="btn btn-default dropdown-toggle btn-xs" type="button" id="context_menu" data-toggle="dropdown">
@@ -288,7 +287,6 @@
                     <li><a href="{% url 'github:switch_label_show_all' %}">Edit labels</a></li>
                 </ul>
             </div>
-            {% endif %}
         </h5>
 
         <ul class="list-group">
