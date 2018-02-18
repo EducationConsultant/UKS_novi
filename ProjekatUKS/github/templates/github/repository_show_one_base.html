@@ -15,6 +15,7 @@
                 <li><a href="{% url 'github:switch_all_issues' %}">Issues</a></li>
                 <li><a href="{% url 'github:getAllMilestones' repository.name  %}">Milestones</a></li>
                 <li><a href="{% url 'github:switch_label_show_all' %}">Labels</a></li>
+                <li><a href="{% url 'github:wiki' repository.pk %}">Wiki</a></li>
                 <li><a href="{% url 'github:organizationInfo' repository.organization.name %}">Back to organization</a></li>
             </ul>
         </div>

@@ -1,7 +1,7 @@
 {% extends "github/issue.html" %}
 
 {% block content %}
-<h1 class="text-primary">New issue</h1>
+<h3>New issue</h3>
 
 <div class="container">
     <form class="form-horizontal" action="{% url 'github:issue_new_from_milestone' milestoneTitle %}" method="post">
@@ -52,12 +52,9 @@
             </div>
         </div>
 
-
-
-
          <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-default">Submit new issue</button>
+                <button type="submit" class="btn btn-default">Submit</button>
             </div>
         </div>
     </form>

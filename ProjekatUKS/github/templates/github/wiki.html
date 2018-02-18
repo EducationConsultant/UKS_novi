@@ -1,0 +1,26 @@
+{% extends "github/repository_show_one_base.html" %}
+
+{% block content %}
+<h3>Wiki</h3>
+<div class="row">
+    <div class="col-xs-10">
+        <h5><b>Title</b></h5>
+        <ul class="list-group">
+            <li class="list-group-item">{{ wiki.title }}</li>
+        </ul>
+
+        <h5><b>Content</b></h5>
+        <ul class="list-group">
+            <li class="list-group-item">{{ wiki.content }}</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+{% block content_right %}
+<ul class="nav nav-stacked">
+    <li>
+        <button type="button" class="btn btn-default" onclick="location.href='{% url 'github:switch_wiki_edit' wiki.pk %}'">Edit</button>
+    </li>
+</ul>
+{% endblock %}

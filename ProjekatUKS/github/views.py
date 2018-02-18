@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.core.mail import EmailMessage
 
 from django.contrib.sites.shortcuts import get_current_site
-from github.models import User, Organization, Repository, Issue, Comment, Milestone, Label, History
+from github.models import User, Organization, Repository, Issue, Comment, Milestone, Label, History, Wiki
 
 
 # switch from some page to home.html
@@ -486,8 +486,18 @@ def saveRepository(request, p):
     repository.members.add(user)
     repository.save()
 
+    wiki = Wiki()
+    wiki.content = ""
+    wiki.title = "Wiki of " + str(repository.name)
+    wiki.save()
+    repository.wiki = wiki
+    repository.save()
+
+    request.session['repository_id'] = repository.pk
     repositoryMembers = repository.members.all
-    return render(request, 'github/addNewMemberRepository.html', {'repository': repository, 'repositoryMembers':repositoryMembers,'p':p})
+    return render(request, 'github/addNewMemberRepository.html',
+              {'repository': repository, 'repositoryMembers': repositoryMembers, 'p': p})
+
 
 
 # parametar 'name' is nameRepostiory
@@ -679,7 +689,8 @@ def issue_new(request):
     if milestoneTitle != "":
         milestone = Milestone.objects.get(title=milestoneTitle)
         issue.milestone = milestone
-
+        milestone.countOpenedIssues = milestone.countOpenedIssues + 1
+        milestone.save()
     issue.save()
 
     for ass in listAssignees:
@@ -721,6 +732,7 @@ def switch_issue_new_from_milestone(request, name):
     return render(request, "github/issue_new_from_milestone.html", {'users': users, 'labels': labels,
                                                      'milestoneTitle': name})
 # FROM MILESTONE
+# name is nameMilestone
 def issue_new_from_milestone(request, name):
     repository_pk = request.session['repository_id']
     repository = Repository.objects.get(pk=repository_pk)
@@ -736,8 +748,6 @@ def issue_new_from_milestone(request, name):
     description = request.POST.get('description')
     listAssignees = request.POST.getlist('assignees')
     listLabels = request.POST.getlist('labels')
-    #milestone = Milestone.objects.get(title = name)
-
 
     username = request.session['uname_user']
     user = User.objects.get(username=username)
@@ -748,12 +758,11 @@ def issue_new_from_milestone(request, name):
     issue.author = user
     issue.repository = repository
 
-    print("*************************" + name + "********************")
     if name != "":
         milestone = Milestone.objects.get(title=name)
         issue.milestone = milestone
-    
-    #issue.milestone = milestone
+        milestone.countOpenedIssues = milestone.countOpenedIssues + 1
+        milestone.save()
 
     issue.save()
 
@@ -773,9 +782,6 @@ def issue_new_from_milestone(request, name):
     all_labels = Label.objects.filter(repository=repository.pk)
     result_labels = list(set(all_labels) - set(issue_labels))
     return render(request, "github/issue_view_one.html",{'issue':issue,'comments':comments,'labels':result_labels, 'milestones':milestones})
-
-
-
 
 
 def switch_issue_view_one(request,id):
@@ -808,9 +814,20 @@ def switch_issue_view_one(request,id):
 # EDIT MILESTONE IN ISSUE
 def issue_edit_milestone(request, issue_id, milestone_id):
     issue = Issue.objects.get(pk=issue_id)
+
+    if issue.milestone:
+        milestoneOld = issue.milestone
+        if  milestoneOld.countOpenedIssues > 0:
+            milestoneOld.countOpenedIssues = milestoneOld.countOpenedIssues - 1
+            milestoneOld.save()
+
     milestone = Milestone.objects.get(pk=milestone_id)
     issue.milestone = milestone
     issue.save()
+
+    if milestone:
+        milestone.countOpenedIssues = milestone.countOpenedIssues + 1
+        milestone.save()
 
     milestones = []
     milestonesAll = Milestone.objects.all()
@@ -819,6 +836,7 @@ def issue_edit_milestone(request, issue_id, milestone_id):
         if m.repository.name == milestone.repository.name:
             if m.opened:
                 milestones.append(m)
+
 
     #comments and replies
     comments_all = Comment.objects.filter(issue=issue.pk)
@@ -958,6 +976,12 @@ def issue_close(request,id):
     issue.closed = True
     issue.save()
 
+    if issue.milestone:
+        milestone = issue.milestone
+        milestone.countClosedIssues = milestone.countClosedIssues + 1
+        milestone.countOpenedIssues = milestone.countOpenedIssues - 1
+        milestone.save()
+
     # author
     username = request.session['uname_user']
     user = User.objects.get(username=username)
@@ -989,6 +1013,12 @@ def issue_reopen(request,id):
     # author
     username = request.session['uname_user']
     user = User.objects.get(username=username)
+
+    if issue.milestone:
+        milestone = issue.milestone
+        milestone.countClosedIssues = milestone.countClosedIssues - 1
+        milestone.countOpenedIssues = milestone.countOpenedIssues + 1
+        milestone.save()
 
     # CREATE HISTORY
     history = History()
@@ -1121,11 +1151,14 @@ def milestone(request, name):
     milestone.repository = Repository.objects.get(name=name)
     milestone.opened = True
     milestone.save()
-    return render(request, 'github/milestoneInformation.html', {'milestone':milestone})
+    return render(request, 'github/milestoneInformation.html', {'milestone':milestone,'nameRepository': name})
 
 # name is milestoneTitle
-def milestoneInfo(request, name ) :
+def milestoneInfo(request, name) :
     milestone = Milestone.objects.get(title=name)
+
+    repository = Repository.objects.get(name=milestone.repository.name)
+
     issuesOfMilestone = []
     issuesAll = Issue.objects.all()
 
@@ -1134,7 +1167,7 @@ def milestoneInfo(request, name ) :
             issuesOfMilestone.append(i)
 
     return render(request, 'github/milestoneInformation.html', {'milestone': milestone,
-                                                                'issuesOfMilestone': issuesOfMilestone,})
+                                                                'issuesOfMilestone': issuesOfMilestone,'nameRepository':repository.name})
 
 # shows all milestones of one repository
 def getAllMilestones(request, name):
@@ -1241,6 +1274,8 @@ def label_delete(request):
 def create_label_from_issue(request):
     repository_pk = request.session['repository_id']
     repository = Repository.objects.get(pk=repository_pk)
+    milestonesAll = Milestone.objects.all()
+    milestones = []  # just opened milestones
 
     users = []
     if repository.members.all() is not None:
@@ -1282,38 +1317,54 @@ def create_label_from_issue(request):
         issue.labels.add(label)
 
     labels = Label.objects.filter(repository=repository.pk)
+
+    for m in milestonesAll:
+        if m.repository.name == repository.name:
+            if m.opened:
+                milestones.append(m)
     return render(request, "github/issue_new.html",
-                  {'issue': issue, 'users': users, 'labels': labels})
+                  {'issue': issue, 'users': users, 'labels': labels, 'milestones':milestones})
 
 def milestone_reopen(request,id):
     milestone = Milestone.objects.get(pk=id)
     milestone.opened = True
     milestone.save()
-    return render(request, "github/milestoneInformation.html", {'milestone':milestone})
+
+    repository = Repository.objects.get(name=milestone.repository.name)
+    return render(request, "github/milestoneInformation.html", {'milestone':milestone,'nameRepository':repository.name})
 
 
 def milestone_close(request, id):
     milestone = Milestone.objects.get(pk=id)
     milestone.opened = False
     milestone.save()
-    return render(request, "github/milestoneInformation.html", {'milestone': milestone})
+
+    repository = Repository.objects.get(name=milestone.repository.name)
+    return render(request, "github/milestoneInformation.html", {'milestone': milestone,'nameRepository':repository.name})
 
 def switch_milestone_edit(request, id):
     milestone = Milestone.objects.get(pk=id)
-    print("*******************" + str(milestone.date))
+    repository = Repository.objects.get(name=milestone.repository.name)
+
     dateEdit = str(milestone.date)
-    return render(request, "github/edit_milestone.html", {'dateEdit' : dateEdit,'milestone': milestone})
+    return render(request, "github/edit_milestone.html", {'dateEdit' : dateEdit,'milestone': milestone,'nameRepository':repository.name})
 
 def milestone_edit(request, id):
     milestone = Milestone.objects.get(pk=id)
+
     title = request.POST.get('title')
     description = request.POST.get('description')
     date = request.POST.get('date')
+
     milestone.title = title
     milestone.description = description
     milestone.date = date
     milestone.save()
-    return render(request, "github/milestoneInformation.html", {'milestone': milestone})
+
+    repository = Repository.objects.get(name=milestone.repository.name)
+    milestonesOfRepository = getMilestonesOfRepository(repository.name)
+    return render(request, "github/milestonesShow.html", {'milestone': milestone,'nameRepository':repository.name,
+                                                          'milestonesOfRepository': milestonesOfRepository})
 
 
 
@@ -1325,6 +1376,35 @@ def delete_milestone(request, id):
     return render(request, 'github/milestonesShow.html', {'nameRepository': name,
                                                           'milestonesOfRepository': milestonesOfRepository})
 
+# id is idRepository
+def wiki(request, id):
+    repository = Repository.objects.get(pk=id)
+    wiki = repository.wiki
+    return render(request, 'github/wiki.html', {'wiki':wiki,'repository':repository})
 
+def switch_wiki_edit(request, id):
+    repository_pk = request.session['repository_id']
+    repository = Repository.objects.get(pk=repository_pk)
 
+    wiki = Wiki.objects.get(pk=id)
+    return render(request, 'github/wiki_edit.html', {'wiki': wiki,'repository':repository})
 
+def wiki_edit(request, id):
+    repository_pk = request.session['repository_id']
+    repository = Repository.objects.get(pk=repository_pk)
+
+    title = request.POST.get('title')
+    content = request.POST.get('content')
+
+    wiki = Wiki.objects.get(pk=id)
+    wiki.title = title
+    wiki.content = content
+
+    wiki.save()
+    repositories = Repository.objects.all()
+    for r in repositories:
+        if r.wiki.pk == wiki.pk:
+            r.wiki = wiki
+            r.save()
+
+    return render(request, 'github/wiki.html', {'wiki':wiki,'repository':repository})

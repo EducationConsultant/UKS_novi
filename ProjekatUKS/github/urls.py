@@ -104,7 +104,8 @@ urlpatterns = [
     path('delete_milestone/<id>', views.delete_milestone, name='delete_milestone'),
     path('switch_milestone_edit/<id>', views.switch_milestone_edit, name='switch_milestone_edit'),
     path('milestone_edit/<id>', views.milestone_edit, name='milestone_edit'),
-
-
+    path('wiki/<id>', views.wiki, name='wiki'),
+    path('wiki_edit/<id>', views.wiki_edit, name='wiki_edit'),
+    path('switch_wiki_edit/<id>', views.switch_wiki_edit, name='switch_wiki_edit'),
 
 ]

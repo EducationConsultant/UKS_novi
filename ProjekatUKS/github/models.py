@@ -46,6 +46,12 @@ class Organization(models.Model):
     def __str__(self):
         return self.name
 
+class Wiki(models.Model):
+    content = models.TextField(null=True)
+    title = models.CharField(null=True, max_length = 100)
+
+    def __str__(self):
+        return self.content
 
 class Repository(models.Model):
     name = models.CharField(max_length=50)
@@ -55,6 +61,8 @@ class Repository(models.Model):
     members = models.ManyToManyField(User)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owner_repository')
+    wiki = models.OneToOneField(Wiki, null=True,on_delete = models.CASCADE)
+
     def __str__(self):
         return self.name
 
@@ -74,6 +82,8 @@ class Milestone(models.Model):
     description = models.CharField(max_length=50)
     repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
     opened = models.BooleanField(default=True)
+    countOpenedIssues = models.PositiveIntegerField(default=0)
+    countClosedIssues = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.title

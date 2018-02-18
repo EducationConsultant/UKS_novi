@@ -1,0 +1,29 @@
+{% extends "github/base.html" %}
+
+{% block body_content %}
+<div class="container-fluid text-center">
+    <div class="row content">
+        <div class="col-sm-2 sidenav">
+            <!-- Sidebar Header -->
+            <div class="sidebar-header">
+                <h3>Milestones for {{request.session.repository_name}}</h3>
+            </div>
+
+            <ul class="nav nav-stacked">
+                <li><a href="{% url 'github:getAllMilestones' nameRepository  %}">Show all</a></li>
+                <li><a href="{% url 'github:switch_milestone' nameRepository %}">New milestone</a></li>
+                <li><a href="{% url 'github:repositoryInfo' nameRepository  %}">Back to repository</a></li>
+            </ul>
+        </div>
+        <div class="col-sm-8 text-left">
+            {% block content %}
+            {% endblock %}
+        </div>
+
+        <div class="col-sm-2 sidenav">
+            {% block content_right %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}

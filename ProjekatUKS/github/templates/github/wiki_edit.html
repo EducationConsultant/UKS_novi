@@ -1,0 +1,27 @@
+{% extends "github/repository_show_one_base.html" %}
+
+
+{% block content %}
+<h3>Edit wiki</h3>
+<form class="form-horizontal" action="{% url 'github:wiki_edit' wiki.pk %}" method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="title">Title:</label>
+        <div>
+            <input type="text" class="form-control" id="title" placeholder="Enter title" name="title"   value="{{ wiki.title }}" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="content">Content:</label>
+        <div>
+            <textarea class="form-control" rows="20" id="content" name="content" placeholder="Enter content"  >{{wiki.content}}</textarea>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-default">Submit</button>
+        </div>
+    </div>
+</form>
+{% endblock %}
