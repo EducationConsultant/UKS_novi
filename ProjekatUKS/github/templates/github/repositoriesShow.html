@@ -1,54 +1,52 @@
 {% extends "github/base.html" %}
 
 {% block body_content %}
-<div class="wrapper">
-     <nav class="col-sm-3 shomeidenav hidden-xs">
-        <!-- Sidebar Header -->
-        <div class="sidebar-header">
-            <h3>Repository settings</h3>
+<div class="container-fluid text-center">
+    <div class="row content">
+        <div class="col-sm-2 sidenav">
+            <!-- Sidebar Header -->
+            <div class="sidebar-header">
+                <h3>Repository</h3>
+            </div>
+
+            <ul class="nav nav-stacked">
+                <li><a href="{% url 'github:organizationsByUser' %}">Show all</a></li>
+                <li><a href="{% url 'github:organization' %}">New organization</a></li>
+            </ul>
         </div>
 
-        <!-- Sidebar Links -->
-        <ul class="nav nav-stacked">
-            <li><a href="{% url 'github:organization' %}">New organization</a></li>
-        </ul>
-    </nav>
+        <div class="col-sm-8 text-left">
+            <div><h3>Repositories of {{username}}</h3></div>
+            <div class="col-xs-12" style="height:50px;"></div>
+            <div class="container">
+               <table class="table">
+                <thead>
+                  <tr>
+                      <th  style="width:10%">Repository name</th>
+                      <th  style="width:10%">Organization name</th>
+                      <th  style="width:10%"></th>
+                      <th style="width:10%"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for o in repositoriesOfUser%}
+                  <tr>
+                      <td><a href="{% url 'github:repositoryInfo' o.name %}">{{o.name}}</a></td>
+                      <td>{{o.organization.name}}</td>
+                      <td><a href="{% url 'github:switch_edit_repository' o.name %}">Edit <span class="glyphicon glyphicon-pencil"></span></a></td>
+                      {% if o.owner == username %}
+                      <td><a href="{% url 'github:switch_delete_repository' o.name %}">Delete <span class="glyphicon glyphicon-trash"></span></a></td>
+                      {% endif %}
 
-    <!-- Page Content -->
-    <div class="content container">
-        <div class="row">
-            <div class="col-md-8">
-            {% block content %}
-                <div><h3>Repositories of {{username}}</h3></div>
-                <div class="col-xs-12" style="height:50px;"></div>
-                <div class="container">
-                   <table class="table">
-                    <thead>
-                      <tr>
-                          <th  style="width:10%">Repository name</th>
-                          <th  style="width:10%">Organization name</th>
-                          <th  style="width:10%"></th>
-                          <th style="width:10%"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                    {% for o in repositoriesOfUser%}
-                      <tr>
-                          <td><a href="{% url 'github:repositoryInfo' o.name %}">{{o.name}}</a></td>
-                          <td>{{o.organization.name}}</td>
-                          {% if o.owner == username %}
-                          <td><a href="{% url 'github:switch_delete_repository' o.name %}">Delete</a></td>
-                          {% endif %}
-                          <td><a href="{% url 'github:switch_edit_repository' o.name %}">Edit</a></td>
-                      </tr>
-                    {% endfor %}
-                    </tbody>
-                  </table>
-                </div>
-            {% endblock %}
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
             </div>
         </div>
-    </div>
 
+        <div class="col-sm-2 sidenav">
+        </div>
+    </div>
 </div>
 {% endblock %}

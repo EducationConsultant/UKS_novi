@@ -1,117 +1,96 @@
 {% extends "github/base.html" %}
 
 {% block body_content %}
-<div class="wrapper">
-     <nav class="col-sm-3 shomeidenav hidden-xs">
-        <!-- Sidebar Header -->
-        <div class="sidebar-header">
-            <h3>Milestone settings</h3>
+<div class="container-fluid text-center">
+    <div class="row content">
+        <div class="col-sm-2 sidenav">
+            <!-- Sidebar Header -->
+            <div class="sidebar-header">
+                <h3>Milestones</h3>
+            </div>
+
+            <ul class="nav nav-stacked">
+                <li><a href="{% url 'github:switch_milestone' milestone.repository.name %}">New milestone</a></li>
+                <li><a href="{% url 'github:getAllMilestones' milestone.repository.name %}">Milestones</a></li>
+                <li><a href="{% url 'github:repositoryInfo'  milestone.repository.name  %}">Back to repository</a></li>
+                {% if milestone.opened %}
+                <li><a href="{% url 'github:switch_issue_new_from_milestone' milestone.title %}">New issue</a></li>
+                {% endif %}
+            </ul>
         </div>
-        <ul class="nav nav-stacked">
-            <li><a href="{% url 'github:switch_milestone' milestone.repository.name %}">New milestone</a></li>
-            <li><a href="{% url 'github:getAllMilestones' milestone.repository.name %}">Milestones</a></li>
-            <li><a href="{% url 'github:repositoryInfo'  milestone.repository.name  %}">Back to repository</a></li>
-            {% if milestone.opened %}
-            <li><a href="{% url 'github:switch_issue_new_from_milestone' milestone.title %}">New issue</a></li>
-            {% endif %}
-        </ul>
 
-    </nav>
-
-    <!-- Page Content -->
-    <div class="content container">
-        <div class="row">
-            <div class="col-md-8">
-            {% block content %}
-               <div>
-                   <h4>About {{milestone.title}}</h4>
-                   <div class="form-group">
-                   <div class="col-sm-offset-2 col-sm-10">
-                        <button type="button" class="btn btn-success" onclick="location.href='{% url 'github:switch_issue_new_from_milestone' milestone.title   %}'">New issue</button>
-                    </div>
-               </div>
-               </div>
-               <div class="form-group">
-                    <span
-                        {% if milestone.opened %}class="label label-success"{% endif %}
-                        {% if not milestone.opened %}class="label label-danger"{% endif %}>
-                        {% if milestone.opened %}
-                            Open
-                        {% endif %}
-                        {% if not milestone.opened %}
-                            Closed
-                        {% endif %}
-                    </span>
-               </div>
-               <div class="form-group">
-                    <label class="control-label col-sm-2" for="title">Title:</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" id="title" placeholder="Enter title" name="title" rows="5" value="{{milestone.title}}"  disabled />
-                    </div>
-               </div>
-               <div class="form-group">
-                    <label class="control-label col-sm-2" for="date">Date</label>
-                     <div class="col-sm-10">
-                         <input class="form-control" id="date" name="date" placeholder="YYYY-MM-DD" type="text" rows="5" value="{{milestone.date}}" disabled/>
-                     </div>
-               </div>
-
-               <div class="form-group">
-                    <label class="control-label col-sm-2" for="description">Description:</label>
-                    <div class="col-sm-5">
-                        <textarea class="form-control" rows="5" id="description" name="description"  disabled>{{milestone.description}}</textarea>
-                    </div>
-               </div>
-               <div class="col-xs-12" style="height:50px;"></div>
-               <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            {% if not milestone.opened %}
-                            <button type="button" class="btn btn-info" onclick="location.href='{% url 'github:milestone_reopen' milestone.pk %}'">Reopen</button>
-                            {% endif %}
+        <div class="col-sm-8 text-left">
+            <!-- Page Content -->
+            <div class="content container">
+                <div class="row">
+                    <div class="col-md-8">
+                        {% block content %}
+                           <h4 class="text-primary">About {{milestone.title}}</h4>
+                            <span {% if milestone.opened %}class="label label-success"{% endif %} {% if not milestone.opened %}class="label label-danger"{% endif %}>
                             {% if milestone.opened %}
-                            <button type="button" class="btn btn-danger" onclick="location.href='{% url 'github:milestone_close' milestone.pk %}'">Close</button>
+                                Open
                             {% endif %}
-                        </div>
-               </div>
-               <div class="form-group">
-                   <div class="col-sm-offset-2 col-sm-10">
-                        <button type="button" class="btn btn-info" onclick="location.href='{% url 'github:delete_milestone' milestone.pk %}'">Delete</button>
-                    </div>
-               </div>
+                            {% if not milestone.opened %}
+                                Closed
+                            {% endif %}
+                            </span>
 
+                            <div class="row">
+                                <div class="col-xs-10">
+                                    <h5><b>Title</b></h5>
+                                    <ul class="list-group">
+                                        <li class="list-group-item">{{milestone.title}}</li>
+                                    </ul>
 
-                <div class="col-xs-12" style="height:50px;"></div>
-                <div class="container">
-                    <div class="col-sm-offset-2 col-sm-10">
-                  <h2>Issues connected to this milestone</h2>
+                                    <h5><b>Date</b></h5>
+                                    <ul class="list-group">
+                                        <li class="list-group-item">{{milestone.date}}</li>
+                                    </ul>
+
+                                    <h5><b>Description</b></h5>
+                                    <ul class="list-group">
+                                        <li class="list-group-item">{{milestone.description}}</li>
+                                    </ul>
+
+                                </div>
+                            </div>
+                        {% endblock %}
                     </div>
-                   <table class="table">
-                    <thead>
-                      <tr>
-                        <th>Title</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                    {% for i in issuesOfMilestone%}
-                      <tr>
-                        <td>
-                            <a href="{% url 'github:switch_issue_view_one' i.pk %}">{{i.title}}</a>
-                        </td>
-                      </tr>
-                    {% endfor %}
-                    </tbody>
-                  </table>
                 </div>
-
-
-
-
-
-            {% endblock %}
             </div>
         </div>
-    </div>
 
+        <div class="col-sm-2 sidenav">
+
+            <ul class="nav nav-stacked">
+                <li>
+                    <button type="button" class="btn btn-success" onclick="location.href='{% url 'github:switch_issue_new_from_milestone' milestone.title   %}'">New issue</button>
+
+                    {% if milestone.opened %}
+                    <button type="button" class="btn btn-danger" onclick="location.href='{% url 'github:milestone_close' milestone.pk %}'">Close</button>
+                    {% endif %}
+
+                    {% if not milestone.opened %}
+                    <button type="button" class="btn btn-info" onclick="location.href='{% url 'github:milestone_reopen' milestone.pk %}'">Reopen</button>
+                    {% endif %}
+                </li>
+
+                <br/>
+
+                <li>
+                    <h5><b>Issues connected to this milestone:</b></h5>
+                    <ul class="list-group">
+                        {% for i in issuesOfMilestone%}
+                        <li class="list-group-item" style="padding: 5px 15px;">
+                            <a href="{% url 'github:switch_issue_view_one' i.pk %}">{{i.title}}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>
 {% endblock %}
+
 
