@@ -6,19 +6,24 @@
         <div class="col-sm-2 sidenav">
             <!-- Sidebar Header -->
             <div class="sidebar-header">
-                <h3>Labels for {{request.session.repository_name}}</h3>
+                <h3>Organizations</h3>
             </div>
 
             <ul class="nav nav-stacked">
-                <li><a href="{% url 'github:switch_label_show_all' %}">Show all</a></li>
-                <li><a href="{% url 'github:switch_label_new' %}">New label</a></li>
-                <li><a href="{% url 'github:switch_all_issues' %}">Back to issues</a></li>
-                <li><a href="{% url 'github:repositoryInfo' request.session.repository_name %}">Back to repository</a></li>
+                <li><a href="{% url 'github:organizationsByUser' %}">Show all</a></li>
+                <li><a href="{% url 'github:organization' %}">New organization</a></li>
             </ul>
         </div>
         <div class="col-sm-8 text-left">
-            {% block content %}
-            {% endblock %}
+            <!-- Page Content -->
+            <div class="content container">
+                <div class="row">
+                    <div class="col-md-8">
+                        {% block content %}
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="col-sm-2 sidenav">

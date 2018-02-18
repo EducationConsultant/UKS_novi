@@ -55,7 +55,7 @@
 {% endblock %}
 
 {% block content %}
-<h1 class="text-primary">{{issue.title}}</h1>
+<h1>{{issue.title}}</h1>
 <span {% if not issue.closed %}class="label label-success"{% endif %} {% if issue.closed %}class="label label-danger"{% endif %}>
     {% if not issue.closed %}
     Open

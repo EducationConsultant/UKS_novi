@@ -22,7 +22,7 @@
 {% endblock %}
 
 {% block content %}
-<h1 class="text-primary">Show all for <a href="{% url 'github:repositoryInfo' request.session.repository_name %}">{{request.session.repository_name}}</a></h1>
+<h3>Show all for {{request.session.repository_name}}</h3>
 
 <div class="container">
     <div class="row" >
@@ -56,14 +56,17 @@
             {% for label in labels %}
                 <tr>
                     <td><div id="label_name{{label.name}}" style="width:auto;height:auto;border:1px solid {{label.color}};background-color:{{label.color}};font-weight: bold;font-size: 20px;">{{label.name}}</div></td>
-                    <td>
-                        <button type="button" onclick="show_edit_modal({{label.pk}},'{{label.name}}','{{label.color}}')">
-                            <span class="glyphicon glyphicon-pencil"></span>
-                        </button>
 
-                        <button type="button" onclick="show_delete_modal({{label.pk}})">
-                            <span class="glyphicon glyphicon-trash"></span>
-                        </button>
+                    <td>
+                        <a href="#" onclick="show_edit_modal({{label.pk}},'{{label.name}}','{{label.color}}')">
+                            Edit <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                    </td>
+
+                    <td>
+                        <a href="#" onclick="show_delete_modal({{label.pk}})">
+                            Delete <span class="glyphicon glyphicon-trash"></span>
+                        </a>
                     </td>
                     <td><input type="text" id="label_pk{{label.pk}}" value="{{label.pk}}" hidden/></td>
                     <td><input type="text" id="label_color{{label.color}}" value="{{label.color}}" hidden/></td>

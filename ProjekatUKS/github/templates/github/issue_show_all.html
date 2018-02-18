@@ -1,7 +1,7 @@
 {% extends "github/issue.html" %}
 
 {% block content %}
-<h1 class="text-primary">Show all for <a href="{% url 'github:repositoryInfo' request.session.repository_name %}">{{request.session.repository_name}}</a></h1>
+<h3>Show all for {{request.session.repository_name}}</h3>
 
 <div class="container">
     <div class="dropdown">

@@ -6,7 +6,7 @@
         <div class="col-sm-2 sidenav">
             <!-- Sidebar Header -->
             <div class="sidebar-header">
-                <h3>Issues for <a href="{% url 'github:repositoryInfo' request.session.repository_name %}">{{request.session.repository_name}}</a></h3>
+                <h3>Issues for {{request.session.repository_name}}</h3>
             </div>
 
             <ul class="nav nav-stacked">
