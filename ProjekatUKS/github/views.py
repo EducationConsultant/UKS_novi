@@ -713,10 +713,12 @@ def issue_new(request):
         if m.repository.name == repository.name:
             if m.opened:
                 milestones.append(m)
+
+    all_history = History.objects.filter(issue=issue.pk)
     return render(request, "github/issue_view_one.html",{'issue':issue,
                                                          'comments':comments,
                                                          'labels':result_labels,
-                                                         'milestones':milestones})
+                                                         'milestones':milestones,'history':all_history})
 
 
 # CREATE ISSUE FROM MILESTONE
@@ -806,10 +808,11 @@ def switch_issue_view_one(request,id):
             if m.opened:
                 milestones.append(m)
 
+    all_history = History.objects.filter(issue=issue.pk)
     return render(request,"github/issue_view_one.html",{'issue':issue,
                                                         'comments':comments,
                                                         'labels':result_labels,
-                                                        'milestones': milestones})
+                                                        'milestones': milestones,'history':all_history})
 
 # EDIT MILESTONE IN ISSUE
 def issue_edit_milestone(request, issue_id, milestone_id):
