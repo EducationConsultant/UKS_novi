@@ -82,16 +82,20 @@
 
                  <span>{{comment.author.username}}</span>
                  <span>{{comment.createdDate}}</span>
-                 <p>
+                 <div class="row">
                      <span>{{comment.description}}</span>
-                     {% if comment.replies %}
-                        {% for reply in comment.replies %}
-                            <p>{{ reply.description }}</p>
-                        {% endfor %}
-                     {% endif %}
-                 </p>
 
-                 <!-- Edit form-->
+                    {% if comment.replies %}
+                    <hr/>
+                    <ul>
+                         {% for reply in comment.replies.all %}
+                         <li>&nbsp&nbsp&nbsp&nbsp{{ reply.description }}</li>
+                         {% endfor %}
+                    </ul>
+                     {% endif %}
+                 </div>
+
+                  <!-- Edit form-->
                  <div class="row" >
                      <div class="col-xs-4">
                          <div class="container">
@@ -121,6 +125,7 @@
                          </div>
                      </div>
                  </div>
+
 
                  <!-- Reply form-->
                  <div class="row" >
@@ -279,6 +284,24 @@
             {% endfor %}
         </ul>
     </li>
+
+    <li>
+         <h5>
+            <b>History:</b>
+            {% if history  %}
+                <ul class="list-group">
+                    <div class="pre-scrollable">
+                        {% for h in history %}
+                        <li class="list-group-item">
+                            {{h.createdDate}}
+                            <br>{{h.description}}</br>
+                        </li>
+                        {% endfor %}
+                    </div>
+                </ul>
+            {% endif %}
+        </h5>
+    </li>
 </ul>
 
 <!-- Modal: EDIT ISSUE-->
@@ -348,5 +371,4 @@
         </div>
     </div>
 </div>
-
 {% endblock %}
