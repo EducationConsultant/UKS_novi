@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.core.mail import EmailMessage
 
 from django.contrib.sites.shortcuts import get_current_site
-from github.models import User, Organization, Repository, Issue, Comment, Milestone, Label, History
+from github.models import User, Organization, Repository, Issue, Comment, Milestone, Label, History, Wiki
 
 
 # switch from some page to home.html
@@ -695,6 +695,14 @@ def saveRepository(request, p):
             repositoryMembers = repository.members.all
 
     repository.save()
+
+    wiki = Wiki()
+    wiki.content = ""
+    wiki.title = "Wiki of" + str(repository.name)
+    wiki.save()
+    repository.wiki = wiki
+    repository.save()
+
     request.session['repository_id'] = repository.pk
     return render(request, 'github/addNewMemberRepository.html', {'repository': repository, 'repositoryMembers':repositoryMembers})
 
@@ -1562,6 +1570,31 @@ def delete_milestone(request, id):
     return render(request, 'github/milestonesShow.html', {'nameRepository': name,
                                                           'milestonesOfRepository': milestonesOfRepository})
 
+# id is idRepository
+def wiki(request, id):
+    repository = Repository.objects.get(pk=id)
+    wiki = repository.wiki
+    return render(request, 'github/wiki.html', {'wiki':wiki})
 
+def switch_wiki_edit(request, id):
+    wiki = Wiki.objects.get(pk=id)
+    return render(request, 'github/wiki_edit.html', {'wiki': wiki})
 
+def wiki_edit(request, id):
+    title = request.POST.get('title')
+    content = request.POST.get('content')
+    print("********************TITLE" + title)
+    print("*****************" + content)
+    wiki = Wiki.objects.get(pk=id)
+    wiki.title = title
+    wiki.content = content
+    print("***********************" + str(wiki.title))
+    print("***************" + str(wiki.content))
+    wiki.save()
+    repositories = Repository.objects.all()
+    for r in repositories:
+        if r.wiki.pk == wiki.pk:
+            r.wiki = wiki
+            r.save()
 
+    return render(request, 'github/wiki.html', {'wiki':wiki})

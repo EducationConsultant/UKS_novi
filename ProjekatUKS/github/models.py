@@ -45,6 +45,11 @@ class Organization(models.Model):
     def __str__(self):
         return self.name
 
+class Wiki(models.Model):
+    content = models.CharField(null=True, max_length = 500)
+    title = models.CharField(null=True, max_length = 100)
+    def __str__(self):
+        content
 
 class Repository(models.Model):
     name = models.CharField(max_length=50)
@@ -54,6 +59,8 @@ class Repository(models.Model):
     members = models.ManyToManyField(User)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     owner = models.CharField(max_length=50)
+    wiki = models.OneToOneField(Wiki, null=True,on_delete = models.CASCADE)
+
     def __str__(self):
         return self.name
 
