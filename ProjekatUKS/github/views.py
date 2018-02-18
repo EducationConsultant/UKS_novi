@@ -991,11 +991,10 @@ def switch_issue_view_one(request,id):
     milestonesAll = Milestone.objects.all()
     milestones = []  # just opened milestones
 
-    comments_with_reply = Comment.objects.filter(issue=issue.pk)
-    comments = []
-    for comm in comments_with_reply:
-        if not comm.isReply:
-            comments.append(comm)
+    # comments and replies
+    comments_all = Comment.objects.filter(issue=issue.pk)
+    # only comments
+    comments = comments_all.filter(parent=None)
 
     repository_pk = request.session['repository_id']
     repository = Repository.objects.get(pk=repository_pk)
