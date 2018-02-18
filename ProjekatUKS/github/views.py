@@ -370,12 +370,16 @@ def saveOrganization(request):
         return render(request, 'github/organization.html',
                       {'organization': organization, 'messageEmail': ' Field email must be filled!'})
 
-    organization.name = name
+
     # check if name exists
-    for o in organizations:
-        if o.name == name:
-            return render(request, 'github/organization.html',
-                          {'organization': organization, 'messageName': 'That name already exists!'})
+    organization.name = name
+    organization.email = email
+    try:
+        org = Organization.objects.get(name=name)
+        return render(request, 'github/organization.html',
+                      {'organization': organization, 'messageName': 'That name already exists!'})
+    except Organization.DoesNotExist:
+        organization.name = name
 
     organization.email = email
     organization.owner = owner
