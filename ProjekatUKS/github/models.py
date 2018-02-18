@@ -85,11 +85,11 @@ class Comment(models.Model):
     description = models.CharField(max_length=500)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
-    createdDate = models.DateField(("Date"), default=datetime.date.today)
+    createdDate = models.DateTimeField(auto_now=True)
     parent = models.ForeignKey('self', null=True, on_delete=models.CASCADE,related_name='replies')
 
     def __str__(self):
-        return self.description
+        return self.author + " " + self.description
 
 
 class Milestone(models.Model):
@@ -101,3 +101,11 @@ class Milestone(models.Model):
 
     def __str__(self):
         return self.title
+
+class History(models.Model):
+    description = models.CharField(max_length=500)
+    createdDate = models.DateTimeField(auto_now=True)
+    issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.description + " " + self.createdDate

@@ -250,6 +250,24 @@
             {% endfor %}
         </ul>
     </li>
+
+    <li>
+         <h5>
+            <b>History:</b>
+            {% if history  %}
+                <ul class="list-group">
+                    <div class="pre-scrollable">
+                        {% for h in history %}
+                        <li class="list-group-item">
+                            {{h.createdDate}}
+                            <br>{{h.description}}</br>
+                        </li>
+                        {% endfor %}
+                    </div>
+                </ul>
+            {% endif %}
+        </h5>
+    </li>
 </ul>
 
 <!-- Modal: EDIT ISSUE-->
