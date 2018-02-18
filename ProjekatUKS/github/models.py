@@ -73,6 +73,8 @@ class Milestone(models.Model):
     description = models.CharField(max_length=50)
     repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
     opened = models.BooleanField(default=True)
+    countOpenedIssues = models.PositiveIntegerField(default=0)
+    countClosedIssues = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.title
