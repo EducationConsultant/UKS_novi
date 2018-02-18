@@ -1471,6 +1471,8 @@ def label_delete(request):
 def create_label_from_issue(request):
     repository_pk = request.session['repository_id']
     repository = Repository.objects.get(pk=repository_pk)
+    milestonesAll = Milestone.objects.all()
+    milestones = []  # just opened milestones
 
     users = []
     if repository.members.all() is not None:
@@ -1512,8 +1514,13 @@ def create_label_from_issue(request):
         issue.labels.add(label)
 
     labels = Label.objects.filter(repository=repository.pk)
+
+    for m in milestonesAll:
+        if m.repository.name == repository.name:
+            if m.opened:
+                milestones.append(m)
     return render(request, "github/issue_new.html",
-                  {'issue': issue, 'users': users, 'labels': labels})
+                  {'issue': issue, 'users': users, 'labels': labels, 'milestones':milestones})
 
 def milestone_reopen(request,id):
     milestone = Milestone.objects.get(pk=id)
