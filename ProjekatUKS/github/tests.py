@@ -144,5 +144,5 @@ class WikiTestCase(TestCase):
         self.wiki.title = newTitle
         self.wiki.content = newContent
         self.wiki.save()
-        self.assertEqual(self.wiki.title, "New title")
-        self.assertEqual(sel.wiki.content, "New content")
+        self.assertEqual(self.wiki.title, "New title123")
+        self.assertEqual(self.wiki.content, "New content12313312")
