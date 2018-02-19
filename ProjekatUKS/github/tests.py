@@ -42,3 +42,45 @@ class OrganizationTestCase(TestCase):
         self.organization.save()
         self.assertEqual(self.organization.name, newName)
 
+
+class RepositoryTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create(firstname ="User", lastname="User",
+                                        username="user", password="user",
+                                        email="user@gmail.com", isActive = True, loggedin = True)
+
+        self.organization = Organization.objects.create(name="org", email="org@gmail.com",
+                                                        purpose="Educational purposes", howLong="Indefinitely",
+                                                        howMuchPeople="5 or fewer", owner=self.user)
+
+        self.member = User.objects.create(firstname="Member", lastname="Member",
+                                      username="member", password="member",
+                                      email="member@gmail.com", isActive=True, loggedin=True)
+
+        self.member2 = User.objects.create(firstname="Member2", lastname="Member2",
+                                          username="member2", password="member2",
+                                          email="member2@gmail.com", isActive=True, loggedin=True)
+
+        self.repository = Repository.objects.create(name="repo", description="Student's repository",
+                                                    type="public", organization = self.organization,
+                                                    owner = self.user)
+
+    def test_repository_add_new(self):
+        self.assertEqual(self.repository.name, "repo")
+        self.assertEqual(self.repository.description, "Student's repository")
+        self.assertEqual(self.repository.type, "private")
+        self.assertEqual(self.repository.organization.name, "org")
+        self.assertEqual(self.repository.owner, self.user)
+
+    def test_repository_addNewMemberRepository(self):
+        self.repository.members.add(self.member)
+        self.repository.members.add(self.member2)
+        self.repository.members.add(self.user)
+        self.repository.save()
+        self.assertEqual(len(self.repository.members.all()), 3)
+
+    def test_repository_edit(self):
+        newName = "repo123"
+        self.repository.name = newName
+        self.repository.save()
+        assertEqual(self.repository.name, "repo123")
