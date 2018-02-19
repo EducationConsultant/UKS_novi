@@ -119,3 +119,30 @@ class MilestoneTestCase(TestCase):
         self.milestone.title = newTitle
         self.assertEqual(self.milestone.title, "Mileston")
 
+
+
+class WikiTestCase(TestCase):
+
+    def setUp(self):
+        self.user = User.objects.create(firstname="User", lastname="User",
+                                        username="user", password="user",
+                                        email="user@gmail.com", isActive=True, loggedin=True)
+
+        self.organization = Organization.objects.create(name="org", email="org@gmail.com",
+                                                        purpose="Educational purposes", howLong="Indefinitely",
+                                                        howMuchPeople="5 or fewer", owner=self.user)
+
+        self.wiki = Wiki.objects.create(title="Wiki page", content="Wiki is about my repository...")
+
+        self.repository = Repository.objects.create(name="repo", description="Student's repository",
+                                                    type="public", organization=self.organization,
+                                                    owner=self.user, wiki = self.wiki)
+
+    def test_wiki_edit(self):
+        newTitle = "New title"
+        newContent = "New content"
+        self.wiki.title = newTitle
+        self.wiki.content = newContent
+        self.wiki.save()
+        self.assertEqual(self.wiki.title, "New title")
+        self.assertEqual(sel.wiki.content, "New content")
