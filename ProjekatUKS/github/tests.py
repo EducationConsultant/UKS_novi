@@ -32,8 +32,9 @@ class OrganizationTestCase(TestCase):
 
     def test_organization_addNewMemberOrganization(self):
         self.organization.members.add(self.member)
+        self.organization.members.add(self.user)
         self.organization.save()
-        self.assertEqual(len(self.organization.members.all()), 1)
+        self.assertEqual(len(self.organization.members.all()), 2)
 
     def test_organization_edit(self):
         newName = "org123"
