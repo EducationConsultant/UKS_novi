@@ -84,3 +84,38 @@ class RepositoryTestCase(TestCase):
         self.repository.name = newName
         self.repository.save()
         assertEqual(self.repository.name, "repo123")
+
+
+class MilestoneTestCase(TestCase):
+    def setUp(self):
+        self.repository = Repository.objects.create(name="repo", description="Student's repository",
+                                                    type="public", organization=self.organization,
+                                                    owner=self.user)
+
+        self.milestone = Milestone.objects.create(date="2018-02-19",
+                                                  title = "Milestone 1",
+                                                  description = "Milestone for study",
+                                                  repository = self.repository,
+                                                  opened = True)
+    def test_milestone_add_new(self):
+        self.assertEqual(self.milestone.date, "2018-02-19")
+        self.assertEqual(self.milestone.title, "Milestone 1")
+        self.assertEqual(self.milestone.description, "Milestone for study")
+        self.assertEqual(self.milestone.repository, self.repository)
+        self.assertEqual(self.milestone.opened, True)
+
+    def test_milestone_close(self):
+        self.milestone.opened = False
+        self.milestone.save()
+        self.assertEqual(self.milestone.opened, False)
+
+    def test_milestone_reopen(self):
+        self.milestone.opened = True
+        self.milestone.save()
+        self.assertEqual(self.milestone.opened, True)
+
+    def test_milestone_edit(self):
+        newTitle = "Mileston"
+        self.milestone.title = newTitle
+        self.assertEqual(self.milestone.title, "Mileston")
+
