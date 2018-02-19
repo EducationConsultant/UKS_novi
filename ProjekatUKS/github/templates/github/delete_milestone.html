@@ -1,0 +1,28 @@
+{% extends "github/milestone_base.html" %}
+
+
+{% block content %}
+<h4 class="text-primary">Delete milestone</h4>
+
+ <form method="post" action="{% url 'github:delete_milestone' milestone.pk %}" method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="titleDelete">Title:</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="titleDelete" placeholder="Enter title" name="titleDelete" rows="5" required  />
+            {% if message %}
+             <div class="alert alert-warning">
+                 <strong>Warning!</strong> {{message}}
+             </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary">Delete</button>
+            <button type="button" class="btn btn-danger" onclick="location.href='{% url 'github:getAllMilestones' milestone.repository.name %}'">Cancel</button>
+        </div>
+    </div>
+ </form>
+{% endblock %}

@@ -45,7 +45,7 @@
               <td>{{m.countOpenedIssues}} opened </td>
               <td>{{m.countClosedIssues}} closed</td>
               <td><a href="{% url 'github:switch_milestone_edit' m.pk %}">Edit <span class="glyphicon glyphicon-pencil"></span></a></td>
-              <td><a href="{% url 'github:delete_milestone' m.pk %}">Delete <span class="glyphicon glyphicon-trash"></span></a></td>
+              <td><a href="{% url 'github:switch_delete_milestone' m.pk %}">Delete <span class="glyphicon glyphicon-trash"></span></a></td>
           </tr>
         {% endfor %}
     </tbody>

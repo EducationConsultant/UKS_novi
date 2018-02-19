@@ -107,5 +107,6 @@ urlpatterns = [
     path('wiki/<id>', views.wiki, name='wiki'),
     path('wiki_edit/<id>', views.wiki_edit, name='wiki_edit'),
     path('switch_wiki_edit/<id>', views.switch_wiki_edit, name='switch_wiki_edit'),
+    path('switch_delete_milestone/<id>', views.switch_delete_milestone, name='switch_delete_milestone'),
 
 ]

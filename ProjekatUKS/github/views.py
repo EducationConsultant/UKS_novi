@@ -257,6 +257,13 @@ def delete_account(request):
 def switch_delete_organization(request, name):
     return render(request, 'github/delete_organization.html', {'name':name})
 
+def switch_delete_milestone(request, id):
+    milestone = Milestone.objects.get(pk=id)
+    nameRepository = milestone.repository.name
+    milestonesOfRepository = getMilestonesOfRepository(nameRepository)
+    return render(request, 'github/delete_milestone.html', {'milestone':milestone,
+                                                            'milestonesOfRepository': milestonesOfRepository,
+                                                            'nameRepository':nameRepository})
 
 def switch_delete_repository(request, name):
     return render(request, 'github/delete_repository.html', {'name':name})
@@ -1384,8 +1391,12 @@ def milestone_edit(request, id):
 
 def delete_milestone(request, id):
     milestone = Milestone.objects.get(pk=id)
+    titleDelete = request.POST.get('titleDelete')
     name = milestone.repository.name
-    milestone.delete()
+    if milestone.title == titleDelete:
+        milestone.delete()
+    else:
+        return render(request, 'github/delete_milestone.html', {'nameRepository': name,'milestone':milestone, 'message': 'Title is not valid.'})
     milestonesOfRepository = getMilestonesOfRepository(name)
     return render(request, 'github/milestonesShow.html', {'nameRepository': name,
                                                           'milestonesOfRepository': milestonesOfRepository})
