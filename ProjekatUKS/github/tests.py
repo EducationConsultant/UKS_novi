@@ -1,6 +1,10 @@
 from django.test import TestCase
 
 
+class ProbaTestCase(TestCase):
+	def test_proba(self):
+		self.assertEsqual(2,4)
+
 class OrganizationTestCase(TestCase):
     def setUp(self):
         self.user = User.objects.create(firstname ="User", lastname="User",
