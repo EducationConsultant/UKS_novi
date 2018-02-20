@@ -369,6 +369,7 @@ def saveOrganization(request):
     name = request.POST['name']
     email = request.POST['email']
     organizations = Organization.objects.all()
+    users = User.objects.all()
     organization = Organization()
 
     # check fileds empty
@@ -378,7 +379,6 @@ def saveOrganization(request):
     if email == "":
         return render(request, 'github/organization.html',
                       {'organization': organization, 'messageEmail': ' Field email must be filled!'})
-
 
     # check if name exists
     organization.name = name
@@ -455,7 +455,6 @@ def saveOrganizationMembers(request, name):
                               {'p':organization.name,'organization': organization,'repositories':repositories})
 
 
-
 # get all organizations by user ( owner and member)
 def organizationsByUser(request):
     username = request.session['uname_user']
@@ -517,7 +516,6 @@ def saveRepository(request, p):
     repositoryMembers = repository.members.all
     return render(request, 'github/addNewMemberRepository.html',
               {'repository': repository, 'repositoryMembers': repositoryMembers, 'p': p})
-
 
 
 # parametar 'name' is nameRepostiory

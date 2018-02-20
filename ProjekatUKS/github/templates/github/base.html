@@ -38,7 +38,6 @@
                 {% if request.session.uname_user and request.session.loggedin %}
                 <li><a href="{% url 'github:organizationsByUser' %}">My organizations</a></li>
                 <li><a href="{% url 'github:repositoriesShow' %}">My repositories</a></li>
-
                 {% endif %}
             </ul>
 

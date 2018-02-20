@@ -53,8 +53,6 @@ urlpatterns = [
     # edit milestone in issue
     path('issue_edit_milestone/<issue_id>/<milestone_id>', views.issue_edit_milestone, name='issue_edit_milestone'),
 
-
-
     #issue and label
     path('issue_delete_label/<issue_id>/<label_id>', views.issue_delete_label, name='issue_delete_label'),
     path('issue_add_label/<issue_id>/<label_id>', views.issue_add_label, name='issue_add_label'),
@@ -72,7 +70,6 @@ urlpatterns = [
     path('label_new', views.label_new, name='label_new'),
     path('label_edit', views.label_edit, name='label_edit'),
     path('label_delete', views.label_delete, name='label_delete'),
-
 
     path('saveOrganizationMembers/<str:name>', views.saveOrganizationMembers, name='saveOrganizationMembers'),
     path('repository/<str:p>', views.repository, name='repository'),
