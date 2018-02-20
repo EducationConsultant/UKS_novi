@@ -204,7 +204,7 @@ def change_username(request):
     user.save()
     request.session['uname_user'] = user.username
 
-    return render(request, "github/change_username.html", {'message': 'Username successfully changed.'})
+    return render(request, "github/change_username.html", {'messageNew': 'Username successfully changed.'})
 
 
 def switch_change_password(request):
