@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from github.models import User, Organization, Repository, Milestone, Wiki
+from github.models import User, Organization, Repository, Milestone, Wiki, Label
 
 
 class OrganizationTestCase(TestCase):
@@ -187,4 +187,38 @@ class UserTestCase(TestCase):
         self.user.password = new_password
         self.user.save()
         self.assertEqual(self.user.password, new_password)
+
+
+class LabelTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create(firstname="Djole", lastname="Pingvin", username="pingvin_djole",
+                            password="djole123", email="djole@gmail.com",
+                            isActive=True, loggedin=False)
+
+        self.organization = Organization.objects.create(name="org", email="org@gmail.com",
+                                                        purpose="Educational purposes", howLong="Indefinitely",
+                                                        howMuchPeople="5 or fewer", owner=self.user)
+
+        self.repository = Repository.objects.create(name="repo", description="Student's repository",
+                                                    type="public", organization=self.organization,
+                                                    owner=self.user)
+
+        self.label = Label.objects.create(name="red", color="#ff1a1a", repository=self.repository)
+
+
+    def test_label_new(self):
+        self.assertEqual(self.label.name, "red")
+
+
+    def test_label_edit(self):
+        new_name = "yellow"
+        new_color = "#ffff1a"
+
+        self.label.name = new_name
+        self.label.color = new_color
+        self.label.save()
+
+        self.assertEqual(self.label.name, new_name)
+        self.assertEqual(self.label.color, new_color)
+
 
