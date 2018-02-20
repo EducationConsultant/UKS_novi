@@ -1,7 +1,5 @@
 from django.test import TestCase
 
-from github.models import User, Organization, Repository, Milestone, Wiki, Label, Issue, Comment
-
 
 class OrganizationTestCase(TestCase):
     def setUp(self):
