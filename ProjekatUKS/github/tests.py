@@ -1,11 +1,6 @@
 from django.test import TestCase
 
-
-
-class AnimalTestCase(TestCase):
-
-    def test_animals_can_speak(self):
-        self.assertEqual(2, 2)
+from github.models import User, Organization, Repository, Milestone, Wiki
 
 
 class OrganizationTestCase(TestCase):
@@ -25,10 +20,10 @@ class OrganizationTestCase(TestCase):
     def test_organization_add_new(self):
         self.assertEqual(self.organization.name, "org")
         self.assertEqual(self.organization.email, "org@gmail.com")
-        self.assertEqual(self.organziation.purpose,"Educational purposes" )
+        self.assertEqual(self.organization.purpose,"Educational purposes" )
         self.assertEqual(self.organization.howLong, "Indefinitely")
-        self.asserrtEqual(self.organization.howMuchPeople, "5 or fewer")
-        self.assertEqueal(self.organization.owner, self.user)
+        self.assertEqual(self.organization.howMuchPeople, "5 or fewer")
+        self.assertEqual(self.organization.owner, self.user)
 
     def test_organization_addNewMemberOrganization(self):
         self.organization.members.add(self.member)
@@ -68,7 +63,7 @@ class RepositoryTestCase(TestCase):
     def test_repository_add_new(self):
         self.assertEqual(self.repository.name, "repo")
         self.assertEqual(self.repository.description, "Student's repository")
-        self.assertEqual(self.repository.type, "private")
+        self.assertEqual(self.repository.type, "public")
         self.assertEqual(self.repository.organization.name, "org")
         self.assertEqual(self.repository.owner, self.user)
 
@@ -83,11 +78,19 @@ class RepositoryTestCase(TestCase):
         newName = "repo123"
         self.repository.name = newName
         self.repository.save()
-        assertEqual(self.repository.name, "repo123")
+        self.assertEqual(self.repository.name, "repo123")
 
 
 class MilestoneTestCase(TestCase):
     def setUp(self):
+        self.user = User.objects.create(firstname="User", lastname="User",
+                                        username="user", password="user",
+                                        email="user@gmail.com", isActive=True, loggedin=True)
+
+        self.organization = Organization.objects.create(name="org", email="org@gmail.com",
+                                                        purpose="Educational purposes", howLong="Indefinitely",
+                                                        howMuchPeople="5 or fewer", owner=self.user)
+
         self.repository = Repository.objects.create(name="repo", description="Student's repository",
                                                     type="public", organization=self.organization,
                                                     owner=self.user)
@@ -120,7 +123,6 @@ class MilestoneTestCase(TestCase):
         self.assertEqual(self.milestone.title, "Mileston")
 
 
-
 class WikiTestCase(TestCase):
 
     def setUp(self):
@@ -146,3 +148,43 @@ class WikiTestCase(TestCase):
         self.wiki.save()
         self.assertEqual(self.wiki.title, "New title")
         self.assertEqual(self.wiki.content, "New content")
+
+
+class UserTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create(firstname="Djole", lastname="Pingvin", username="pingvin_djole",
+                            password="djole123", email="djole@gmail.com",
+                            isActive=True, loggedin=False)
+
+    def test_login_user(self):
+        self.user.loggedin = True
+        self.user.save()
+
+        self.assertEqual(self.user.loggedin, True)
+
+    def test_logout(self):
+        self.user.loggedin = False
+        self.user.save()
+
+        self.assertEqual(self.user.loggedin, False)
+
+    def test_change_username(self):
+        new_username = "new_username"
+
+        self.user.username = new_username
+        self.user.save()
+
+        self.assertEqual(self.user.username, "new_username")
+
+    def test_change_password(self):
+        old_password = "djole123"
+        self.assertEqual(self.user.password, old_password)
+
+        new_password = "newpass123"
+        confirm_new_password = "newpass123"
+        self.assertEqual(new_password, confirm_new_password)
+
+        self.user.password = new_password
+        self.user.save()
+        self.assertEqual(self.user.password, new_password)
+
