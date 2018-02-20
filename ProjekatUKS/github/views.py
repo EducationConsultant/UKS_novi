@@ -6,7 +6,6 @@ from django.core.mail import EmailMessage
 from django.contrib.sites.shortcuts import get_current_site
 from github.models import User, Organization, Repository, Issue, Comment, Milestone, Label, History, Wiki
 
-
 # switch from some page to home.html
 def switch_home(requset):
     return render(requset, "github/home.html")
@@ -437,6 +436,7 @@ def saveOrganizationMembers(request, name):
     # list with all usernames
     for u in users:
         usernameList.append(u.username)
+
     # check username
     if memberName not in usernameList:
         return render(request, 'github/addNewMemberOrganization.html',
@@ -467,7 +467,6 @@ def organizationsByUser(request):
 
     return render(request, 'github/organizationsShow.html', {'username': username,
                                                              'organizationsOfUser':organizations})
-
 
 # new repository
 def repository(request,p):
