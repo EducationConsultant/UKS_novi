@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from github.models import User, Organization, Repository, Milestone, Wiki, Label
+from github.models import User, Organization, Repository, Milestone, Wiki, Label, Issue
 
 
 class OrganizationTestCase(TestCase):
@@ -220,5 +220,61 @@ class LabelTestCase(TestCase):
 
         self.assertEqual(self.label.name, new_name)
         self.assertEqual(self.label.color, new_color)
+
+
+class IssueTestCase(TestCase):
+    def setUp(self):
+        self.author = User.objects.create(firstname="Djole", lastname="Pingvin", username="pingvin_djole",
+                            password="djole123", email="djole@gmail.com",
+                            isActive=True, loggedin=False)
+
+        self.organization = Organization.objects.create(name="org", email="org@gmail.com",
+                                                        purpose="Educational purposes", howLong="Indefinitely",
+                                                        howMuchPeople="5 or fewer", owner=self.author)
+
+        self.repository = Repository.objects.create(name="repo", description="Student's repository",
+                                                    type="public", organization=self.organization,
+                                                    owner=self.author)
+
+        self.label = Label.objects.create(name="red", color="#ff1a1a", repository=self.repository)
+
+        self.milestone = Milestone.objects.create(date="2018-02-19",
+                                                  title="Milestone 1",
+                                                  description="Milestone for study",
+                                                  repository=self.repository,
+                                                  opened=True)
+
+        self.issue = Issue.objects.create(title="Issue 1", description="Description",
+                                          author=self.author, closed=False,
+                                          repository=self.repository,
+                                          milestone=self.milestone)
+
+
+    def test_issue_new(self):
+        self.assertEqual(self.issue.title, "Issue 1")
+        self.assertEqual(self.issue.description, "Description")
+
+
+    def test_edit_issue(self):
+        new_title = "New title"
+        self.issue.title = new_title
+        self.issue.save()
+
+        self.assertEqual(self.issue.title, new_title)
+
+
+    def test_issue_close(self):
+        self.issue.closed = True
+        self.issue.save()
+
+        self.assertEqual(self.issue.closed, True)
+
+
+    def test_issue_reopen(self):
+        self.issue.closed = False
+        self.issue.save()
+
+        self.assertEqual(self.issue.closed, False)
+
 
 
