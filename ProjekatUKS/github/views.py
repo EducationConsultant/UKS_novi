@@ -73,11 +73,13 @@ def save_user(request):
 
 # from email link to login.html
 def activate_user(request,username):
-    user = User.objects.get(username=username)
-    user.isActive = True
-    user.save()
-    return render(request, "github/login.html")
-
+    try:
+        user = User.objects.get(username=username)
+        user.isActive = True
+        user.save()
+        return render(request, "github/login.html")
+    except User.DoesNotExist:
+        return render(request, "github/login.html", {'message': 'User does not exist.'})
 
 # from some page to login.html
 def switch_login(requset):
