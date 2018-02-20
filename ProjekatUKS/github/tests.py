@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from github.models import User, Organization, Repository, Milestone, Wiki, Label, Issue
+from github.models import User, Organization, Repository, Milestone, Wiki, Label, Issue, Comment
 
 
 class OrganizationTestCase(TestCase):
@@ -276,5 +276,53 @@ class IssueTestCase(TestCase):
 
         self.assertEqual(self.issue.closed, False)
 
+class CommentTestCase(TestCase):
+    def setUp(self):
+        self.author = User.objects.create(firstname="Djole", lastname="Pingvin", username="pingvin_djole",
+                            password="djole123", email="djole@gmail.com",
+                            isActive=True, loggedin=False)
+
+        self.organization = Organization.objects.create(name="org", email="org@gmail.com",
+                                                        purpose="Educational purposes", howLong="Indefinitely",
+                                                        howMuchPeople="5 or fewer", owner=self.author)
+
+        self.repository = Repository.objects.create(name="repo", description="Student's repository",
+                                                    type="public", organization=self.organization,
+                                                    owner=self.author)
+
+        self.label = Label.objects.create(name="red", color="#ff1a1a", repository=self.repository)
+
+        self.milestone = Milestone.objects.create(date="2018-02-19",
+                                                  title="Milestone 1",
+                                                  description="Milestone for study",
+                                                  repository=self.repository,
+                                                  opened=True)
+
+        self.issue = Issue.objects.create(title="Issue 1", description="Description",
+                                          author=self.author, closed=False,
+                                          repository=self.repository,
+                                          milestone=self.milestone)
+
+        self.comment = Comment.objects.create(description="Description",author=self.author,
+                                              issue=self.issue)
+
+
+    def test_comment_new(self):
+        self.assertEqual(self.comment.description, "Description")
+
+
+    def test_comment_edit(self):
+        new_desciption = "new description"
+        self.comment.description = new_desciption
+        self.comment.save()
+
+        self.assertEqual(self.comment.description, new_desciption)
+
+
+    def test_comment_reply(self):
+        self.reply = Comment.objects.create(description="Reply description", author=self.author,
+                                              issue=self.issue,parent=self.comment)
+
+        self.assertEqual(self.reply.parent.description, "Description")
 
 
