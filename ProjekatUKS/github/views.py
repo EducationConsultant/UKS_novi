@@ -6,7 +6,6 @@ from django.core.mail import EmailMessage
 from django.contrib.sites.shortcuts import get_current_site
 from github.models import User, Organization, Repository, Issue, Comment, Milestone, Label, History, Wiki
 
-
 # switch from some page to home.html
 def switch_home(requset):
     return render(requset, "github/home.html")
@@ -369,6 +368,7 @@ def saveOrganization(request):
     name = request.POST['name']
     email = request.POST['email']
     organizations = Organization.objects.all()
+    users = User.objects.all()
     organization = Organization()
 
     # check fileds empty
@@ -378,7 +378,6 @@ def saveOrganization(request):
     if email == "":
         return render(request, 'github/organization.html',
                       {'organization': organization, 'messageEmail': ' Field email must be filled!'})
-
 
     # check if name exists
     organization.name = name
@@ -437,6 +436,7 @@ def saveOrganizationMembers(request, name):
     # list with all usernames
     for u in users:
         usernameList.append(u.username)
+
     # check username
     if memberName not in usernameList:
         return render(request, 'github/addNewMemberOrganization.html',
@@ -468,7 +468,6 @@ def organizationsByUser(request):
 
     return render(request, 'github/organizationsShow.html', {'username': username,
                                                              'organizationsOfUser':organizations})
-
 
 # new repository
 def repository(request,p):
@@ -517,7 +516,6 @@ def saveRepository(request, p):
     repositoryMembers = repository.members.all
     return render(request, 'github/addNewMemberRepository.html',
               {'repository': repository, 'repositoryMembers': repositoryMembers, 'p': p})
-
 
 
 # parametar 'name' is nameRepostiory
