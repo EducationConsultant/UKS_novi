@@ -1,7 +1,7 @@
 from django.db import models
 from django.test import TestCase
 
-from .models import User
+from ..models import User
 
 
 class ProbaTestCase(TestCase):
