@@ -9,7 +9,6 @@ services:
 
 install:
   - pip install -r requirements.txt
-  - pip install coverage
   
 script:
   - docker-compose run web python3 manage.py test
@@ -21,6 +20,5 @@ before_install:
   - docker images
 
 after_success:
-  - coverage report
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
   - docker push $DOCKER_USERNAME/uks_novi:proba
