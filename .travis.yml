@@ -2,7 +2,7 @@ sudo: required
 
 language: python
 python:
-  - "3.5"
+  - "3.5"  
  
 services: 
   - docker
@@ -11,8 +11,8 @@ install:
   - pip install -r requirements.txt
   
 script:
-  - python3 manage.py test
-
+  - python github/tests.py
+  
 before_install:
   - docker --version
   - cd ProjekatUKS/
