@@ -18,8 +18,8 @@ before_install:
   - cd ProjekatUKS/
   - docker build -t $DOCKER_USERNAME/uks_novi:proba .
   - docker images
-  - cd github/
 
 after_success:
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
   - docker push $DOCKER_USERNAME/uks_novi:proba
+  - cd github/
