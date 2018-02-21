@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from .models import User, Organization, Repository, Milestone, Wiki, Label, Issue, Comment
+from github.models import User, Organization, Repository, Milestone, Wiki, Label, Issue, Comment
 
 
 class ProbaTestCase(TestCase):
