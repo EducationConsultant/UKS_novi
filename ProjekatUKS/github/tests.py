@@ -1,6 +1,6 @@
 from django.db import models
 import unittest
-from github.models import User, Organization, Repository, Milestone, Label, Issue, Comment
+from github.models import User, Organization, Repository, Milestone, Label, Issue, Comment, Wiki
 
 
 class UserTestCase(unittest.TestCase):
