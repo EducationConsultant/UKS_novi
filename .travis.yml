@@ -7,6 +7,12 @@ python:
 services: 
   - docker
 
+before_install:
+  - docker --version
+  - cd ProjekatUKS/
+  - docker build -t $DOCKER_USERNAME/uks_novi:proba .
+  - docker images
+
 install:
   - pip install -r requirements.txt
   
@@ -14,12 +20,6 @@ script:
   - docker-compose run web python3 manage.py makemigrations
   - docker-compose run web python3 manage.py migrate
   - docker-compose run web python3 manage.py test
-
-before_install:
-  - docker --version
-  - cd ProjekatUKS/
-  - docker build -t $DOCKER_USERNAME/uks_novi:proba .
-  - docker images
 
 after_success:
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";

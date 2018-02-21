@@ -3,6 +3,7 @@ from django.db import models
 import unittest
 
 #from . import models
+from github.models import User
 
 
 class UserTestCase(unittest.TestCase):
