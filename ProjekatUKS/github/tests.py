@@ -1,7 +1,7 @@
 from django.db import models
 from django.test import TestCase
 
-from .. import models
+from . import models
 
 
 class ProbaTestCase(TestCase):
