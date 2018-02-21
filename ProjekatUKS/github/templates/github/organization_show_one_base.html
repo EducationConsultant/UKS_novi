@@ -11,7 +11,7 @@
 
             <ul class="nav nav-stacked">
                 <li><a href="{% url 'github:organizationInfo' organization.name %}">About organization</a></li>
-                <li><a href="{% url 'github:addNewMemberOrganization' organization.name %}">Add member</a></li>
+                <li><a href="{% url 'github:addNewMemberOrganization' organization.name %}">Add member to organization</a></li>
                 <li><a href="{% url 'github:repository' organization.name %}">Add new repository</a></li>
                 <li><a href="{% url 'github:organizationsByUser' %}">Back to all organizations</a></li>
 

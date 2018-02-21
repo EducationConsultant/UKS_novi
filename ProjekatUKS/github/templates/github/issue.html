@@ -12,7 +12,7 @@
             <ul class="nav nav-stacked">
                 <li><a href="{% url 'github:switch_all_issues' %}">Show all</a></li>
                 <li><a href="{% url 'github:switch_issue_new' %}">New issue</a></li>
-                <li><a href="{% url 'github:repositoryInfo' request.session.repository_name %}">Back to repository</a></li>
+                <li><a href="{% url 'github:repositoryInfo' repository.name %}">Back to repository</a></li>
             </ul>
 
             {% block content_left %}

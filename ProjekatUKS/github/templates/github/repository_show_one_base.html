@@ -11,7 +11,7 @@
 
             <ul class="nav nav-stacked">
                 <li><a href="{% url 'github:repositoryInfo' repository.name %}">About repository</a></li>
-                <li><a href="{% url 'github:addNewMemberRepository' repository.name %}">Add member</a></li>
+                <li><a href="{% url 'github:addNewMemberRepository' repository.name %}">Add member ro repository</a></li>
                 <li><a href="{% url 'github:switch_all_issues' %}">Issues</a></li>
                 <li><a href="{% url 'github:getAllMilestones' repository.name  %}">Milestones</a></li>
                 <li><a href="{% url 'github:switch_label_show_all' %}">Labels</a></li>

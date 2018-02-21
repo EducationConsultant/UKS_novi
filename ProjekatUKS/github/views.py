@@ -638,8 +638,7 @@ def repositoryInfo(request, name):
     request.session['repository_name'] = repository.name
 
     return render(request, 'github/repositoryInformations.html', {'repository': repository,
-                                                                    'repositoryMembers': repositoryMembers,
-                                                                    })
+                                                                'repositoryMembers': repositoryMembers})
 
 
 def switch_issue_show_all(request):
@@ -647,17 +646,26 @@ def switch_issue_show_all(request):
     repository = Repository.objects.get(pk=repository_pk)
 
     issues = Issue.objects.filter(repository=repository.pk)
-    return render(request, "github/issue_show_all.html",{'issues':issues})
+    return render(request, "github/issue_show_all.html",{'issues':issues,
+                                                         'repository':repository})
 
 
 def issue_show_all_open(request):
+    repository_pk = request.session['repository_id']
+    repository = Repository.objects.get(pk=repository_pk)
+
     issues = Issue.objects.filter(closed=False)
-    return render(request, "github/issue_show_all.html",{'issues': issues})
+    return render(request, "github/issue_show_all.html",{'issues': issues,
+                                                         'repository':repository})
 
 
 def issue_show_all_closed(request):
+    repository_pk = request.session['repository_id']
+    repository = Repository.objects.get(pk=repository_pk)
+
     issues = Issue.objects.filter(closed=True)
-    return render(request, "github/issue_show_all.html",{'issues': issues})
+    return render(request, "github/issue_show_all.html",{'issues': issues,
+                                                         'repository':repository})
 
 
 def switch_issue_new(request):
@@ -678,7 +686,8 @@ def switch_issue_new(request):
 
     labels = Label.objects.filter(repository=repository.pk)
     return render(request, "github/issue_new.html", {'users':users,'labels':labels,
-                                                     'milestones': milestones})
+                                                     'milestones': milestones,
+                                                     'repository':repository})
 
 
 def issue_new(request):
@@ -735,7 +744,9 @@ def issue_new(request):
     return render(request, "github/issue_view_one.html",{'issue':issue,
                                                          'comments':comments,
                                                          'labels':result_labels,
-                                                         'milestones':milestones,'history':all_history})
+                                                         'milestones':milestones,
+                                                         'history':all_history,
+                                                         'repository':repository})
 
 
 # CREATE ISSUE FROM MILESTONE
@@ -749,7 +760,7 @@ def switch_issue_new_from_milestone(request, name):
             users.append(member.username)
     labels = Label.objects.filter(repository=repository.pk)
     return render(request, "github/issue_new_from_milestone.html", {'users': users, 'labels': labels,
-                                                     'milestoneTitle': name})
+                                                     'milestoneTitle': name,'repository':repository})
 # FROM MILESTONE
 # name is nameMilestone
 def issue_new_from_milestone(request, name):
@@ -800,7 +811,7 @@ def issue_new_from_milestone(request, name):
     issue_labels = issue.labels.all()
     all_labels = Label.objects.filter(repository=repository.pk)
     result_labels = list(set(all_labels) - set(issue_labels))
-    return render(request, "github/issue_view_one.html",{'issue':issue,'comments':comments,'labels':result_labels, 'milestones':milestones})
+    return render(request, "github/issue_view_one.html",{'issue':issue,'comments':comments,'labels':result_labels, 'milestones':milestones,'repository':repository})
 
 
 def switch_issue_view_one(request,id):
@@ -829,7 +840,7 @@ def switch_issue_view_one(request,id):
     return render(request,"github/issue_view_one.html",{'issue':issue,
                                                         'comments':comments,
                                                         'labels':result_labels,
-                                                        'milestones': milestones,'history':all_history})
+                                                        'milestones': milestones,'history':all_history,'repository':repository})
 
 # EDIT MILESTONE IN ISSUE
 def issue_edit_milestone(request, issue_id, milestone_id):
@@ -875,7 +886,8 @@ def issue_edit_milestone(request, issue_id, milestone_id):
                                                           'comments': comments,
                                                           'labels': result_labels,
                                                           'milestones': milestones,
-                                                          'history':all_history})
+                                                          'history':all_history,
+                                                          'repository':repository})
 
 
 #delete label form issue
@@ -915,7 +927,12 @@ def issue_delete_label(request,issue_id,label_id):
 
     all_history = History.objects.filter(issue=issue.pk)
     return render(request, "github/issue_view_one.html",
-                  {'issue': issue, 'comments': comments, 'labels': result_labels, 'milestones':milestones, 'history':all_history})
+                  {'issue': issue,
+                   'comments': comments,
+                   'labels': result_labels,
+                   'milestones':milestones,
+                   'history':all_history,
+                   'repository':repository})
 
 
 def issue_add_label(request,issue_id,label_id):
@@ -954,7 +971,9 @@ def issue_add_label(request,issue_id,label_id):
 
     all_history = History.objects.filter(issue=issue.pk)
     return render(request, "github/issue_view_one.html",
-                  {'issue': issue, 'comments': comments, 'labels': result_labels, 'milestones':milestones, 'history':all_history})
+                  {'issue': issue, 'comments': comments,
+                   'labels': result_labels, 'milestones':milestones,
+                   'history':all_history,'repository':repository})
 
 
 def issue_edit_title(request,id):
@@ -985,7 +1004,11 @@ def issue_edit_title(request,id):
     result_labels = list(set(all_labels) - set(issue_labels))
 
     all_history = History.objects.filter(issue=issue.pk)
-    return render(request, "github/issue_view_one.html", {'issue': issue,'comments':comments,'labels':result_labels,'history':all_history})
+    return render(request, "github/issue_view_one.html",
+                  {'issue': issue,'comments':comments,
+                   'labels':result_labels,
+                   'history':all_history,
+                   'repository':repository})
 
 
 def issue_close(request,id):
@@ -1019,7 +1042,10 @@ def issue_close(request,id):
     all_labels = Label.objects.filter(repository=repository.pk)
     result_labels = list(set(all_labels) - set(issue_labels))
     all_history = History.objects.filter(issue=issue.pk)
-    return render(request, "github/issue_view_one.html", {'issue': issue,'comments':comments,'labels':result_labels,'history':all_history})
+    return render(request, "github/issue_view_one.html",
+                  {'issue': issue,'comments':comments,
+                   'labels':result_labels,'history':all_history,
+                    'repository': repository})
 
 
 def issue_reopen(request,id):
@@ -1053,7 +1079,10 @@ def issue_reopen(request,id):
     all_labels = Label.objects.filter(repository=repository.pk)
     result_labels = list(set(all_labels) - set(issue_labels))
     all_history = History.objects.filter(issue=issue.pk)
-    return render(request, "github/issue_view_one.html", {'issue': issue,'comments':comments,'labels':result_labels,'history':all_history})
+    return render(request, "github/issue_view_one.html",
+                  {'issue': issue,'comments':comments,
+                   'labels':result_labels,
+                   'history':all_history,'repository':repository})
 
 
 def comment_new(request, id):
@@ -1081,7 +1110,10 @@ def comment_new(request, id):
     comments_all = Comment.objects.filter(issue=issue.pk)
     comments = comments_all.filter(parent=None)
     all_history = History.objects.filter(issue=issue.pk)
-    return render(request, "github/issue_view_one.html", {'issue': issue,'comments':comments,'labels':result_labels,'history':all_history})
+    return render(request, "github/issue_view_one.html",
+                  {'issue': issue,'comments':comments,
+                   'labels':result_labels,'history':all_history,
+                    'repository':repository})
 
 
 def comment_edit(request, idIssue, idComment):
@@ -1102,7 +1134,9 @@ def comment_edit(request, idIssue, idComment):
     all_labels = Label.objects.filter(repository=repository.pk)
     result_labels = list(set(all_labels) - set(issue_labels))
     all_history = History.objects.filter(issue=issue.pk)
-    return render(request, "github/issue_view_one.html", {'issue': issue,'comments': comments,'labels':result_labels,'history':all_history})
+    return render(request, "github/issue_view_one.html",
+                  {'issue': issue,'comments': comments,
+                   'labels':result_labels,'history':all_history,'repository':repository})
 
 def comment_delete(request,id):
     repository_pk = request.session['repository_id']
@@ -1121,7 +1155,11 @@ def comment_delete(request,id):
     all_labels = Label.objects.filter(repository=repository.pk)
     result_labels = list(set(all_labels) - set(issue_labels))
     all_history = History.objects.filter(issue=issue.pk)
-    return render(request, "github/issue_view_one.html",{'issue': issue,'comments': comments,'messageDelete':'Comment deleted!','labels':result_labels,'history':all_history})
+    return render(request, "github/issue_view_one.html",
+                  {'issue': issue,'comments': comments,
+                   'messageDelete':'Comment deleted!',
+                   'labels':result_labels,'history':all_history,
+                   'repository': repository})
 
 
 def comment_reply(request, idIssue, idComment):
@@ -1151,7 +1189,10 @@ def comment_reply(request, idIssue, idComment):
     comments_all = Comment.objects.filter(issue=issue.pk)
     comments = comments_all.filter(parent=None)
     all_history = History.objects.filter(issue=issue.pk)
-    return render(request, "github/issue_view_one.html", {'issue': issue, 'comments': comments,'labels':result_labels,'history':all_history})
+    return render(request, "github/issue_view_one.html",
+                  {'issue': issue, 'comments': comments,
+                   'labels':result_labels,
+                   'history':all_history,'repository':repository})
 
 # new milestone
 # name is nameRepository
@@ -1343,7 +1384,8 @@ def create_label_from_issue(request):
             if m.opened:
                 milestones.append(m)
     return render(request, "github/issue_new.html",
-                  {'issue': issue, 'users': users, 'labels': labels, 'milestones':milestones})
+                  {'issue': issue, 'users': users, 'labels': labels,
+                   'milestones':milestones,'repository':repository})
 
 def milestone_reopen(request,id):
     milestone = Milestone.objects.get(pk=id)
