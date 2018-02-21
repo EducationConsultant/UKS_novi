@@ -1,8 +1,5 @@
 from django.db import models
-#from django.test import TestCase
 import unittest
-
-#from . import models
 from github.models import User
 
 
@@ -30,7 +27,7 @@ class UserTestCase(unittest.TestCase):
         self.user.username = new_username
         self.user.save()
 
-        self.assertEqual(self.user.username, "new_username")
+        self.assertEqual(self.user.username, "new_username1")
 
     def test_change_password(self):
         old_password = "djole123"
