@@ -300,7 +300,7 @@ class CommentTestCase(unittest.TestCase):
         self.assertEqual(self.reply.parent.description, "Description")
 
 
-class WikiTestCase(TestCase):
+class WikiTestCase(unittest.TestCase):
 
     def setUp(self):
         self.user = User.objects.create(firstname="User", lastname="User",
