@@ -16,6 +16,9 @@ before_script:
 script:
   - python tests.py
   
+after_script:
+  - cd ..
+  
 before_install:
   - docker --version
   - cd ProjekatUKS/
