@@ -9,16 +9,11 @@ services:
 
 install:
   - pip install -r requirements.txt
-  
-before_script:
-  - cd github/
+  - pip install coverage
   
 script:
-  - python tests.py
-  
-after_script:
-  - cd ..
-  
+  - coverage run manage.py test
+
 before_install:
   - docker --version
   - cd ProjekatUKS/
@@ -26,5 +21,6 @@ before_install:
   - docker images
 
 after_success:
+  - coverage report
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
   - docker push $DOCKER_USERNAME/uks_novi:proba
