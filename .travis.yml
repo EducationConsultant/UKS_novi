@@ -10,6 +10,9 @@ services:
 install:
   - pip install -r requirements.txt
   
+before_script:
+  - cd github/
+  
 script:
   - python tests.py
   
@@ -22,4 +25,3 @@ before_install:
 after_success:
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
   - docker push $DOCKER_USERNAME/uks_novi:proba
-  - cd github/
