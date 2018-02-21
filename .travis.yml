@@ -12,7 +12,7 @@ install:
   - pip install coverage
   
 script:
-  - coverage make test
+  - coverage run manage.py test
 
 before_install:
   - docker --version
