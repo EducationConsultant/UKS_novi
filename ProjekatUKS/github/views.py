@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+import os
 
 from django.core.mail import EmailMessage
 
@@ -62,9 +62,10 @@ def save_user(request):
          "\n\n"
          "The BooHub Team"
          )
-    to_email = user.email
 
-    email = EmailMessage(mail_subject, message, to=[to_email])
+    email = EmailMessage(mail_subject, message, from_email = None, to = None, bcc = [user.email,],
+    connection = None, attachments = None, headers = None, cc = None)
+
     email.send()
 
     return render(request, "github/activate.html", {'user':user})
@@ -142,9 +143,9 @@ def send_email_reset_password(request):
                    "\n\n"
                    "The BooHub Team"
                    )
-        to_email = user.email
 
-        email = EmailMessage(mail_subject, message, to=[to_email])
+        email = EmailMessage(mail_subject, message, from_email=None, to=None, bcc=[user.email, ],
+                             connection=None, attachments=None, headers=None, cc=None)
         email.send()
 
         return render(request, "github/password_reset.html", {'user':user})

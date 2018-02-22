@@ -12,6 +12,9 @@ services:
   web:
     build: .
     restart: always
+    environment:
+      - EMAIL_HOST_USER=djolepingvinboo@gmail.com
+      - EMAIL_HOST_PASSWORD=djolejepingvin.22
     command: sh ./migrations.sh 
     volumes:
       - .:/code
