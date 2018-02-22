@@ -1,26 +1,25 @@
 sudo: required
-
 language: python
 python:
-  - "3.5"  
- 
-services: 
-  - docker
-
+- '3.5'
+services:
+- docker
 before_install:
-  - docker --version
-  - cd ProjekatUKS/
-  - docker build -t $DOCKER_USERNAME/uks_novi:proba .
-  - docker images
-
+- docker --version
+- cd ProjekatUKS/
+- docker build -t $DOCKER_HUB_USERNAME/uks_novi:proba .
+- docker images
 install:
-  - pip install -r requirements.txt
-
+- pip install -r requirements.txt
 script:
-  - docker-compose run web python3 manage.py makemigrations
-  - docker-compose run web python3 manage.py migrate
-  - docker-compose run web python3 manage.py test
-
+- docker-compose run web python3 manage.py makemigrations
+- docker-compose run web python3 manage.py migrate
+- docker-compose run web python3 manage.py test
 after_success:
-  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
-  - docker push $DOCKER_USERNAME/uks_novi:proba
+- docker login -u "$DOCKER_HUB_USERNAME" -p "$DOCKER_HUB_PASSWORD";
+- docker push $DOCKER_HUB_USERNAME/uks_novi:proba
+env:
+  global:
+  - secure: kneXgvK5aCIXnNkVzfBAu4UpK+HyKtDhtl5pqaH4wXLRAPtHLloY1A4hDajYj1leZFvlnYlSdp4aW66GjWOxpzWmtIXvSRrYMCMtyW/omwaHkJzBWcRQ+aSsS8ZgeKnwhqgqLdfoB0cOnTlte+5lii5FNi/JXliXrHX5DxXFFZ7OMS0pMpRURDpyzZ8vTn8LXw5MTrSwTYHcNFXxzJOwwWZIt6EloIThOn/ixvfBytY9a08+4F5Veqxc98pig6r7lp4lHivP9c7jlwt0YgFsxerqN0ThHXMvBJvNegC0nr6+tKsoNOSqolCNKFRA34k1AJmZ6PCTQdJispJXsJeMFdZm/oWX3KHh8OGh+zYRgpA9M1NY/Q13wnoY7pGQxJfFmtt8VzXMgVKcOI1ZvpPbpHF+ZT+O2562G5ZmnVIpqcvLixnFuHfSyEl3L3FlyW+qv6MAVFViKyvI31HU+iZTj9qxCdD1MU4blwln7/0JGVYAM7BuJ2QP9PwGnB2mgKFD4Z9CgMPHyW9frZIk5F0y7Idcf6edTVI6XOC10XaxdXT2d7EA32cmR+2xIPUV8hIbiiyQFHIO+SXdKpNByYMh+XgTtiQMCFXYfLqFxKC9i+Ntub4D68fIsHDXZ4Y4SqgykjC9keh0n1/f3Nko7AlAgxPGI8TxoqkSw03pU9HBvSI=
+  - secure: XF/XLxa62pWq/FD5nq++c8Jw+6EvCW6NUU4pM7MuTcL+DOYTqyGz0EPBE/0NWct/KeAE+cQWGxaBsNfMMUsjTy7lFDMJWzpqBJHCmjhTJs4v47xdmj1kXYLFCWMFLbVjowMaQS7xsGr90e4R/M+iVvW6Ua4pT+RzjKvYfeOWnDqwRmq29ASCLhwkh8F1v/ENSJ3XBsuOLY4pWJ4i6yjA0/96V1t7l4bA7++Zjx4zAekXBNTdBPplip44hESqUsLaOV/e8nHvDAAV1YREWkbobIjV1iCSRaqtaeB3D88sqonNtUq9Db8nw+kcc03VH6PJApeTmqVEV1A9Ovt7t9rgedywdGnn1BAc0BCJL3k5BF78uJ6JTuPwrZSPebt6f13Cn4M+gz5a0Df6aXPvaFPQzpn2Znuuefa7aKRJYLpfntFgtMQCXP1+mqojq/sCY5ykIuum+k2DWVSgi9MDO+5RHOH719ZwNYu1wtz3p5P1xkrF6Dq74SpKNy+9GcBFzrADlUlBmw+GNFI4gfCKEud67M3rsQeFmiQEopHS15iFCxNXoIJw31/8dEqCYN+Yd0VozEqEueFobQw3crlCNrMhJlBUE3XVZKby5UJ344eRFJrVKSevHt2AstpnuIIyGIRUBMCKZjmUBf4L53j6E3zkem4kB3P9D+x8ezZVaPW7DSg=
+  - secure: FNg2zykzl8hD3KsBITx6kyRnjjanRxzisHX+jbVSrNZre9RR5b2Vyj7oLjCEI/o3NZjgvNtQ0MY2LEs0Ck2c1BKmzC16ybWYhyaR1WsFF/NbRIV9TIZTpwA+T87HwsowI0Yj/Od8YREpgVdm6Ltsqtaya7ROQWlajXLc+Ifo+unOnaUFFi/euy8u9INm3II+Z5yDpR/U4owp7FGTPG0KAlXpiul/XTJH9RxOHgzQeSaFaWhy6FDI8rEWzolwv+61rw+xJBchL8IZJy3g+72WdCb5fAzJH7242dm+hK4Oa5prbdWlNyiHLThG3UV2xhSMf5j21378F2ipVgAPA32G2253sXIGNekTI3mmqr+hT2RuqtccK1Qfcj7BKstErTX7qVSjj3o5aJnBhAftFI2QbLURFOh0IgQrSTbY0G5TZUO9p/xIOY5/F5npPtcpqoppdh+iIJsBN4QNBw+vB2NRJeW0m3inXJvYwMDtbcQys6QMaVRbWMQIr62sxbuCsNPe2GTBn/qYtf5fY7mOpl2bt+4CsEzxvAbQTM3+y3UaoAmXZM90f+96gAmUfRGgDQtKQyf06K2kHsYTOsXd9hAHNIf3Vqv3vgt+5w70F+OhQFSlr8D6NxCg6ugUWUMs9nDpuDdNX0UvpRZCBU8uXoqrLWqh9X1Ahmzto+4eixps+eM=
