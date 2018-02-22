@@ -1,5 +1,5 @@
 # BooHub
-###### Faculty of Technical Sciences
+###### Faculty of Technical Sciences, Novi Sad
 ###### Software Configuration Management 2017
 
 BooHub is application for tracking projects development.
