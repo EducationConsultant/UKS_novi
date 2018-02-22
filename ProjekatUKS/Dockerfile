@@ -1,12 +1,20 @@
-FROM python:3
+ FROM python:3
 
  ENV PYTHONUNBUFFERED 1
  
- RUN mkdir /code
- WORKDIR /code
+ RUN mkdir -p /usr/src/boohub
+ WORKDIR /usr/src/boohub
  
- ADD requirements.txt /code/
+ 
+ COPY requirements.txt .
  RUN pip install -r requirements.txt
- ADD . /code/
 
- EXPOSE 8000
+ RUN mkdir -p myappBoohub
+ COPY ./myappBoohub ./myappBoohub
+
+ RUN mkdir -p myappBoohub/logs
+
+ EXPOSE 8027
+ 
+ 
+ 

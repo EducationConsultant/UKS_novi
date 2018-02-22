@@ -13,12 +13,12 @@ services:
     build: .
     restart: always
     environment:
-      - EMAIL_HOST_USER=djolepingvinboo@gmail.com
-      - EMAIL_HOST_PASSWORD=djolejepingvin.22
+      - EMAIL_HOST_USER=$EMAIL_HOST_USER
+      - EMAIL_HOST_PASSWORD=$EMAIL_HOST_PASSWORD
     command: sh ./migrations.sh 
     volumes:
-      - .:/code
+  	  - path_to_logs_file_on_your_disk:/usr/src/boohub/myappBoohub/logs
     ports:
-      - "8000:8000"
+      - "8027:8000"
     depends_on:
       - db
