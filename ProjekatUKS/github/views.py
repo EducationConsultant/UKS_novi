@@ -365,21 +365,25 @@ def delete_organization(request, name):
 
     try:
         user = User.objects.get(username=username)
+        owner_organizations = Organization.objects.filter(owner=user.pk)
+        member_organizatios = Organization.objects.filter(members=user.pk)
 
-        organization = Organization.objects.get(name=name)
-        nameDelete = request.POST.get('nameDelete')
-        if name == nameDelete:
-            organization.delete()
+        organizations = (owner_organizations | member_organizatios).distinct()
+        try:
+            organization = Organization.objects.get(name=name)
+            nameDelete = request.POST.get('nameDelete')
 
-            owner_organizations = Organization.objects.filter(owner=user.pk)
-            member_organizatios = Organization.objects.filter(members=user.pk)
+            if name == nameDelete:
+                organization.delete()
+                return render(request, 'github/organizationsShow.html',{'username': username,
+                                                                     'organizationsOfUser': organizations})
+            else:
+                return render(request, 'github/delete_organization.html', {'name': name, 'message': 'Name is not valid'})
 
-            organizations = (owner_organizations | member_organizatios).distinct()
+        except Organization.DoesNotExist:
+            return render(request, 'github/organizationsShow.html', {'username': username,
+                                                                     'organizationsOfUser': organizations})
 
-            return render(request, 'github/organizationsShow.html',{'username': username,
-                                                                 'organizationsOfUser': organizations})
-        else:
-            return render(request, 'github/delete_organization.html', {'name': name, 'message': 'Name is not valid'})
     except User.DoesNotExist:
         return render(request, "github/login.html", {'message': 'You need to login to view this content.'})
 
@@ -412,19 +416,22 @@ def delete_repository(request, name):
     try:
         user = User.objects.get(username=username)
 
-        repository = Repository.objects.get(name=name)
-        nameDelete = request.POST.get('nameDelete')
-        if name == nameDelete:
-            repository.delete()
-            owner_reoisitories = Repository.objects.filter(owner=user.pk)
-            member_repositories = Repository.objects.filter(members=user.pk)
+        owner_reoisitories = Repository.objects.filter(owner=user.pk)
+        member_repositories = Repository.objects.filter(members=user.pk)
 
-            repositories = (owner_reoisitories | member_repositories).distinct()
-
+        repositories = (owner_reoisitories | member_repositories).distinct()
+        try:
+            repository = Repository.objects.get(name=name)
+            nameDelete = request.POST.get('nameDelete')
+            if name == nameDelete:
+                repository.delete()
+                return render(request, 'github/repositoriesShow.html', {'username': username,
+                                                                    'repositoriesOfUser': repositories})
+            else:
+                return render(request, 'github/delete_repository.html', {'name': name, 'message': 'Name is not valid'})
+        except Repository.DoesNotExist:
             return render(request, 'github/repositoriesShow.html', {'username': username,
                                                                     'repositoriesOfUser': repositories})
-        else:
-            return render(request, 'github/delete_repository.html', {'name': name, 'message': 'Name is not valid'})
     except User.DoesNotExist:
         return render(request, "github/login.html", {'message': 'You need to login to view this content.'})
 
@@ -1346,10 +1353,6 @@ def comment_delete(request,id):
 
         issue = Issue.objects.get(pk=id)
 
-        comment_pk = request.POST.get('commentid')
-        comment = Comment.objects.get(pk=comment_pk)
-        comment.delete()
-
         comments_all = Comment.objects.filter(issue=issue.pk)
         comments = comments_all.filter(parent=None)
 
@@ -1357,11 +1360,24 @@ def comment_delete(request,id):
         all_labels = Label.objects.filter(repository=repository.pk)
         result_labels = list(set(all_labels) - set(issue_labels))
         all_history = History.objects.filter(issue=issue.pk)
-        return render(request, "github/issue_view_one.html",
-                      {'issue': issue,'comments': comments,
-                       'messageDelete':'Comment deleted!',
-                       'labels':result_labels,'history':all_history,
-                       'repository': repository})
+
+        try:
+            comment_pk = request.POST.get('commentid')
+            comment = Comment.objects.get(pk=comment_pk)
+            comment.delete()
+
+
+            return render(request, "github/issue_view_one.html",
+                          {'issue': issue,'comments': comments,
+                           'messageDelete':'Comment deleted!',
+                           'labels':result_labels,'history':all_history,
+                           'repository': repository})
+        except Comment.DoesNotExist:
+            return render(request, "github/issue_view_one.html",
+                          {'issue': issue, 'comments': comments,
+                           'messageDelete': 'Comment deleted!',
+                           'labels': result_labels, 'history': all_history,
+                           'repository': repository})
     except User.DoesNotExist:
         return render(request, "github/login.html", {'message': 'You need to login to view this content.'})
 
@@ -1590,15 +1606,19 @@ def label_delete(request):
     try:
         user = User.objects.get(username=username)
         label_pk = request.POST.get('label_pk')
-        label = Label.objects.get(pk=label_pk)
-
-        label.delete()
 
         repository_pk = request.session['repository_id']
         repository = Repository.objects.get(pk=repository_pk)
         labels = Label.objects.filter(repository=repository.pk)
-        return render(request, "github/label_show_all.html",
-                      {'labels': labels, 'messageSuccess': 'Label successfully deleted.'})
+        try:
+            label = Label.objects.get(pk=label_pk)
+            label.delete()
+
+            return render(request, "github/label_show_all.html",
+                          {'labels': labels, 'messageSuccess': 'Label successfully deleted.'})
+        except Label.DoesNotExist:
+            return render(request, "github/label_show_all.html",
+                          {'labels': labels, 'messageSuccess': 'Label successfully deleted.'})
     except User.DoesNotExist:
         return render(request, "github/login.html", {'message': 'You need to login to view this content.'})
 
