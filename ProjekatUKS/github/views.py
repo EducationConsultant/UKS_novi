@@ -116,12 +116,7 @@ def login_user(request):
 
 # from some page to forgot_password.html
 def switch_forgot_password(request):
-    username = request.session['uname_user']
-    try:
-        user = User.objects.get(username=username)
-        return render(request, "github/forgot_password.html")
-    except User.DoesNotExist:
-        return render(request, "github/login.html", {'message': 'You need to login to view this content.'})
+    return render(request, "github/forgot_password.html")
 
 
 def send_email_reset_password(request):
@@ -139,7 +134,7 @@ def send_email_reset_password(request):
                     "\n\n"
                     "We heard that you lost your BooHub password. Sorry about that!"
                     " But don’t worry! You can use the following link to reset your password:"
-                    "\n\n" + domain + "/github/password_reset/" + user.username +
+                    "\n\n" + domain + "/boohub/password_reset/" + user.username +
                    "\n\n"
                    "The BooHub Team"
                    )
