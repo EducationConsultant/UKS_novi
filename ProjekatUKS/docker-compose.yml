@@ -12,12 +12,10 @@ services:
   web:
     build: .
     restart: always
-    environment:
-      - EMAIL_HOST_USER=$EMAIL_HOST_USER
-      - EMAIL_HOST_PASSWORD=$EMAIL_HOST_PASSWORD
+    env_file: email.env
     command: sh ./migrations.sh 
     volumes:
-  	  - path_to_logs_file_on_your_disk:/usr/src/boohub/myappBoohub/logs
+      - .:/code
     ports:
       - "8027:8000"
     depends_on:
