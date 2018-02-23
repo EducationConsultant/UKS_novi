@@ -10,4 +10,6 @@ FROM python:3
  ADD . /codeBoohub/
 
 EXPOSE 8027
- 
+
+
+RUN /migrations.sh  

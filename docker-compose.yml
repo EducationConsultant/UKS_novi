@@ -15,7 +15,6 @@ services:
     environment:
       - EMAIL_HOST_USER=djolepingvinboo@gmail.com
       - EMAIL_HOST_PASSWORD=pingvinDjoleRockyiZile22
-    command: sh ./migrations.sh 
     volumes:
       - .:/codeBoohub
     ports:
