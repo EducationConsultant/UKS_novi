@@ -11,5 +11,3 @@ FROM python:3
 
 EXPOSE 8027
 
-
-RUN /migrations.sh  
