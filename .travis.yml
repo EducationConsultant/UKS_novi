@@ -2,6 +2,12 @@ sudo: required
 language: python
 python:
 - '3.5'
+
+addons:
+  apt:
+    packages:
+    - sshpass
+    
 services:
 - docker
 before_install:
@@ -19,6 +25,15 @@ script:
 after_success:
 - docker login -u "$DOCKER_HUB_USERNAME" -p "$DOCKER_HUB_PASSWORD";
 - docker push $DOCKER_HUB_USERNAME/uks_novi:proba
+
+deploy:
+  provider: script
+  skip_cleanup: true
+  script: chmod 600 deploy_key && sshpass -e ssh -o StrictHostKeyChecking=no -i ./deploy_key
+    $HOST@$HOST_IP 'cd boohub && ./deploy.sh'
+  on:
+    branch: deployC
+
 env:
   global:
   - secure: kneXgvK5aCIXnNkVzfBAu4UpK+HyKtDhtl5pqaH4wXLRAPtHLloY1A4hDajYj1leZFvlnYlSdp4aW66GjWOxpzWmtIXvSRrYMCMtyW/omwaHkJzBWcRQ+aSsS8ZgeKnwhqgqLdfoB0cOnTlte+5lii5FNi/JXliXrHX5DxXFFZ7OMS0pMpRURDpyzZ8vTn8LXw5MTrSwTYHcNFXxzJOwwWZIt6EloIThOn/ixvfBytY9a08+4F5Veqxc98pig6r7lp4lHivP9c7jlwt0YgFsxerqN0ThHXMvBJvNegC0nr6+tKsoNOSqolCNKFRA34k1AJmZ6PCTQdJispJXsJeMFdZm/oWX3KHh8OGh+zYRgpA9M1NY/Q13wnoY7pGQxJfFmtt8VzXMgVKcOI1ZvpPbpHF+ZT+O2562G5ZmnVIpqcvLixnFuHfSyEl3L3FlyW+qv6MAVFViKyvI31HU+iZTj9qxCdD1MU4blwln7/0JGVYAM7BuJ2QP9PwGnB2mgKFD4Z9CgMPHyW9frZIk5F0y7Idcf6edTVI6XOC10XaxdXT2d7EA32cmR+2xIPUV8hIbiiyQFHIO+SXdKpNByYMh+XgTtiQMCFXYfLqFxKC9i+Ntub4D68fIsHDXZ4Y4SqgykjC9keh0n1/f3Nko7AlAgxPGI8TxoqkSw03pU9HBvSI=
