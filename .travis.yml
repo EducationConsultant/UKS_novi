@@ -27,6 +27,7 @@ after_success:
 - docker push $DOCKER_HUB_USERNAME/uks_novi:proba
 - export SSHPASS=$DEPLOY_PASS
 - ls
+- cd ..
 deploy:
   provider: script
   skip_cleanup: true
