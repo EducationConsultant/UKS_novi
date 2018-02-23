@@ -325,5 +325,7 @@ class WikiTestCase(unittest.TestCase):
         self.wiki.save()
         self.assertEqual(self.wiki.title, "New title")
         self.assertEqual(self.wiki.content, "New content")
+        
+        
 
 
