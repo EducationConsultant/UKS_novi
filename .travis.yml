@@ -12,6 +12,7 @@ before_install:
 - docker --version
 - docker build -t $DOCKER_HUB_USERNAME/uks_novi:proba .
 - docker images
+- docker ps -a
 - openssl aes-256-cbc -K $encrypted_dcc2dc14fc59_key -iv $encrypted_dcc2dc14fc59_iv
   -in deploy_key.enc -out ./deploy_key -d
 install:
