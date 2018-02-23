@@ -5,8 +5,9 @@ python:
 services:
 - docker
 before_install:
+- openssl aes-256-cbc -K $encrypted_dcc2dc14fc59_key -iv $encrypted_dcc2dc14fc59_iv
+  -in deploy_key.enc -out ./deploy_key -d
 - docker --version
-- cd ProjekatUKS/
 - docker build -t $DOCKER_HUB_USERNAME/uks_novi:proba .
 - docker images
 install:
