@@ -17,7 +17,7 @@ services:
       - EMAIL_HOST_PASSWORD=pingvinDjoleRockyiZile22
     command: sh ./migrations.sh 
     volumes:
-      - .:/code
+      - .:/codeBoohub
     ports:
       - "8027:8000"
     depends_on:
