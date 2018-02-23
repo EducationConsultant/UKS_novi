@@ -6,6 +6,7 @@ __pycache__/
 migrations/
 postgres-data/
 
+
 .idea/
 deploy_key
 
