@@ -7,7 +7,7 @@ migrations/
 postgres-data/
 
 .idea/
-./deploy_key
+deploy_key
 
 # C extensions
 *.so
