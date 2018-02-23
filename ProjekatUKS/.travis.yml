@@ -15,7 +15,7 @@ before_install:
 - docker ps 
 - openssl aes-256-cbc -K $encrypted_dcc2dc14fc59_key -iv $encrypted_dcc2dc14fc59_iv
   -in deploy_key.enc -out ./deploy_key -d
-- cd ProjekatUKS/  
+
 install:
 - pip install -r requirements.txt
 script:
@@ -27,7 +27,7 @@ after_success:
 - docker push $DOCKER_HUB_USERNAME/uks_novi:proba
 - export SSHPASS=$DEPLOY_PASS
 - ls
-- cd ..
+
 deploy:
   provider: script
   skip_cleanup: true
