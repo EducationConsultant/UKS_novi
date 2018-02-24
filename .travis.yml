@@ -17,9 +17,9 @@ before_install:
 install:
 - pip install -r requirements.txt
 script:
-- docker-compose run web python3 ./manage.py makemigrations
-- docker-compose run web python3 ./manage.py migrate
-- docker-compose run web python3 ./manage.py test
+- docker-compose run web python3 manage.py makemigrations
+- docker-compose run web python3 manage.py migrate
+- docker-compose run web python3 manage.py test
 after_success:
 - docker build -t $DOCKER_HUB_USERNAME/uks_novi:proba .
 - docker push $DOCKER_HUB_USERNAME/uks_novi:proba
