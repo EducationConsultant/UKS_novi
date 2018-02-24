@@ -26,14 +26,14 @@ after_success:
 - docker push $DOCKER_HUB_USERNAME/uks_novi:proba
 - export SSHPASS=$DEPLOY_PASS
 - ls
+- cd ..
+- ls
 - docker ps
 - docker images
 deploy:
   provider: script
   skip_cleanup: true
-  script: 
-  - cd ..
-  - chmod 600 deploy_key && sshpass -e ssh -o StrictHostKeyChecking=no -i ./deploy_key
+  script: chmod 600 deploy_key && sshpass -e ssh -o StrictHostKeyChecking=no -i ./deploy_key
     $HOST@$HOST_IP 'cd boohub && ./deploy.sh'
   on:
     branch: deploy2
