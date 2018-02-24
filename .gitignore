@@ -6,7 +6,7 @@ __pycache__/
 migrations/
 postgres-data/
 
-.idea/
+*.idea/
 
 
 # C extensions

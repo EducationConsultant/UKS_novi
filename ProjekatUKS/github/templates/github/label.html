@@ -13,7 +13,7 @@
                 <li><a href="{% url 'github:switch_label_show_all' %}">Show all</a></li>
                 <li><a href="{% url 'github:switch_label_new' %}">New label</a></li>
                 <li><a href="{% url 'github:switch_all_issues' %}">Back to issues</a></li>
-                <li><a href="{% url 'github:repositoryInfo' request.session.repository_name %}">Back to repository</a></li>
+                <li><a href="{% url 'github:repositoryInfo' repository.name %}">Back to repository</a></li>
             </ul>
         </div>
         <div class="col-sm-8 text-left">

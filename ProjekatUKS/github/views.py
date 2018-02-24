@@ -1529,7 +1529,7 @@ def switch_label_show_all(request):
         repository = Repository.objects.get(pk=repository_pk)
 
         labels = Label.objects.filter(repository=repository.pk)
-        return render(request, "github/label_show_all.html", {'labels': labels})
+        return render(request, "github/label_show_all.html", {'labels': labels,'repository':repository})
     except User.DoesNotExist:
         return render(request, "github/login.html", {'message': 'You need to login to view this content.'})
 
@@ -1538,7 +1538,10 @@ def switch_label_new(request):
     username = request.session['uname_user']
     try:
         user = User.objects.get(username=username)
-        return render(request, "github/label_new.html")
+        repository_pk = request.session['repository_id']
+        repository = Repository.objects.get(pk=repository_pk)
+
+        return render(request, "github/label_new.html",{'repository':repository})
     except User.DoesNotExist:
         return render(request, "github/login.html", {'message': 'You need to login to view this content.'})
 
@@ -1561,7 +1564,7 @@ def label_new(request):
         label.save()
 
         labels = Label.objects.filter(repository=repository.pk)
-        return render(request, "github/label_show_all.html", {'labels': labels})
+        return render(request, "github/label_show_all.html", {'labels': labels,'repository':repository})
     except User.DoesNotExist:
         return render(request, "github/login.html", {'message': 'You need to login to view this content.'})
 
@@ -1581,7 +1584,7 @@ def label_edit(request):
         new_name = request.POST.get('new_name')
         for lab in labels:
             if lab.name == new_name:
-                return render(request, "github/label_show_all.html", {'labels': labels,'messageEdit':'Label name must be unique.'})
+                return render(request, "github/label_show_all.html", {'labels': labels,'messageEdit':'Label name must be unique.','repository':repository})
 
         new_color = request.POST.get('new_color')
 
@@ -1591,7 +1594,7 @@ def label_edit(request):
         labelToEdit.save()
 
         labels = Label.objects.filter(repository=repository.pk)
-        return render(request, "github/label_show_all.html", {'labels': labels,'messageSuccess':'Label successfully changed.'})
+        return render(request, "github/label_show_all.html", {'labels': labels,'messageSuccess':'Label successfully changed.','repository':repository})
     except User.DoesNotExist:
         return render(request, "github/login.html", {'message': 'You need to login to view this content.'})
 
@@ -1610,10 +1613,10 @@ def label_delete(request):
             label.delete()
 
             return render(request, "github/label_show_all.html",
-                          {'labels': labels, 'messageSuccess': 'Label successfully deleted.'})
+                          {'labels': labels, 'messageSuccess': 'Label successfully deleted.','repository':repository})
         except Label.DoesNotExist:
             return render(request, "github/label_show_all.html",
-                          {'labels': labels, 'messageSuccess': 'Label successfully deleted.'})
+                          {'labels': labels, 'messageSuccess': 'Label successfully deleted.','repository':repository})
     except User.DoesNotExist:
         return render(request, "github/login.html", {'message': 'You need to login to view this content.'})
 
