@@ -31,7 +31,9 @@ after_success:
 deploy:
   provider: script
   skip_cleanup: true
-  script: chmod 600 deploy_key && sshpass -e ssh -o StrictHostKeyChecking=no -i ../deploy_key
+  script: 
+  - cd ..
+  - chmod 600 deploy_key && sshpass -e ssh -o StrictHostKeyChecking=no -i ./deploy_key
     $HOST@$HOST_IP 'cd boohub && ./deploy.sh'
   on:
     branch: deploy2
